@@ -2,15 +2,29 @@
   "name": "matcha",
   "version": "0.1.0",
   "description": "matcha 42's project",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "nodemon server.js"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "ejs": "^2.5.6",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "mongoose": "^4.9.0",
+    "morgan": "^1.8.1",
+    "passport" : "~0.1.17",
+    "passport-local" : "~0.1.6",
+    "passport-facebook" : "~1.0.2",
+    "passport-twitter" : "~1.0.2",
+    "passport-google-oauth" : "~0.1.5",
+    "connect-flash" : "~0.1.1",
+    "body-parser": "~1.0.0",
+    "cookie-parser": "~1.0.0",
+    "method-override": "~1.0.0",
+    "express-session": "~1.0.0"
   },
   "devDependencies": {
-    "jshint": "^2.9.4"
+    "jshint": "^2.9.4",
+    "nodemon": "^1.11.0"
   }
 }

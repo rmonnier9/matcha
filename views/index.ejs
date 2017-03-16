@@ -10,6 +10,25 @@
 	</header>
 	<section>
 		<h2>Etage : <%= etage %></h2>
+		<p>
+			<%
+    for(var i = 1 ; i <= etage ; i++) {
+			%>
+
+	    <%= i %>...
+
+			<% } %>
+	</p>
+	<p>
+		<%
+		var j = 0;
+		while (j < 10) {
+		%>
+
+		<%= j %>...
+
+		<% j++; } %>
+</p>
 	</section>
 	<footer>
 	</footer>
