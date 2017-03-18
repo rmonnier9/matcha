@@ -1,36 +1,17 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-	<meta charset="utf-8">
-	<title>SNCF</title>
-</head>
+<!-- views/index.ejs -->
+<%- include('head.ejs'); %>
 <body>
-	<header>
-		<h1>Menu Déroulant</h1><br/>
-	</header>
-	<section>
-		<h2>Etage : <%= etage %></h2>
-		<p>
-			<%
-    for(var i = 1 ; i <= etage ; i++) {
-			%>
+<div class="container">
 
-	    <%= i %>...
+    <div class="jumbotron text-center">
+        <h1><span class="fa fa-lock"></span> Node Authentication</h1>
 
-			<% } %>
-	</p>
-	<p>
-		<%
-		var j = 0;
-		while (j < 10) {
-		%>
+        <p>Login or Register with:</p>
 
-		<%= j %>...
+        <a href="/signin" class="btn btn-default"><span class="fa fa-user"></span>Signin</a>
+        <a href="/signup" class="btn btn-default"><span class="fa fa-user"></span>Signup</a>
+    </div>
 
-		<% j++; } %>
-</p>
-	</section>
-	<footer>
-	</footer>
+</div>
 </body>
 </html>

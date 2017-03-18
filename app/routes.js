@@ -12,27 +12,29 @@ module.exports = function(app, passport) {
     // LOGIN ===============================
     // =====================================
     // show the login form
-    app.get('/login', function(req, res) {
+    app.get('/signin', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('login.ejs', { message: req.flash('loginMessage') });
+        res.render('signin.ejs', { message: req.flash('signinMessage') });
     });
 
-    // process the login form
-    // app.post('/login', do all our passport stuff here);
+    app.post('/signin',
+        passport.authenticate('local-signin', { successRedirect: '/profile',
+                                                failureRedirect: '/signin',
+                                                failureFlash: true })
+    );
 
-    // =====================================
     // SIGNUP ==============================
-    // =====================================
-    // show the signup form
-    app.get('/signup', function(req, res) {
 
-        // render the page and pass in any flash data if it exists
+    app.get('/signup', function(req, res) {
         res.render('signup.ejs', { message: req.flash('signupMessage') });
     });
 
-    // process the signup form
-    // app.post('/signup', do all our passport stuff here);
+    app.post('/signup',
+        passport.authenticate('local-signup', { successRedirect: '/profile',
+                                                failureRedirect: '/signup',
+                                                failureFlash: true })
+    );
 
     // =====================================
     // PROFILE SECTION =====================
