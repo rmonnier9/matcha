@@ -26,21 +26,21 @@ module.exports = function(passport) {
 
 
     passport.use('local-signup', new LocalStrategy({
-        usernameField: 'username',
+        usernameField: 'login',
         passwordField: 'password',
         passReqToCallback : true
     },
-      function(req, username, password, done) {
+      function(req, login, password, done) {
 
           // asynchronous
           // User.findOne wont fire unless data is sent back
           process.nextTick(function() {
-            User.findOne({ 'username' :  username }, function(err, user) {
+            User.findOne({ 'login' :  login }, function(err, user) {
               if (err) { return done(err); }
-              if (user) { return done(null, false, req.flash('signupMessage', 'That username is already taken.'));
+              if (user) { return done(null, false, req.flash('signupMessage', 'That login is already taken.'));
               }
               var newUser = new User();
-              newUser.username = username;
+              newUser.login = login;
               newUser.local.password = newUser.generateHash(password);
               newUser.save(function(err) {
                 if (err) { throw err; }
@@ -52,15 +52,15 @@ module.exports = function(passport) {
     ));
 
     passport.use('local-signin', new LocalStrategy({
-      usernameField: 'username',
+      usernameField: 'login',
       passwordField: 'password',
       passReqToCallback : true
       },
-      function(req, username, password, done) {
-        User.findOne({ 'username': username }, function(err, user) {
+      function(req, login, password, done) {
+        User.findOne({ 'login': login }, function(err, user) {
           if (err) { return done(err); }
           if (!user) {
-            return done(null, false, req.flash('signinMessage', 'Incorrect username.'))
+            return done(null, false, req.flash('signinMessage', 'Incorrect login.'))
           }
           if (!user.validPassword(password)) {
             return done(null, false, req.flash('signinMessage', 'Incorrect password.'))
