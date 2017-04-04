@@ -34,7 +34,7 @@ module.exports = function(passport) {
 
           // asynchronous
           // User.findOne wont fire unless data is sent back
-          process.nextTick(function() {
+          //process.nextTick(function() {
             User.findOne({ 'login' :  login }, function(err, user) {
               if (err) { return done(err); }
               if (user) { return done(null, false, req.flash('signupMessage', 'That login is already taken.'));
@@ -47,7 +47,7 @@ module.exports = function(passport) {
                 return done(null, newUser);
               });
             })
-          });
+          //});
       }
     ));
 
@@ -59,6 +59,8 @@ module.exports = function(passport) {
       function(req, login, password, done) {
         User.findOne({ 'login': login }, function(err, user) {
           if (err) { return done(err); }
+			 console.log(login);
+			 console.log(user);
           if (!user) {
             return done(null, false, req.flash('signinMessage', 'Incorrect login.'))
           }
