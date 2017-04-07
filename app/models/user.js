@@ -8,8 +8,8 @@ var userSchema = mongoose.Schema({
     lastname         : String,
     login            : String,
     birthDate        : Date,
-    gender           : { type: String, enum: ['Male', 'Female'] },
-    interestedIn     : { type: String, enum: ['Male', 'Female'] },
+    gender           : { type: String, enum: ['male', 'female'] },
+    interestedIn     : { type: String, enum: ['male', 'female'] },
     about            : String,
     tags             : String,
     pictures         : {

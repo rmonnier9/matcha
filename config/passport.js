@@ -41,7 +41,10 @@ module.exports = function(passport) {
               }
               var newUser = new User();
               newUser.login = login;
-              newUser.local.password = newUser.generateHash(password);
+				  newUser.local.password = newUser.generateHash(password);
+				  newUser.firstname = req.body.firstname;
+				  newUser.lastname = req.body.lastname;
+				  newUser.local.email = req.body.email;
               newUser.save(function(err) {
                 if (err) { throw err; }
                 return done(null, newUser);
@@ -59,8 +62,6 @@ module.exports = function(passport) {
       function(req, login, password, done) {
         User.findOne({ 'login': login }, function(err, user) {
           if (err) { return done(err); }
-			 console.log(login);
-			 console.log(user);
           if (!user) {
             return done(null, false, req.flash('signinMessage', 'Incorrect login.'))
           }

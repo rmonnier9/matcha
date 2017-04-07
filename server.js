@@ -1,16 +1,17 @@
-var express       = require('express');
-var app           = express();
-var port          = 8000;
-var mongoose      = require('mongoose');
-var passport      = require('passport');
-var flash         = require('connect-flash');
+const express       = require('express');
+const app           = express();
+const port          = 8000;
+const mongoose      = require('mongoose');
+const passport      = require('passport');
+const flash         = require('connect-flash');
 
-var morgan        = require('morgan');
-var cookieParser  = require('cookie-parser');
-var bodyParser    = require('body-parser');
-var session       = require('express-session');
+const morgan        = require('morgan');
+const cookieParser  = require('cookie-parser');
+const bodyParser    = require('body-parser');
+const session       = require('express-session');
+const fileUpload	  = require('express-fileupload');
 
-var configDB      = require('./config/database.js');
+const configDB      = require('./config/database.js');
 
 // configuration ===============================================================
 mongoose.connect(configDB.url); // connect to our database
@@ -21,6 +22,8 @@ require('./config/passport')(passport); // pass passport for configuration
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
 app.use(bodyParser()); // get information from html forms
+app.use(fileUpload()); //get uploaded files
+app.use(express.static('dist'));
 
 app.set('view engine', 'ejs')
 
