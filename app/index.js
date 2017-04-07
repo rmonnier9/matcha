@@ -1,22 +1,39 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-class Square extends React.Component {
-  render() {
-    return (
-      <button className="square">
-        {/* TODO */}
-      </button>
-    );
-  }
+function Square(props) {
+	return (
+		<button className="square" onClick={() => props.onClick()}>
+		  {props.value}
+		</button>
+	);
 }
 
 class Board extends React.Component {
+	constructor() {
+	  super();
+	  this.state = {
+		 squares: Array(9).fill(null),
+		 xIsNext: true
+	  };
+	}
+	handleClick(i) {
+	   const squares = this.state.squares.slice();
+		if (calculateWinner(squares) || squares[i])
+			return ;
+	   squares[i] = this.state.xIsNext ? 'X' : 'O';
+	   this.setState({
+			squares: squares,
+			xIsNext: !this.state.xIsNext,
+		});
+	}
   renderSquare(i) {
-    return <Square />;
+    return <Square value={this.state.squares[i]} onClick={() => this.handleClick(i)}/>;
   }
   render() {
-    const status = 'Next player: X';
+	  const winner = calculateWinner(this.state.squares);
+	  let status;
+	  if (winner)
+	  	status = 'Winner is ' + winner;
+	  else
+	  	status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     return (
       <div>
         <div className="status">{status}</div>
@@ -60,7 +77,7 @@ class Game extends React.Component {
 
 ReactDOM.render(
   <Game />,
-  document.getElementById('container')
+  document.getElementById('react-root')
 );
 
 function calculateWinner(squares) {
