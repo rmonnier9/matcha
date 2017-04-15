@@ -1,9 +1,9 @@
 <!-- views/profile.ejs -->
 <!doctype html>
 <html>
-<% include('head.ejs'); %>
+<%- include('head.ejs'); %>
 <body>
-	<% include('header_logged.ejs'); %>
+	<%- include('header_logged.ejs'); %>
 	<div class="all-site-wrap">
 		<h1>You are logged <%= user.login %> !</h1>
 		<% for(let i = 0 ; i < user.pictures.length ; i++) { %>
@@ -11,7 +11,7 @@
 		<% } %>
 
 	</div>
-	<div class="react-matcha"></div>
+	<div id="react-root"></div>
 	<script src="bundle.js"></script>
 </body>
 <%- include('footer.ejs'); %>

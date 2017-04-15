@@ -11,6 +11,7 @@ import cookieParser	from 'cookie-parser'
 import bodyParser   	from 'body-parser'
 import session      	from 'express-session'
 import fileUpload	 	from 'express-fileupload'
+import path				from 'path'
 
 import configDB     	from './config/database.js'
 const	mongoStore	  = require('connect-mongo')(session)
@@ -25,7 +26,10 @@ app.use(morgan('dev')) // log every request to the console
 app.use(cookieParser()) // read cookies (needed for auth)
 app.use(bodyParser()) // get information from html forms
 app.use(fileUpload()) //get uploaded files
-app.use(express.static('dist'))
+app.use(express.static(path.join(__dirname, 'dist'), {
+  dotfiles: 'ignore',
+  index: false
+}))
 
 app.set('view engine', 'ejs')
 
@@ -38,9 +42,10 @@ app.use(passport.session()) // persistent login sessions
 app.use(flash()) // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
-require('./app/routes.js')(app, passport) // load our routes and pass in our app and fully configured passport
+// require('./app/routes.js')(app, passport) // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
+app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
 app.listen(port)
 console.log('The magic happens on port ' + port)
 
