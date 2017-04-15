@@ -1,6 +1,7 @@
-// import React from 'react'
-// import ReactDOM from 'react-dom'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
 
-import RouterMatcha from './Router.jsx'
-
-ReactDOM.render(<RouterMatcha />,document.getElementById('react-root'));
+ReactDOM.render(
+	<App />,
+	document.getElementById('react-root'))
