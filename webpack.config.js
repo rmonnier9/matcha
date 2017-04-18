@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './myapp/main.js',
+  entry: './matcha-front/src/index.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist', 'js')

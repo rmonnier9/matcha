@@ -11,10 +11,10 @@ const userSchema = mongoose.Schema({
     gender           : { type: String, enum: ['male', 'female'] },
     interestedIn     : { type: String, enum: ['male', 'female'] },
     about            : String,
-    tags             : String,
+    tags             : Array,
     pictures         : Array,
     localisation     : Number,
-    popularityRate   : Number,
+    popularity		   : Number,
     dateCreation     : { type: Date, default: Date.now },
     dateLastLogin    : Date,
     local            : {
@@ -45,6 +45,12 @@ userSchema.methods.generateHash = function(password) {
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.local.password);
+}
+
+userSchema.methods.getAge = function() {
+	const ageDifMs = Date.now() - this.birthDate.getTime();
+	const ageDate = new Date(ageDifMs);
+	return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
 // create the model for users and expose it to our app

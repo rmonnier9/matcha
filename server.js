@@ -42,7 +42,7 @@ app.use(passport.session()) // persistent login sessions
 app.use(flash()) // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
-// require('./app/routes.js')(app, passport) // load our routes and pass in our app and fully configured passport
+require('./api/routes.js')(app, passport) // load our routes and pass in our app and fully configured passport
 
 // launch ======================================================================
 app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
