@@ -4,4 +4,4 @@ import App from './App'
 
 ReactDOM.render(
 	<App />,
-	document.getElementById('react-root'))
+	document.getElementById('root'))

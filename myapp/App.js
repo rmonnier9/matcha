@@ -1,41 +1,34 @@
+import React from 'react'
 import {
 	BrowserRouter as Router,
-	Route,
-	NavLink
+	Route
 } from 'react-router-dom'
 
 import './App.css'
 
 // Containers
-// import MainLayout from './containers/MainLayout.jsx'
-// import Home from './containers/Home.jsx'
-// import Search from './containers/Search.jsx'
-// import Profile from './containers/Profile.jsx'
-// import Signin from './containers/Signin.jsx'
-// import Signup from './containers/Signup.jsx'
-
-// Pages
-const Links = () => (
-	<nav>
-		<NavLink exact activeClassName="active" to="/">Home</NavLink>
-		<NavLink activeClassName="active" to="/about"}}>Around me</NavLink>
-		<NavLink activeClassName="active" to="/contact">Search</NavLink>
-		<NavLink activeClassName="active" to="/profile">Profile</NavLink>
-		<NavLink activeClassName="active" to="/signin">Signin</NavLink>
-		<NavLink activeClassName="active" to="/signup">Signup</NavLink>
-	</nav>
-)
+import Header from './Header.js'
+import Footer from './Footer.js'
+import Profile from './Profile.js'
+import Around from './Around.js'
+import Matches from './Matches.js'
+import Notifications from './Notifications.js'
+import Search from './Search.js'
+import Signup from './Signup.js'
+import Signin from './Signin.js'
 
 const App = () => (
 	<Router>
 		<div>
-			<Links />
-			<Route exact path="/" render={() => <h1>Home</h1>} />
-			<Route path="/around" render={() => <h1>Around me</h1>} />
-			<Route path="/search" render={() => <h1>Search</h1>} />
-			<Route path="/profile" render={() => <h1>Profile</h1>} />
-			<Route path="/signin" render={() => <h1>Signin</h1>} />
-			<Route path="/signup" render={() => <h1>Signup</h1>} />
+			<Header />
+			<Route exact path="/" component={Around} />
+			<Route path="/matches" component={Matches} />
+			<Route path="/notifications" component={Notifications} />
+			<Route path="/search" component={Search} />
+			<Route path="/profile" component={Profile} />
+			<Route path="/signin" component={Signin} />
+			<Route path="/signup" component={Signup} />
+			<Footer />
 		</div>
 	</Router>
 )
