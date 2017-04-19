@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'dist'), {
 }))
 
 
-require('./api/routes.js')(app, express, jwt)
+require('./routes.js')(app, express, jwt)
 
 // launch ======================================================================
 // app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));

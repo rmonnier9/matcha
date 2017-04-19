@@ -1,8 +1,8 @@
 // app/routes.js
-import User       from '../api/models/user';
-import fs 			from 'fs';
-import uuid			from 'uuid';
-import path			from 'path';
+import User     from './models/user'
+import fs 			from 'fs'
+import uuid			from 'uuid'
+import path			from 'path'
 
 module.exports = (app, express, jwt) => {
 
