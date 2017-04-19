@@ -17,6 +17,7 @@
     "express": "^4.15.2",
     "express-fileupload": "^0.1.2",
     "express-session": "~1.0.0",
+    "jsonwebtoken": "^7.3.0",
     "mongoose": "^4.9.0",
     "morgan": "^1.8.1",
     "passport": "~0.1.17",

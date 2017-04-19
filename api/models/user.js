@@ -13,14 +13,13 @@ const userSchema = mongoose.Schema({
     about            : String,
     tags             : Array,
     pictures         : Array,
+    profilePictureId : Number,
     localisation     : Number,
     popularity		   : Number,
     dateCreation     : { type: Date, default: Date.now },
     dateLastLogin    : Date,
-    local            : {
-        email        : String,
-        password     : String,
-    },
+    email            : String,
+    password         : String,
     facebook         : {
         id           : String,
         token        : String,
@@ -44,14 +43,17 @@ userSchema.methods.generateHash = function(password) {
 
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.local.password);
+    return bcrypt.compareSync(password, this.password);
 }
 
+// compute user's age
 userSchema.methods.getAge = function() {
 	const ageDifMs = Date.now() - this.birthDate.getTime();
 	const ageDate = new Date(ageDifMs);
 	return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
-// create the model for users and expose it to our app
-module.exports = mongoose.model('User', userSchema)
+// create the model for users
+const model = mongoose.model('User', userSchema)
+
+export default model
