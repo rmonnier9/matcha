@@ -38,19 +38,20 @@ const userSchema = mongoose.Schema({
 // methods ======================
 // generating a hash
 userSchema.methods.generateHash = function(password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
 }
 
 // checking if password is valid
 userSchema.methods.validPassword = function(password) {
-    return bcrypt.compareSync(password, this.password);
+    return bcrypt.compareSync(password, this.password)
 }
 
 // compute user's age
 userSchema.methods.getAge = function() {
-	const ageDifMs = Date.now() - this.birthDate.getTime();
-	const ageDate = new Date(ageDifMs);
-	return Math.abs(ageDate.getUTCFullYear() - 1970);
+	if (!this.hasOwnProperty('birthDate')) return null
+	const ageDifMs = Date.now() - this.birthDate.getTime()
+	const ageDate = new Date(ageDifMs)
+	return Math.abs(ageDate.getUTCFullYear() - 1970)
 }
 
 // create the model for users

@@ -4,44 +4,11 @@ import fs 			from 'fs'
 import uuid			from 'uuid'
 import path			from 'path'
 
-module.exports = (app, express, jwt) => {
-
-app.get('/api/profile/:login', (req, res) => {
-	User.findOne({ 'login' :  req.params.login }, (err, user) => {
-		if (err) throw err;
-		if (!user) return res.status(404).send("User inexistant.");
-		const {login, firstname, lastname, popularity, pictures, about, tags} = user;
-		const age = user.getAge();
-		const data = {login, firstname, lastname, age, popularity, pictures, about, tags};
-		console.log(data);
-		res.json(data);
-	})
-})
-
-app.get('/api/pictures/:login/:id', (req, res, next) => {
-	User.findOne({ 'login' :  req.params.login }, (err, user) => {
-		if (err) throw err;
-		res.sendFile(path.resolve(__dirname, '../images/' + req.params.login + '/' + req.params.id), function (err) {
-			if (err) {
-				next(err);
-			} else {
-				console.log('Sent:', req.params.id);
-			}
-		})
-	})
-})
-
+const routes = (apiRoutes, app, jwt) => {
 
 // FILE UPLOAD =====================
 
-
 // // INFO UPDATE =====================
-// app.post('/update-info', (req, res) => {
-//
-// })
-//
-
-const apiRoutes = express.Router()
 
 apiRoutes.post('/signup', (req, res, next) => {
 	const {login, email, password, confirmpassword} = req.body
@@ -94,6 +61,19 @@ apiRoutes.get('/whoami', (req, res) => {
 	return res.json({success: true, message: 'Authenticated as ' + currentUser})
 })
 
+apiRoutes.get('/profile/:login', (req, res) => {
+	const	{login} =req.params
+	User.findOne({ login:  login }, (err, user) => {
+		if (err) throw err;
+		if (!user) return res.status(404).send("User inexistant.");
+		const {login, firstname, lastname, about, tags, pictures, profilePictureId, popularity, localisation} = user;
+		const age = user.getAge();
+		const data = {login, firstname, lastname, age, about, tags, pictures, profilePictureId, popularity, localisation};
+		console.log(data);
+		res.json({success: true, message: 'Profile found.', data: data});
+	})
+})
+
 apiRoutes.post('/profile/:login', (req, res) => {
 	const {currentUser} = req.decoded
 	const	{login} =req.params
@@ -110,25 +90,40 @@ apiRoutes.post('/profile/:login', (req, res) => {
 		if (request.hasOwnProperty(field)) update[field] = request[field]
 	}
 	console.log(update);
-	User.update({ login: currentUser }, update, (err, raw) => {
+	User.update({ login: login }, update, (err, raw) => {
   	if (err) throw err
   	// console.log('The raw response from Mongo was ', raw)
 		res.json({success: true, message: 'Profile successfully updated.'})
 	})
 })
 
-apiRoutes.post('/upload', (req, res) => {
+apiRoutes.get('/profile/:login/pictures/:id', (req, res, next) => {
+	const	{login, id} = req.params
+	User.findOne({ login:  login }, (err, user) => {
+		if (err) throw err;
+		res.sendFile(path.resolve(__dirname, './images/' + login + '/' + id), (err) => {
+			if (err) {
+				next(err)
+			} else {
+				console.log('Sent:', id)
+			}
+		})
+	})
+})
+
+apiRoutes.post('/profile/:login/pictures', (req, res) => {
 	if (!req.files || !req.files.image)
 	return res.status(400).json({success: false, message: 'No images were uploaded.'})
 
 	const {image} = req.files
-	const {login} = req.decoded
+	const {currentUser} = req.decoded
+	const	{login} = req.params
+	if (login != currentUser) return res.json({success: false, message: 'No rights for update this profile.'})
 
-	User.findOne({login:  login }, (err, user) => {
+	User.findOne({login: login }, (err, user) => {
 		if (err) throw err
-		console.log(user.pictures)
 		if (user.pictures.length >= 5)
-		return res.status(400).json({success: false, message: 'Too many images.'})
+			return res.status(400).json({success: false, message: 'Too many images.'})
 
 		const userPath = './images/' + login
 
@@ -149,13 +144,12 @@ apiRoutes.post('/upload', (req, res) => {
 		const imagePath = userPath + '/' + imageId;
 		image.mv(imagePath, (err) => {
 			if (err)
-			return res.status(500).json({success: false, message: err})
+				return res.status(500).json({success: false, message: err})
 			res.json({success: true, message: 'File uploaded!'})
 		});
 	})
 })
 
-app.use('/api', apiRoutes);
 }
 
 
@@ -165,3 +159,5 @@ const isLoggedIn = (req, res, next) => {
 	return next();
 	res.redirect('/');
 }
+
+export default routes

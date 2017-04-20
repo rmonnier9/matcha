@@ -12,6 +12,7 @@ import fileUpload	  	from 'express-fileupload'
 import path           from 'path'
 
 import config         from './config/config.js'
+import routes from './routes.js'
 
 // configuration ===============================================================
 mongoose.connect(config.database) // connect to our database
@@ -27,8 +28,9 @@ app.use(express.static(path.join(__dirname, 'dist'), {
   index: false
 }))
 
-
-require('./routes.js')(app, express, jwt)
+const apiRoutes = express.Router()
+routes(apiRoutes, app, jwt)
+app.use('/api', apiRoutes)
 
 // launch ======================================================================
 // app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
