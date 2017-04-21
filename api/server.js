@@ -29,10 +29,10 @@ app.use(express.static(path.join(__dirname, 'dist'), {
 }))
 
 const apiRoutes = express.Router()
-routes(apiRoutes, app, jwt)
+routes(apiRoutes, app)
 app.use('/api', apiRoutes)
 
 // launch ======================================================================
-// app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
+app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
 app.listen(port)
 console.log('The magic happens on port ' + port)
