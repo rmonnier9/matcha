@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'dist'), {
 }))
 
 const apiRoutes = express.Router()
-routes(apiRoutes, app)
+routes(apiRoutes)
 app.use('/api', apiRoutes)
 
 // launch ======================================================================
