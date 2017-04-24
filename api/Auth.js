@@ -62,7 +62,7 @@ const isLogged = (req, res, next) => {
 const whoami = (req, res) => {
   	const {currentUser} = req.decoded
   	console.log(req.decoded);
-    if (!currentUser) return res.json({success: true, message: 'Not authenticated.'})
+    if (!currentUser) return res.json({success: false, message: 'Not authenticated.'})
   	else return res.json({success: true, message: 'Authenticated as ' + currentUser})
 }
 
