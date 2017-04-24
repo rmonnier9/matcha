@@ -11,7 +11,7 @@ const validPassword = (password, hashedPassword) => {
     return bcrypt.compareSync(password, hashedPassword)
 }
 
-const signupController = (req, res, next) => {
+const signup = (req, res, next) => {
 
   const {login, email, password, confirmpassword} = req.body
   mongoConnect( db => {
@@ -35,7 +35,7 @@ const signupController = (req, res, next) => {
   })
 }
 
-const signinController = (req, res, next) => {
+const signin = (req, res, next) => {
   const {login, password} = req.body
   mongoConnect( db => {
     db.collection('users').findOne({ 'login':  login }, (err, user) => {
@@ -66,4 +66,4 @@ const whoami = (req, res) => {
   	else return res.json({success: true, message: 'Authenticated as ' + currentUser}).end()
 }
 
-export {signupController, signinController, isLogged, whoami}
+export {signup, signin, isLogged, whoami}

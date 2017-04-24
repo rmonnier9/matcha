@@ -1,22 +1,49 @@
-// app/routes.js
 import * as Auth from './Auth.js'
 import * as User from './User.js'
+import * as Interaction from './Interaction.js'
 
-const routes = (apiRoutes) => {
-
+const routes = (app) => {
+console.log(Auth);
+console.log(User);
+console.log(Interaction);
 // User authentification  ==========
-apiRoutes.post('/signup', Auth.signupController)
-apiRoutes.post('/signin', Auth.signinController)
+app.post('/api/signup', Auth.signup)
+app.post('/api/signin', Auth.signin)
 
 // Logged part  ====================
-apiRoutes.use(Auth.isLogged)
-apiRoutes.get('/whoami', Auth.whoami)
+app.use(Auth.isLogged)
+app.get('/api/whoami', Auth.whoami)
+
+// Password  ============
+// app.post('/api/update_password', User.updatePassword)
+// app.post('/api/forgot_password', User.forgotPassword)
 
 // User Datas  ==========
-apiRoutes.get('/profile/:login', User.getInfo)
-apiRoutes.post('/profile/:login', User.updateInfo)
-apiRoutes.get('/profile/:login/pictures/:id', User.getPicture)
-apiRoutes.post('/profile/:login/pictures', User.postPicture)
+app.get('/api/profile/:login', User.getInfo) //block report and like also
+app.put('/api/profile/:login', User.updateInfo)
+// app.delete('/api/profile/:login', User.deleteProfile)
+// app.get('/api/profile/:login/notifications', User.notifications)
+
+// Images  ==============
+app.get('/api/profile/:login/pictures/:id', User.getPicture)
+app.post('/api/profile/:login/pictures', User.postPicture)
+// app.delete('/api/profile/:login/pictures/:id', User.deletePicture)
+
+// Likes  ===============
+app.get('/api/:current/like/:target', Interaction.getInterest)
+app.put('/api/:current/like/:target', Interaction.updateInterest)
+
+// Report and block  ====
+// app.get('/api/:current/report', Interaction.getReports)
+// app.put('/api/:current/report/:target', Interaction.updateReport)
+// app.get('/api/:current/block', Interaction.getBlocks)
+// app.put('/api/:current/block/:target', Interaction.updateBlock)
+
+// search  ===============
+// app.post('/api/search', searchController.user)
+
+// Suggestion  ===========
+// app.get('/api/suggestions', suggestion)
 
 }
 

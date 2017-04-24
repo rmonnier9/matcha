@@ -1,6 +1,6 @@
 import {MongoClient}			from 'mongodb'
-import assert from 'assert'
-import config        from './config.js'
+import assert							from 'assert'
+import config       			from './config.js'
 
 
 const mongoConnect = (callback) => {

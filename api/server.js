@@ -2,8 +2,8 @@ import express        from 'express'
 const app              = express()
 const port             = 8000
 
-import mongoose       from 'mongoose'
 import jwt            from 'jsonwebtoken'
+import MongoConnection from './config/MongoConnection.js'
 
 import morgan      	  from 'morgan'
 import cookieParser 	from 'cookie-parser'
@@ -14,8 +14,9 @@ import path           from 'path'
 import config         from './config/config.js'
 import routes from './routes.js'
 
+MongoConnection.connect()
+
 // configuration ===============================================================
-mongoose.connect(config.database) // connect to our database
 app.set('superSecret', config.secret)
 
 app.use(morgan('dev'))
@@ -28,9 +29,17 @@ app.use(express.static(path.join(__dirname, 'dist'), {
   index: false
 }))
 
-const apiRoutes = express.Router()
-routes(apiRoutes)
-app.use('/api', apiRoutes)
+routes(app)
+
+const gracefulExit = () => {
+  MongoConnection.db.close(() => {
+    console.log('Mongo connection successfully disconnected through app termination');
+    process.exit(0);
+  })
+}
+
+// If the Node process ends, close the Mongoose connection
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 
 // launch ======================================================================
 app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
