@@ -8,7 +8,7 @@ class MongoConnection {
 			MongoClient.connect(config.database, (err, db) => {
 					assert.equal(null, err)
 					MongoConnection.db = db;
-					console.log("successfully connected !");
+					console.log("Connected to Mongo database.");
 			})
 	}
 }

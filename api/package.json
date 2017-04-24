@@ -16,7 +16,8 @@
     "jsonwebtoken": "^7.3.0",
     "mongodb": "^2.2.26",
     "mongoose": "^4.9.0",
-    "morgan": "^1.8.1"
+    "morgan": "^1.8.1",
+    "nodemailer": "^4.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",

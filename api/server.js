@@ -33,7 +33,8 @@ routes(app)
 
 const gracefulExit = () => {
   MongoConnection.db.close(() => {
-    console.log('Mongo connection successfully disconnected through app termination');
+    console.log('Closing MongoDB connection...');
+    console.log('Exiting server process...');
     process.exit(0);
   })
 }
