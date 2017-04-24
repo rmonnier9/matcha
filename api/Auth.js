@@ -1,7 +1,7 @@
-import mongoConnect from './config/mongo.js'
+import config        from './config/config.js'
+import MongoConnection	from './config/MongoConnection.js'
 import bcrypt   from 'bcrypt-nodejs'
 import jwt            from 'jsonwebtoken'
-import config        from './config/config.js'
 
 const generateHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
@@ -14,38 +14,34 @@ const validPassword = (password, hashedPassword) => {
 const signup = (req, res, next) => {
 
   const {login, email, password, confirmpassword} = req.body
-  mongoConnect( db => {
-    const col = db.collection('users')
-    col.findOne({ 'login':  login }, (err, user) => {
-      if (err) throw err
-      if (user) return res.json({ success: false, message: 'That login is already taken.' })
+ const col = MongoConnection.db.collection('users');
+ col.findOne({ 'login':  login }, (err, user) => {
+   if (err) throw err
+   if (user) return res.json({ success: false, message: 'That login is already taken.' })
 
-      if (password != confirmpassword)  return res.json({ success: false, message: 'Passwords are different.' })
-      const newUser = {}
-      newUser.email = email
-      newUser.login = login
-      newUser.pictures = []
-      newUser.password = generateHash(password)
-      col.insertOne(newUser, (err, r) => {
-        if (err) throw err
-        return res.json({ success: true, message: 'Account successfully created.' })
-        db.close()
-      })
-    })
-  })
+   if (password != confirmpassword)  return res.json({ success: false, message: 'Passwords are different.' })
+   const newUser = {}
+   newUser.email = email
+   newUser.login = login
+   newUser.pictures = []
+   newUser.password = generateHash(password)
+   col.insertOne(newUser, (err, r) => {
+     if (err) throw err
+     return res.json({ success: true, message: 'Account successfully created.' })
+     db.close()
+   })
+ })
 }
 
 const signin = (req, res, next) => {
   const {login, password} = req.body
-  mongoConnect( db => {
-    db.collection('users').findOne({ 'login':  login }, (err, user) => {
-      if (err) throw err
-      if (!user) return res.json({ success: false, message: 'Authentication failed. User not found.' })
-      if (!validPassword(password, user.password)) return res.json({ success: false, message: 'Authentication failed. Wrong password.' })
-      const token = jwt.sign({currentUser: user.login}, config.secret, { expiresIn: 3600 * 24 })
-      return res.json({ success: true, message: 'Token delivered.', token: token })
-    })
-  })
+	MongoConnection.db.collection('users').findOne({ 'login':  login }, (err, user) => {
+	   if (err) throw err
+	   if (!user) return res.json({ success: false, message: 'Authentication failed. User not found.' })
+	   if (!validPassword(password, user.password)) return res.json({ success: false, message: 'Authentication failed. Wrong password.' })
+	   const token = jwt.sign({currentUser: user.login}, config.secret, { expiresIn: 3600 * 24 })
+	   return res.json({ success: true, message: 'Token delivered.', token: token })
+	})
 }
 
 const isLogged = (req, res, next) => {
@@ -66,4 +62,19 @@ const whoami = (req, res) => {
   	else return res.json({success: true, message: 'Authenticated as ' + currentUser}).end()
 }
 
-export {signup, signin, isLogged, whoami}
+const updatePassword = (req, res) => {
+	const {currentUser} = req.decoded;
+	const {password, confirmpassword} = req.body;
+
+	if (password != confirmpassword) res.json({ success: false, message: 'Passwords are differents.' }).end();
+
+	const hashedPassword = generateHash(password);
+	const update = {password: hashedPassword};
+	MongoConnection.db.collection('users').updateOne({ login: login }, {$set: update}, (err, r) => {
+		if (err) throw err;
+		// console.log('The raw response from Mongo was ', raw);
+		res.json({success: true, message: 'Password successfully updated.'});
+	});
+}
+
+export {signup, signin, isLogged, whoami, updatePassword}

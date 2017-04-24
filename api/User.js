@@ -38,7 +38,7 @@ const getInfo = (req, res) => {
 	})
 }
 
-const updateInfo = (req, res, next) => {
+const updateInfo = (req, res) => {
   const {currentUser} = req.decoded
   const	{login} =req.params
   if (login != currentUser) return res.json({success: false, message: 'No rights for update this profile.'})
