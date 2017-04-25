@@ -40,7 +40,7 @@ app.put('/api/:current/reports/:target', Interaction.reportUser, Interaction.upd
 app.put('/api/:current/blocks/:target', Interaction.updateBlock);
 
 // search  ===============
-app.get('/api/search', Search.getInfo);
+app.get('/api/search', Search.advancedSearch);
 
 // Suggestion  ===========
 // app.get('/api/suggestions', suggestion);

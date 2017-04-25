@@ -2,7 +2,7 @@ import config        			from './config/config.js'
 import MongoConnection			from './config/MongoConnection.js'
 import User			      		from './class/User.class.js'
 
-const getInfo = (req, res) => {
+const avancedSearch = (req, res) => {
 	const {currentUser} = req.decoded;
 	const {query} = req;
 
@@ -39,4 +39,4 @@ const getInfo = (req, res) => {
 	})
 }
 
-export {getInfo}
+export {advancedSearch}
