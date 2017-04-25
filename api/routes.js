@@ -1,6 +1,7 @@
 import * as Auth from './Auth.js';
 import * as User from './User.js';
 import * as Interaction from './Interaction.js';
+import * as Search from './Search.js';
 
 const routes = (app) => {
 console.log(Auth);
@@ -34,13 +35,12 @@ app.get('/api/:current/likes/:target', Interaction.getInterest);
 app.put('/api/:current/likes/:target', Interaction.updateInterest);
 
 // Report and block  ====
-// app.get('/api/:current/reports', Interaction.getReports);
-// app.put('/api/:current/reports/:target', Interaction.updateReport);
+app.put('/api/:current/reports/:target', Interaction.reportUser, Interaction.updateBlock);
 // app.get('/api/:current/blocks', Interaction.getBlocks);
-// app.put('/api/:current/blocks/:target', Interaction.updateBlock);
+app.put('/api/:current/blocks/:target', Interaction.updateBlock);
 
 // search  ===============
-// app.post('/api/search', searchController.user);
+app.get('/api/search', Search.getInfo);
 
 // Suggestion  ===========
 // app.get('/api/suggestions', suggestion);
