@@ -1,6 +1,10 @@
 import express        from 'express';
 const app              = express();
 const port             = 8000;
+import socketIo					from 'socket.io';
+import http					from 'http';
+const server = http.createServer(app);
+const io = socketIo(server);
 
 import jwt            from 'jsonwebtoken';
 import MongoConnection from './config/MongoConnection.js';
@@ -15,6 +19,8 @@ import config         from './config/config.js';
 import routes from './routes.js';
 
 MongoConnection.connect();
+
+
 
 // configuration ===============================================================
 app.set('superSecret', config.secret);
@@ -45,5 +51,5 @@ const gracefulExit = () => {
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 
 // launch the server
-app.listen(port);
+server.listen(port);
 console.log('The magic happens on port ' + port);

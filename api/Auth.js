@@ -19,7 +19,8 @@ const signup = (req, res, next) => {
     if (user) return res.json({ success: false, error: {field: "login", message: "That login is already taken."} })
 
 	 // create json user and add it to DB
-    const newUser = User.create(email, login, password);
+	 const activationString = User.randomString(16);
+    const newUser = User.create(email, login, password, activationString);
     usersCollection.insertOne(newUser, (err, r) => {
       if (err) throw err
 
@@ -28,6 +29,22 @@ const signup = (req, res, next) => {
       return res.json({ success: true, message: 'Account successfully created.' }).end()
    })
  })
+}
+
+const emailConfirm = (req, res) => {
+	const {login, activation} = req.query;
+
+	const usersCollection = MongoConnection.db.collection('users');
+	usersCollection.findOne({ 'login':  login }, (err, user) => {
+		if (user.active == true)
+			return res.json({ success: false, message: 'Account already activated.' }).end();
+		if (user.activationString == activation) {
+			usersCollection.updateOne({ 'login':  login }, {active: true, $unset: {activationString: ""}});
+			return res.json({ success: true, message: 'Account successfully activated.' }).end();
+		}
+		else
+			return res.json({ success: false, message: 'Wrong activation string.' }).end();
+	})
 }
 
 const signin = (req, res, next) => {
@@ -94,4 +111,4 @@ const updatePassword = (req, res) => {
 	});
 }
 
-export {signup, signin, isLogged, whoami, updatePassword}
+export {signup, signin, isLogged, whoami, updatePassword, emailConfirm}

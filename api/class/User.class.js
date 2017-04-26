@@ -17,7 +17,16 @@ class User {
 		return Math.abs(ageDate.getUTCFullYear() - 1970)
 	}
 
-	static create(email, login, password) {
+	static randomString(length) {
+   	let text = "";
+   	const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+   	for (let i = 0; i < length; i++) {
+   		text += possible.charAt(Math.floor(Math.random() * possible.length));
+		}
+		return text;
+ 	}
+
+	static create(email, login, password, activationString) {
 	  const emptyArray = [];
 	  const newPassword = this.generateHash(password);
 	  return ({
@@ -28,7 +37,9 @@ class User {
 				interestedIn: emptyArray,
 				interestedPeople: emptyArray,
 				blocked: emptyArray,
-				blockedBy: emptyArray
+				blockedBy: emptyArray,
+				active: false,
+				activationString: activationString
 			});
 	}
 
