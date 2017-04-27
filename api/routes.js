@@ -10,7 +10,7 @@ console.log(Interaction);
 // User authentification  ==========
 app.post('/api/signup', Auth.signup);
 app.post('/api/signin', Auth.signin);
-app.get('/api/confirm', Auth.emailConfirm);
+// app.get('/api/confirm', Auth.emailConfirm);
 
 // Logged part  ====================
 app.use(Auth.isLogged);

@@ -28,35 +28,39 @@ const getInfo = (req, res) => {
 	const usersCollection = MongoConnection.db.collection('users');
 	usersCollection.findOne({login: login, blocked: {$not: {$eq: currentUser}}}, (err, user) => {
 		if (err) throw err;
-		if (!user) return res.status(404).json({success: false, message: 'Profile not found.'});
+		if (!user) return res.status(404).json({success: false, message: 'Profile not found.'}).end();
 
-		// get infos, send them and end request
+		// get and send infos then end request
 		const data = User.getInfos(user);
-		return res.json({success: true, message: 'Profile found.', data: data});
+		return res.json({success: true, message: 'Profile found.', data: data}).end();
 	})
 }
 
 const updateInfo = (req, res) => {
   const {currentUser} = req.decoded
   const	{login} =req.params
+  const request = req.body
+
+  // check permission
   if (login != currentUser) return res.json({success: false, message: 'Permission denied : you can\'t update this profile.'})
 
-  const request = req.body
-  const whitelist = ['firstname', 'lastname', 'email', 'birthDate', 'gender', 'interestedIn', 'about',
-                      'tags', 'profilePictureId', 'localisation']
-  const update = {};
+	// filter parameters that can be updated with a whitelist
+	const whitelist = ['firstname', 'lastname', 'birthDate', 'gender', 'lookingFor', 'about', 'tags', 'profilePictureId', 'localisation'];
+	const update = {};
+	for (let ix in whitelist)
+	{
+		const field = whitelist[ix];
+		if (request.hasOwnProperty(field)) update[field] = request[field];
+	}
 
-  for (let ix in whitelist)
-  {
-    const field = whitelist[ix];
-    if (request.hasOwnProperty(field)) update[field] = request[field]
-  }
-  console.log(update);
+	// parse new infos
+	// const error = parser.updateForm(req.body);
+   // if (error != null) return res.json({ success: false, error }).end();
 
-  MongoConnection.db.collection('users').updateOne({ login: login }, {$set: update}, (err, r) => {
-    if (err) throw err;
-    // console.log('The raw response from Mongo was ', raw)
-    return res.json({success: true, message: 'Profile successfully updated.'})
+	// update user in DB
+	MongoConnection.db.collection('users').updateOne({ login: login }, {$set: update}, (err, r) => {
+		if (err) throw err;
+		return res.json({success: true, message: 'Profile successfully updated.'}).end();
 	})
 }
 
