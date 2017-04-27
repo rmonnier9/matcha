@@ -12,9 +12,11 @@ class User {
 
 	static getAge(birthDate) {
 		if (!birthDate) return null
-		const ageDifMs = Date.now() - birthDate.getTime()
-		const ageDate = new Date(ageDifMs)
-		return Math.abs(ageDate.getUTCFullYear() - 1970)
+		if (!(birthDate instanceof Date))
+			birthDate = new Date(birthDate);
+		const ageDifMs = Date.now() - birthDate.getTime();
+		const ageDate = new Date(ageDifMs);
+		return Math.abs(ageDate.getFullYear() - 1970);
 	}
 
 	static randomString(length) {
