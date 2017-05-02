@@ -1,4 +1,4 @@
-import User			      	from './class/User.class.js'
+import User			   from './class/User.class.js';
 
 const loginField = (login) => {
   const field = "login";
@@ -70,6 +70,30 @@ const birthDateField = (birthDate) => {
 	return (null);
 };
 
+const tagsField = (tagsTab) => {
+	const field = "tags";
+	if (!tagsTab) return (null);
+
+	if (!(tagsTab instanceof Array)) return ({field, message: "tagsTab must be an array."});
+	for (let ix in tagsTab)
+	{
+		if (!tagsTab[ix].match(/^[a-zA-Z]+$/)) return ({field, message: "index " + ix + " : tags must only contain letters." });
+		if (!(tagsTab[ix].length >= 1 && tagsTab[ix].length <= 16)) return ({field, message: "index " + ix + "tags must contains between 1 and 16 letters." });
+	}
+	return (null);
+};
+
+const aboutField = (about) => {
+	const field = "about";
+	if (!about) return (null);
+
+ 	//check text size
+   if (!(text.length >= 1 && text.length <= 160)) return {field, message: "about must contain between 1 and 160 characters."};
+
+ 	// check content
+   if (!text.match(/^[a-zA-Z0-9 .,:;\?!'-\s]+$/)) return {field, message: "Invalid characters."};
+   return (null);
+};
 
 const signupForm = (data) => {
   const error = [];
@@ -94,7 +118,9 @@ const updateForm = (date) => {
 	if (testVal != null) error.push(testVal);
 	testVal = birthDateField(data.birthDate);
 	if (testVal != null) error.push(testVal);
+	testVal = tagsField(data.tags);
+	if (testVal != null) error.push(testVal);
 	return error.length == 0 ? null : error;
 }
 
-export default {signupForm, passwordField, loginField, updateForm, birthDateField}
+export default {signupForm, passwordField, loginField, updateForm, signupForm2}
