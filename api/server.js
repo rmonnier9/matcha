@@ -1,13 +1,13 @@
-import express        from 'express';
+import express          from 'express';
+import http					    from 'http';
+import socketIo					from 'socket.io';
 const app              = express();
 const port             = 8000;
-import socketIo					from 'socket.io';
-import http					from 'http';
-const server = http.createServer(app);
-const io = socketIo(server);
+const server           = http.createServer(app);
+const io               = socketIo(server);
 
-import jwt            from 'jsonwebtoken';
-import MongoConnection from './config/MongoConnection.js';
+import jwt              from 'jsonwebtoken';
+import MongoConnection  from './config/MongoConnection.js';
 
 import morgan      	  from 'morgan';
 import cookieParser 	from 'cookie-parser';
@@ -16,14 +16,14 @@ import fileUpload	  	from 'express-fileupload';
 import path           from 'path';
 
 import config         from './config/config.js';
-import routes from './routes.js';
+import routes         from './routes.js';
+import SocketHandler  from './SocketHandler.js'
 
 MongoConnection.connect();
 
+// SOCKET
+// io.on('connection', SocketHandler(users));
 
-
-// configuration ===============================================================
-app.set('superSecret', config.secret);
 
 app.use(morgan('dev'));
 app.use(cookieParser());

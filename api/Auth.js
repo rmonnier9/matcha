@@ -5,7 +5,7 @@ import jwt						from 'jsonwebtoken';
 import parser					from './parser.js';
 import mail						from './mail.js';
 
-const signup = (req, res, next) => {
+const signup = (req, res) => {
 	const {login, email, password, confirmpassword} = req.body;
 
 	// parse the form fields

@@ -123,4 +123,4 @@ const updateForm = (date) => {
 	return error.length == 0 ? null : error;
 }
 
-export default {signupForm, passwordField, loginField, updateForm, signupForm2}
+export default {signupForm, passwordField, loginField, updateForm}
