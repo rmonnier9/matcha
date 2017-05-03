@@ -5,32 +5,6 @@ import _							from 'lodash';
 import parser					from './parser.js';
 import moment					from 'moment';
 
-// const auth = (users, socket) => async (token) => {
-//
-// 	// check if token is valid
-// 	const decoded = await jwt.verify(token, config.secret);
-// 	// if (!decoded)
-//
-//   const {currentUser} = decoded;
-// 	const usersCollection = MongoConnection.db.collection('users');
-// 	const user = await usersCollection.findOne({ 'login': currentUser });
-//
-//
-// 	mongoConnectAsync(null, async (db) => {
-// 		const log = await checkToken(data, db);
-//
-// 		if (!log) return (socket.emit('connect status', 'unauthorized'));
-// 		db.collection('users').update(
-// 			{ username: log.username },
-// 			{ $set: { lastConnection: 'connected' },
-// 		});
-// 		users.push({ username: log.username, socket });
-// 		socket.on('send message', sendMessage(db, socket, log, users));
-// 		console.log(users.map((el) => el.username));
-// 	});
-// };
-
-
 class ChatServer {
 	constructor(options) {
 		this.io = options.io;

@@ -28,7 +28,7 @@ const signup = (req, res) => {
 
 		// send mail to the user and end the request
 		const subject = "Matcha - Account created !";
-		const content = "Welcome to Matcha.";
+		const content = "Welcome to Matcha. Your activation key is : " + activationString;
       mail(email, subject, content);
       return res.json({ success: true, message: 'Account successfully created.' }).end();
    })
@@ -36,7 +36,7 @@ const signup = (req, res) => {
 }
 
 const emailConfirm = (req, res) => {
-	const {login, activation} = req.query;
+	const {login, activation} = req.body;
 
 	// find user in DB
 	const usersCollection = MongoConnection.db.collection('users');
@@ -125,7 +125,7 @@ const forgotPassword = (req, res) => {
 	const {currentUser} = req.decoded;
 
 	// generate new random password
-	const newPassword = User.randomString(8);
+	const newPassword = User.randomString(12);
 
 	// hash the password
 	const hashedPassword = User.generateHash(newPassword);
@@ -139,7 +139,7 @@ const forgotPassword = (req, res) => {
 		// find the user in DB to get email
 		usersCollection.findOne({ 'login':  login }, (err, user) => {
 			if (err) throw err;
-			const email = user.email;
+			const {email} = user;
 
 			//send mail with password and then end the request
 			const subject = "Forgot password - Your new password";
@@ -150,4 +150,4 @@ const forgotPassword = (req, res) => {
 	});
 }
 
-export {signup, signin, isLogged, whoami, updatePassword, emailConfirm}
+export {signup, signin, isLogged, whoami, updatePassword, forgotPassword, emailConfirm}

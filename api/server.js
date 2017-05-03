@@ -41,10 +41,13 @@ app.use(express.static(path.join(__dirname, 'dist'), {
 }));
 
 // load chat server
-// new ChatServer({io: io}).init();
+const chatServer = new ChatServer({io: io});
+chatServer.init();
+
+console.log(chatServer);
 
 // load all API routes
-routes(app);
+routes(app, chatServer.users);
 
 // if a request doesn't match a route, send the front app
 app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
