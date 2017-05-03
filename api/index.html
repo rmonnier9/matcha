@@ -7,7 +7,8 @@
       body { font: 13px Helvetica, Arial; }
       #form1 { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
 		#form2 { background: #000; padding: 3px; position: fixed; bottom: 50px; width: 100%; }
-				#form3 { background: #000; padding: 3px; position: fixed; bottom: 100px; width: 100%; }
+		#form3 { background: #000; padding: 3px; position: fixed; bottom: 100px; width: 100%; }
+		#form4 { background: #000; padding: 3px; position: fixed; bottom: 150px; width: 100%; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
@@ -26,13 +27,16 @@
 	 <form id="form3" action="">
 	  <input id="omline" autocomplete="off" /><button>oneline</button>
 	 </form>
+	 	 <form id="form4" action="">
+	 <input id="to" autocomplete="off" /><button>oneline</button>
+	 	 </form>
 	 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 	 <script src="/socket.io/socket.io.js"></script>
 	 <script>
 	   $(function () {
 	     var socket = io();
 	     $('#form1').submit(function(){
-	       socket.emit('chat message', $('#m').val());
+	       socket.emit('chat message', {message: $('#m').val(), target: $('#to').val()});
 	       $('#m').val('');
 	       return false;
 	     });
@@ -46,7 +50,8 @@
 			 return false;
 		  });
 		  socket.on('chat message', function(msg){
-			  $('#messages').append($('<li>').text(msg));
+			  $('#messages').append($('<li>').text(msg.from));
+			  $('#messages').append($('<li>').text(msg.message));
 		  });
 		  socket.on('auth', function(msg){
 			  console.log(msg);

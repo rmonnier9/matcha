@@ -30,9 +30,9 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 
 // front app for chat tests
-app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
-});
+// app.get('/', function(req, res){
+//   res.sendFile(__dirname + '/index.html');
+// });
 
 // expose dist folder
 app.use(express.static(path.join(__dirname, 'dist'), {
@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, 'dist'), {
 }));
 
 // load chat server
-new ChatServer({io: io}).init();
+// new ChatServer({io: io}).init();
 
 // load all API routes
 routes(app);

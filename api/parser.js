@@ -95,6 +95,17 @@ const aboutField = (about) => {
    return (null);
 };
 
+const message = (message) => {
+	if (!message) return (false);
+
+ 	//check message size
+   if (!(message.length >= 1 && message.length <= 160)) return (false);
+
+ 	// check content
+   if (!message.match(/^[a-zA-Z0-9 .,:;\?!'-\s]+$/)) return (false);
+   return (true);
+};
+
 const signupForm = (data) => {
   const error = [];
   let testVal;
@@ -123,4 +134,4 @@ const updateForm = (date) => {
 	return error.length == 0 ? null : error;
 }
 
-export default {signupForm, passwordField, loginField, updateForm}
+export default {signupForm, passwordField, loginField, updateForm, message}

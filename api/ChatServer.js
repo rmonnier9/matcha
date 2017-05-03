@@ -2,6 +2,7 @@ import config        		from './config/config.js';
 import MongoConnection		from './config/MongoConnection.js';
 import jwt						from 'jsonwebtoken';
 import _							from 'lodash';
+import parser					from './parser.js';
 import moment					from 'moment';
 
 // const auth = (users, socket) => async (token) => {
@@ -57,8 +58,7 @@ class ChatServer {
 				this.users.push(newUser);
 
 				const usersCollection = MongoConnection.db.collection('users');
-				console.log(newUser);
-			   usersCollection.updateOne({ login: newUser.login },
+			   usersCollection.updateOne({ login: currentUser },
 													{ $set: { lastConnection: 'connected' },
 												});
 
@@ -73,7 +73,6 @@ class ChatServer {
 	}
 
 	setResponseListeners(user) {
-		// triggered when a socket disconnects
 		user.socket.on('disconnect', () => {
 			// remove the user
 			_.remove(this.users, (value) => user.socket.id == value.socket.id);
@@ -84,7 +83,7 @@ class ChatServer {
 												{ $set: { lastConnection: moment().format('MM-DD-YYYY') },
 											});
 		});
-		// triggered when socket requests online users
+
 		user.socket.on('onlineUsers', () => {
 			const onlineUsers = _.map(this.users, (item) => {
 				return item.login;
@@ -92,11 +91,27 @@ class ChatServer {
 			user.socket.emit('onlineUsers', onlineUsers);
 		});
 
-		// triggered when socket send a chat message
-		user.socket.on('chat message', (chat) => {
-			if (chat) user.socket.emit('chat message', chat);
+		user.socket.on('chat message', ({ message, target }) => {
+			// console.log(target, message);
+			// parse the message
+		  if (!parser.message(message)) return false;
+
+		  const socketTargets = this.users.filter((user) => user.login == target);
+		//   console.log(socketTargets);
+		  if (!socketTargets.length) return false;
+		  const data = {from: user.login,
+		  					message};
+			socketTargets.forEach((user) => {
+					user.socket.emit('chat message', data);
+			});
+			// console.log(data);
+			const chatCollection = MongoConnection.db.collection('chat');
+			chatCollection.insertOne({ 'from': user.login,
+												'to': target,
+											 	message,
+												at: moment().format() });
 		});
-	}
+	};
 }
 
 
