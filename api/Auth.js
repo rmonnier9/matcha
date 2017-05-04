@@ -8,7 +8,6 @@ import mail						from './mail.js';
 const signup = async (req, res, next) => {
 	const {login, email, password, confirmpassword} = req.body;
 
-	await wait(1000);
 	// parse the form fields
 	const error = parser.signupForm(req.body);
 	if (error != null) return res.json({ success: false, error }).end();
@@ -31,11 +30,6 @@ const signup = async (req, res, next) => {
    mail(email, subject, content);
    return res.json({ success: true, message: 'Account successfully created.' }).end();
 }
-
-function wait(ms) {
-  return new Promise((resolve, reject) => setTimeout(() => reject("test"), ms));
-}
-
 
 const emailConfirm = async (req, res) => {
 	const {login, activation} = req.body;
@@ -72,6 +66,8 @@ const signin = async (req, res, next) => {
 
 	// create a session token for 2 hours, send it then end the request
    const token = jwt.sign({currentUser: user.login}, config.secret, { expiresIn: 3600 * 2 });
+// 	res.set('Access-Control-Expose-Headers', 'x-access-token');
+// res.set('x-access-token', token);
    return res.json({ success: true, message: 'Token delivered.', token: token }).end();
 }
 
