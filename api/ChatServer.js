@@ -4,6 +4,7 @@ import jwt						from 'jsonwebtoken';
 import _							from 'lodash';
 import parser					from './parser.js';
 import moment					from 'moment';
+import * as Notification		from './Notification.js';
 
 class ChatServer {
 	constructor(options) {
@@ -20,8 +21,6 @@ class ChatServer {
 
 	auth(socket) {
 		return ((token) => {
-			console.log('inside auth');
-			console.log(token);
 			jwt.verify(token, config.secret, (err, decoded) => {
 				if (err) return socket.emit('auth', 'Auth error : Invalid token.');
 				const {currentUser} = decoded;
@@ -51,11 +50,17 @@ class ChatServer {
 			// remove the user
 			_.remove(this.users, (value) => user.socket.id == value.socket.id);
 
-			// set last connection
-			const usersCollection = MongoConnection.db.collection('users');
-			usersCollection.updateOne({ login: user.login },
-												{ $set: { lastConnection: moment().format('MM-DD-YYYY') },
-											});
+			// check if there is no more socket connection for the user
+			const isConnected = _.find(this.users, (value) => user.login == value.login);
+
+			// in that case, set last connection
+			if (!isConnected) {
+				const usersCollection = MongoConnection.db.collection('users');
+				usersCollection.updateOne({ login: user.login },
+													{
+														$set: { lastConnection: moment().format() },
+													});
+			}
 		});
 
 		user.socket.on('onlineUsers', () => {
@@ -66,24 +71,42 @@ class ChatServer {
 		});
 
 		user.socket.on('chat message', ({ message, target }) => {
-			// console.log(target, message);
+
 			// parse the message
 		  if (!parser.message(message)) return false;
 
-		  const socketTargets = this.users.filter((user) => user.login == target);
-		//   console.log(socketTargets);
-		  if (!socketTargets.length) return false;
-		  const data = {from: user.login,
-		  					message};
-			socketTargets.forEach((user) => {
-					user.socket.emit('chat message', data);
-			});
-			// console.log(data);
-			const chatCollection = MongoConnection.db.collection('chat');
-			chatCollection.insertOne({ 'from': user.login,
-												'to': target,
-											 	message,
-												at: moment().format() });
+		  // get user from DB
+		  const usersCollection = MongoConnection.db.collection('users');
+		  usersCollection.findOne({
+			  								login: target,
+			  								blocked: {$not: {$eq: user.login}},
+											matches: user.login
+											}, (err, targetUser) => {
+			  if (err) throw err;
+			  if (!targetUser) return false;
+
+			  // add message to DB
+			  const chatCollection = MongoConnection.db.collection('chat');
+			  chatCollection.insertOne({ 'from': user.login,
+												  'to': target,
+												  message,
+												  at: moment().format()
+											  });
+
+				// check if user is connected
+			  const socketTargets = this.users.filter((user) => user.login == target);
+			  if (socketTargets.length) {
+				  const data = {from: user.login, message};
+				  socketTargets.forEach((user) => {
+						  						user.socket.emit('chat message', data);
+					  							});
+			  }
+			  else {
+				  // send and update user notifications
+					const newNotification = user.login + " has sent you a message.";
+					Notification.send(this.users, newNotification, targetUser);
+			  }
+		  })
 		});
 	};
 }

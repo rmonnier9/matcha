@@ -30,9 +30,9 @@ app.use(bodyParser.json());
 app.use(fileUpload());
 
 // front app for chat tests
-// app.get('/', function(req, res){
-//   res.sendFile(__dirname + '/index.html');
-// });
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
 
 // expose dist folder
 app.use(express.static(path.join(__dirname, 'dist'), {
@@ -40,14 +40,22 @@ app.use(express.static(path.join(__dirname, 'dist'), {
   index: false
 }));
 
-// load chat server
+// load socket server
 const chatServer = new ChatServer({io: io});
 chatServer.init();
 
-console.log(chatServer);
-
 // load all API routes
 routes(app, chatServer.users);
+
+// custom error handling
+app.use((err, req, res, next) => {
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.status(500);
+  console.log(err);
+  res.json({ error: "Internal server error." });
+});
 
 // if a request doesn't match a route, send the front app
 app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
