@@ -29,13 +29,14 @@ app.get('/api/forgot_password', Auth.forgotPassword);
 
 // User Datas  ==========
 app.get('/api/profile/:login', User.getInfo(users)); //block report and like also
+app.get('/api/myprofile', User.getMyInfo); //block report and like also
 app.put('/api/profile/:login', User.updateInfo);
 // app.delete('/api/profile/:login', User.deleteProfile);
 // app.get('/api/profile/:login/notifications', User.notifications);
 
 // Images  ==============
-app.get('/api/profile/:login/pictures/:id', User.getPicture);
-app.post('/api/profile/:login/pictures', User.postPicture);
+app.get('/api/pictures/:login/:id', User.getPicture);
+app.post('/api/pictures', User.postPicture);
 // app.delete('/api/profile/:login/pictures/:id', User.deletePicture);
 
 // Likes  ===============
@@ -43,9 +44,9 @@ app.get('/api/:current/likes/:target', Interaction.getInterest);
 app.put('/api/:current/likes/:target', Interaction.updateInterest(users));
 
 // Report and block  ====
-app.put('/api/:current/reports/:target', Interaction.reportUser, Interaction.updateBlock);
-// app.get('/api/:current/blocks', Interaction.getBlocks);
-app.put('/api/:current/blocks/:target', Interaction.updateBlock);
+app.post('/api/reports/:target', Interaction.reportUser, Interaction.updateBlock);
+app.get('/api/blocks/:target', Interaction.getBlockStatus);
+app.post('/api/blocks/:target', Interaction.updateBlock);
 
 // search  ===============
 app.get('/api/search', rejectedCatcher(Search.advancedSearch));

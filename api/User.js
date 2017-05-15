@@ -50,8 +50,21 @@ const getInfo = (users) => async (req, res) => {
 		}
 	}
 	// get and send infos then end request
-	const data = User.getInfos(user);
-	return res.json({success: true, message: 'Profile found.', data: data}).end();
+	const profile = User.getInfos(user);
+	return res.json({success: true, message: 'Profile found.', profile}).end();
+}
+
+const getMyInfo = async (req, res) => {
+	const {currentUser} = req.decoded;
+
+	// get user from DB
+	const usersCollection = MongoConnection.db.collection('users');
+	const user = await usersCollection.findOne({login: currentUser});
+	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'}).end();
+
+	// get and send infos then end request
+	const profile = User.getInfos(user);
+	return res.json({success: true, message: 'Profile found.', profile}).end();
 }
 
 const updateInfo = async (req, res) => {
@@ -97,6 +110,7 @@ const getPicture = async (req, res, next) => {
 }
 
 const postPicture = async (req, res, next) => {
+	console.log(req);
 	// check if a file has been uploaded
 	if (!req.files || !req.files.image)
 	 return res.status(400).json({success: false, message: 'No images were uploaded.'});
@@ -136,4 +150,4 @@ const postPicture = async (req, res, next) => {
 }
 
 
-export {getInfo, updateInfo, getPicture, postPicture}
+export {getInfo, getMyInfo, updateInfo, getPicture, postPicture}
