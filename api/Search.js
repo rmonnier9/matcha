@@ -23,6 +23,17 @@ const advancedSearch = async (req, res, next) => {
 				{ lastname: regex },
 		] };
 	}
+	// if (query.agemin && query.agemax)
+	// {
+	// 	const ageMin = Date.now() - query.agemin * 360 * 24 * 3600 * 1000
+	// 	const ageMin = Date.now() - query.agemin * 360 * 24 * 3600 * 1000
+	// 	searchOBJ.$and[i] = {
+	// 		$or: [
+	// 			{ login: regex },
+	// 			{ firstname: regex },
+	// 			{ lastname: regex },
+	// 	] };
+	// }
 
 	// define number of results per pages
 	const numberPerPage = 2;

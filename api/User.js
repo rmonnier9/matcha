@@ -69,24 +69,22 @@ const getMyInfo = async (req, res) => {
 
 const updateInfo = async (req, res) => {
   const {currentUser} = req.decoded
-  const	{login} =req.params
-  const request = req.body
+  const { body } = req
 
-  // check permission
-  if (login != currentUser) return res.json({success: false, message: 'Permission denied : you can\'t update this profile.'})
+  // parse the form fields
+  const error = parser.updateForm(body);
+  if (error != null) return res.json({ success: false, error }).end();
+
 
 	// filter parameters that can be updated with a whitelist
-	const whitelist = ['firstname', 'lastname', 'birthDate', 'gender', 'lookingFor', 'about', 'tags', 'profilePictureId', 'localisation'];
+	const whitelist = ['firstname', 'lastname', 'gender', 'lookingFor', 'about', 'tags', 'profilePictureId', 'localisation'];
 	const update = {};
 	for (let ix in whitelist)
 	{
 		const field = whitelist[ix];
-		if (request.hasOwnProperty(field)) update[field] = request[field];
+		if (body.hasOwnProperty(field)) update[field] = body[field];
 	}
-
-	// parse new infos
-	// const error = parser.updateForm(req.body);
-   // if (error != null) return res.json({ success: false, error }).end();
+	if (body.hasOwnProperty('birthDate')) update['birthDate'] = new Date(body['birthDate'])
 
 	// update user in DB
 	const usersCollection = MongoConnection.db.collection('users');

@@ -30,13 +30,13 @@ app.get('/api/forgot_password', Auth.forgotPassword);
 // User Datas  ==========
 app.get('/api/profile/:login', User.getInfo(users)); //block report and like also
 app.get('/api/myprofile', User.getMyInfo); //block report and like also
-app.put('/api/profile/:login', User.updateInfo);
+app.put('/api/myprofile', User.updateInfo);
 // app.delete('/api/profile/:login', User.deleteProfile);
 // app.get('/api/profile/:login/notifications', User.notifications);
 
 // Images  ==============
 app.get('/api/pictures/:login/:id', User.getPicture);
-app.post('/api/pictures', User.postPicture);
+app.post('/api/myprofile/pictures', User.postPicture);
 // app.delete('/api/profile/:login/pictures/:id', User.deletePicture);
 
 // Likes  ===============

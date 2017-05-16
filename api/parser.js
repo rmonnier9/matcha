@@ -131,6 +131,8 @@ const updateForm = (date) => {
 	if (testVal != null) error.push(testVal);
 	testVal = tagsField(data.tags);
 	if (testVal != null) error.push(testVal);
+	testVal = aboutField(data.about);
+	if (testVal != null) error.push(testVal);
 	return error.length == 0 ? null : error;
 }
 
