@@ -1,11 +1,12 @@
-import config        			from './config/config.js';
-import MongoConnection			from './config/MongoConnection.js';
-import User			      		from './class/User.class.js';
-import * as Notification		from './Notification.js';
-import fs 							from 'fs';
-import uuid							from 'uuid';
-import path							from 'path';
-import _								from 'lodash';
+import config        			from './config/config.js'
+import MongoConnection			from './config/MongoConnection.js'
+import User			      		from './class/User.class.js'
+import * as Notification		from './Notification.js'
+import fs 							from 'fs'
+import uuid							from 'uuid'
+import path							from 'path'
+import _								from 'lodash'
+import parser					from './parser.js'
 
 const createFolder = (userPath) => {
   return new Promise((resolve, reject) => {
@@ -88,7 +89,7 @@ const updateInfo = async (req, res) => {
 
 	// update user in DB
 	const usersCollection = MongoConnection.db.collection('users');
-   const r = await usersCollection.updateOne({ login: login }, {$set: update});
+   const r = await usersCollection.updateOne({ login: currentUser }, {$set: update});
 	return res.json({success: true, message: 'Profile successfully updated.'}).end();
 }
 

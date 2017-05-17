@@ -40,19 +40,19 @@ const nameField = (field, text) => {
 
 const genderField = (gender) => {
 	const field = "gender";
-	if (!gend) return (null);
+	if (!gender) return (null);
 
 	// check if the value is valid
-	if (!gend.match(/^(male|female)$/)) return ({field, message: 'Gender must be either male or female.' });
+	if (!gender.match(/^(male|female)$/)) return ({field, message: 'Gender must be either male or female.' });
 	return (null);
 };
 
 const lookingForField = (lookingFor) => {
 	const field = "lookingFor";
-	if (!gend) return (null);
+	if (!lookingFor) return (null);
 
 	// check if the value is valid
-	if (!gend.match(/^(male|female|both)$/)) return ({field, message: 'lookingFor must be either male, female or both.' });
+	if (!lookingFor.match(/^(male|female|both)$/)) return ({field, message: 'lookingFor must be either male, female or both.' });
 	return (null);
 };
 
@@ -116,7 +116,7 @@ const signupForm = (data) => {
   return error.length == 0 ? null : error;
 }
 
-const updateForm = (date) => {
+const updateForm = (data) => {
 	const error = [];
 	let testVal;
 	testVal = nameField("firstname", data.firstname);
