@@ -36,16 +36,15 @@ const advancedSearch = async (req, res, next) => {
 	// }
 
 	// define number of results per pages
-	const numberPerPage = 2;
-	const pageNumber = query.page != null ? query.page : 1;
-	const toSkip = (pageNumber - 1) * numberPerPage;
+	const toSkip = parseInt(query.start)
+	const numberPerPage = 2
 
 	// execute the query in the DB
 	const usersCollection = MongoConnection.db.collection('users');
 	const cursor = usersCollection.find(searchOBJ)
 											.skip(toSkip).limit(numberPerPage);
 	const users = await cursor.toArray();
-	return res.json({success: true, message: 'Search successfull.', data: users}).end();
+	return res.json({success: true, message: 'Search successfull.', users}).end();
 }
 
 export {advancedSearch}

@@ -20,7 +20,7 @@ app.post('/api/signin', Auth.signin);
 app.post('/api/confirm', Auth.emailConfirm);
 
 // Logged part  ====================
-app.use(Auth.isLogged);
+app.use('/api', Auth.isLogged);
 app.get('/api/whoami', Auth.whoami);
 
 // Password  ============

@@ -35,7 +35,7 @@ app.use(fileUpload());
 // });
 
 // expose dist folder
-app.use(express.static(path.join(__dirname, 'dist'), {
+app.use(express.static(path.join(__dirname, 'build'), {
   dotfiles: 'ignore',
   index: false
 }));
@@ -58,7 +58,7 @@ app.use((err, req, res, next) => {
 });
 
 // if a request doesn't match a route, send the front app
-app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'dist', 'index.html')));
+app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'build', 'index.html')));
 
 // if the Node process ends, close the Mongoose connection
 const gracefulExit = () => {
@@ -70,5 +70,5 @@ const gracefulExit = () => {
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 
 // launch the server
-server.listen(port);
+server.listen(process.env.PORT || port);
 console.log('The magic happens on port ' + port);

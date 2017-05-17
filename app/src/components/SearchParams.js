@@ -11,13 +11,13 @@ const SearchInput = ({ children, label }) =>
 
 class SearchParams extends Component {
 	render() {
-		const { onSubmitClick, serverResponse, ageVal, popVal, distVal, updateAge, updatePop, updateDist } = this.props
+		const { onSubmitClick, serverResponse, ageVal, popVal, distVal, updateAge, updatePop, updateDist, name } = this.props
 		return (
 			<div className="search-params">
-		     <form onSubmit={onSubmitClick}>
+		     <form method="get" action="#">
 		 		<div className="errorMessageMain">{serverResponse}</div>
 				<div className="label">Name or username</div>
-				<input type="text" name="name" />
+				<input type="text" name="name" value={name} />
 				<div className="leftSearch">
 				<SearchInput label="age">
 					<InputRange maxValue={100} minValue={18} value={ageVal} onChange={updateAge} />
