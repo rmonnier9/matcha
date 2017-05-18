@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
+
 import {
-	Redirect
+	Redirect,
+	Link
 } from 'react-router-dom'
 import { loginUser, logoutUser } from '../actions'
 import { connect } from 'react-redux'
@@ -17,23 +19,24 @@ class Login extends Component {
 		}
 
      return (
-       <div>
-         <input type='text' ref='login' className="form-control" placeholder='Login'/>
-         <input type='password' ref='password' className="form-control" placeholder='Password'/>
-         <button onClick={(event) => this.handleClick(event)} className="btn btn-primary">
-           Login
-         </button>
+	 <div className="signup">
+		<h2 className="form-signup-heading">Sign up</h2>
+      <input type='text' ref='login' className="form-control" placeholder='Login'/>
+      <input type='password' ref='password' className="form-control" placeholder='Password'/>
+      <button onClick={(event) => this.handleClick(event)} className="btn btn-primary">
+        Login
+      </button>
 
-         {errorMessage &&
-           <p>{errorMessage}</p>
-         }
+      {errorMessage &&
+        <p>{errorMessage}</p>
+      }
+		<Link to="/signup">Sign up ?</Link>
        </div>
      )
    }
 
-   handleClick(event) {
-     const login = this.refs.login
-     const password = this.refs.password
+   handleClick = (event) => {
+     const {login, password} = this.refs
      const creds = { login: login.value.trim(), password: password.value.trim() }
      this.props.dispatch(loginUser(creds))
    }

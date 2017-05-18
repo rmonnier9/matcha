@@ -1,6 +1,7 @@
 import config        			from './config/config.js'
 import MongoConnection			from './config/MongoConnection.js'
 import User			      		from './class/User.class.js'
+import queryString from 'query-string'
 
 const advancedSearch = async (req, res, next) => {
 	const {currentUser} = req.decoded;
@@ -35,16 +36,22 @@ const advancedSearch = async (req, res, next) => {
 	// 	] };
 	// }
 
-	// define number of results per pages
-	const toSkip = parseInt(query.start)
-	const numberPerPage = 2
+	// define number of results per requests
+	const toSkip = !query.start ? 0 : parseInt(query.start)
+	const numberPerRequest = 2
 
 	// execute the query in the DB
 	const usersCollection = MongoConnection.db.collection('users');
 	const cursor = usersCollection.find(searchOBJ)
-											.skip(toSkip).limit(numberPerPage);
+											.skip(toSkip).limit(numberPerRequest);
 	const users = await cursor.toArray();
-	return res.json({success: true, message: 'Search successfull.', users}).end();
+
+	const resObj = {success: true, message: 'Search successfull.', users}
+	if (users.length) {
+		query.start = toSkip + numberPerRequest
+		resObj.nextHref = '/search?' + queryString.stringify(query)
+	}
+	return res.json(resObj).end();
 }
 
 export {advancedSearch}

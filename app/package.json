@@ -8,6 +8,8 @@
     "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-infinite-scroll": "^0.1.5",
+    "react-infinite-scroller": "^1.0.12",
     "react-input-range": "^1.1.3",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",

@@ -4,6 +4,12 @@ import callApi from '../callApi.js'
 
 import Profile from './Profile.js'
 
+const FormInput = ({ children, label }) =>
+	<div className="searchInput">
+		<div className="searchLabel">{label}</div>
+		{children}
+	</div>
+
 class MyProfileContainer extends Component {
 	state = {
 		data: null,

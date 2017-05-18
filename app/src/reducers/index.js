@@ -40,59 +40,60 @@ function auth(state = {
 }
 
 
-function profile(state = {
-  isFetching: false,
-  didInvalidate: false
-}, action) {
-  switch (action.type) {
-    case INVALIDATE_PROFILE:
-      return Object.assign({}, state, {
-        didInvalidate: true
-      })
-    case REQUEST_PROFILE:
-      return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
-      })
-    case RECEIVE_PROFILE:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didInvalidate: false,
-        profile: action.data,
-        lastUpdated: action.receivedAt
-      })
-    default:
-      return state
-  }
-}
-
-function currentProfile(state = {}, action) {
-  switch (action.type) {
-	  case INVALIDATE_PROFILE:
-	  case RECEIVE_PROFILE:
-	  case REQUEST_PROFILE:
-	  	return Object.assign({}, state, {
-        [action.login]: profile(state[action.login], action)
-      })
-    default:
-      return state
-  }
-}
 
 const rootReducer = combineReducers({
-	auth,
-	currentProfile
+	auth
 })
 
 export default rootReducer
 
 // ------------------ OLD --------------------------- //
-
-function selectedProfile(state = '', action) {
-  switch (action.type) {
-    case SELECT_PROFILE:
-      return action.login
-    default:
-      return state
-  }
-}
+// 
+// function selectedProfile(state = '', action) {
+//   switch (action.type) {
+//     case SELECT_PROFILE:
+//       return action.login
+//     default:
+//       return state
+//   }
+// }
+//
+//
+// function profile(state = {
+//   isFetching: false,
+//   didInvalidate: false
+// }, action) {
+//   switch (action.type) {
+//     case INVALIDATE_PROFILE:
+//       return Object.assign({}, state, {
+//         didInvalidate: true
+//       })
+//     case REQUEST_PROFILE:
+//       return Object.assign({}, state, {
+//         isFetching: true,
+//         didInvalidate: false
+//       })
+//     case RECEIVE_PROFILE:
+//       return Object.assign({}, state, {
+//         isFetching: false,
+//         didInvalidate: false,
+//         profile: action.data,
+//         lastUpdated: action.receivedAt
+//       })
+//     default:
+//       return state
+//   }
+// }
+//
+// function currentProfile(state = {}, action) {
+//   switch (action.type) {
+// 	  case INVALIDATE_PROFILE:
+// 	  case RECEIVE_PROFILE:
+// 	  case REQUEST_PROFILE:
+// 	  	return Object.assign({}, state, {
+//         [action.login]: profile(state[action.login], action)
+//       })
+//     default:
+//       return state
+//   }
+// }
