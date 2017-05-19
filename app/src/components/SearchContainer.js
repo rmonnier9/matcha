@@ -13,23 +13,13 @@ class SearchContainer extends Component {
 	constructor(props) {
 		super(props)
 		const { search } = this.props.location
-		console.log(search);
 		const query = queryString.parse(search)
-		console.log(query);
 		this.state = {
-			subDis: false,
-			subVal: '&nbsp;',
-			advanced: false,
 			serverResponse: null,
-			ageVal: {
-				min: 18,
-				max: 100,
-			},
+			name: query.name,
+			ageVal: query.age,
+			distVal: query.distance,
 			popVal: {
-				min: 0,
-				max: 100,
-			},
-			distVal: {
 				min: 0,
 				max: 100,
 			},
@@ -37,7 +27,6 @@ class SearchContainer extends Component {
 				min: 0,
 				max: 100,
 			},
-			name: query.name,
 			data: null,
 			users: [],
 			hasMoreItems: true,
@@ -54,15 +43,11 @@ class SearchContainer extends Component {
 		}
 		else {
 			url = pathname + search
-			url += '&agemin=' + ageVal.min
-			url += '&agemax=' + ageVal.max
 			url += '&popmin=' + popVal.min
 			url += '&popmax=' + popVal.max
-			url += '&distmin=' + distVal.min
-			url += '&distmax=' + distVal.max
 		 }
-		 console.log(url);
 		 callApi(url, 'GET').then(json => {
+			 console.log(json);
 			 const {data} = json
 			 const users = [...this.state.users]
 
@@ -83,28 +68,31 @@ class SearchContainer extends Component {
 		 })
  	}
 
-	updateAge = (value) => this.setState({ ageVal: value })
+	updateAge = (e) => this.setState({ ageVal: e.target.value })
 	updatePop = (value) => this.setState({ popVal: value })
-	updateDist = (value) => this.setState({ distVal: value })
+	updateDist = (e) => this.setState({ distVal: e.target.value })
 	updateName = (e) => this.setState({ name: e.target.value })
 
 	render() {
-		console.log(this.state);
-		const {serverResponse, ageVal, distVal, popVal, name, data} = this.state
+		console.log("RENDER", this.state);
+		const {serverResponse, ageVal, distVal, popVal, name, data, users} = this.state
 
 		const items = []
-		this.state.users.map((user, key) => {
-			const url = "/profile/" + user.login
-			 items.push(
- 					<li key={key} className="users" >
- 						<Link to={url}>{user.login}</Link>
- 						<EncartLeft
- 							profile={user}
- 						/>
- 					</li>
-			 )
-		})
-		        const loader = <div className="loader">Loading ...</div>;
+		if (!users.length) items.push(<p key={0}>No results</p>)
+		else {
+			users.map((user, key) => {
+				const url = "/profile/" + user.login
+				 items.push(
+	 					<li key={key} className="users" >
+	 						<Link to={url}>{user.login}</Link>
+	 						<EncartLeft
+	 							profile={user}
+	 						/>
+	 					</li>
+				 )
+			})
+		}
+		const loader = <div className="loader">Loading ...</div>;
 
 		return (
 			<div className="search">

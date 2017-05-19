@@ -8,7 +8,29 @@ import Profile from './Profile.js'
 class ProfileContainer extends React.Component{
 	constructor(){
 		super()
-		this.state = {data: null, alreadyBlocked: false}
+		this.state = {
+							data: null,
+							alreadyBlocked: false,
+							alreadyLiked: false}
+	}
+
+	onLikeClick = (e, likes) => {
+		const {login} = this.props.match.params
+		const url = '/likes/' + login
+		callApi(url, 'POST', {likes})
+		.then(({ data }) => {
+			console.log("result like", data);
+			console.log(likes);
+			if (data.success === true)
+			{
+				if (likes === true) {
+					this.setState({alreadyLiked: true})
+				}
+				else {
+					this.setState({alreadyLiked: false})
+				}
+			}
+		})
 	}
 
 	onBlockClick = (e, blocks) => {
@@ -46,21 +68,27 @@ class ProfileContainer extends React.Component{
 			this.setState({data})
 		})
 		const {login} = this.props.match.params
-		const alreadyBlockURL = '/blocks/' + login
-		callApi(alreadyBlockURL, 'GET').then(json => {
+		const alreadyBlockedURL = '/blocks/' + login
+		callApi(alreadyBlockedURL, 'GET').then(json => {
 			const {data} = json
 			const {alreadyBlocked} = data
 			if (alreadyBlocked) this.setState({alreadyBlocked})
 		})
+		const alreadyLikedURL = '/likes/' + login
+		callApi(alreadyLikedURL, 'GET').then(json => {
+			const {data} = json
+			console.log("result lie", data);
+			const {alreadyLiked} = data
+			if (alreadyLiked) this.setState({alreadyLiked})
+		})
 	}
 
 	render(){
-		const { data, alreadyBlocked } = this.state
+		const { data, alreadyBlocked, alreadyLiked } = this.state
 
 		if (!data) { return (<div><h1>Loading...</h1></div>) }
 		const {profile, message} = data
-		console.log("ere", data);
-		console.log(profile);
+		console.log("RENDER", profile);
 		return (
 			<div className="profile">
 				<Profile
@@ -68,6 +96,9 @@ class ProfileContainer extends React.Component{
 					onReportClick={this.onReportClick}
 					onBlockClick={this.onBlockClick}
 					alreadyBlocked={alreadyBlocked}
+					onLikeClick={this.onLikeClick}
+					alreadyLiked={alreadyLiked}
+					myprofile={false}
 				/>
 			</div>
 		)

@@ -3,39 +3,36 @@ import mail						from './mail.js';
 import * as Notification	from './Notification.js';
 
 const getInterest = async (req, res) => {
-  const	{current, target} = req.params
+  const	{target} = req.params
 	const {currentUser} = req.decoded
-	if (current != currentUser) return res.json({success: false, message: 'No rights for accessing this interaction.'})
 
 	const usersCollection = MongoConnection.db.collection('users');
 	const user = await usersCollection.findOne({login: target, blocked: {$ne: currentUser}});
 	if (!user) return res.json({success: false, message: 'Wrong target : user targeted doesn\'t exists'});
 
-	// check if current likes target
-	const data = user.interestedPeople.indexOf(current) == -1 ? false : true;
-	res.json({success: true, data: data})
+	// check if currentUser likes target
+	const alreadyLiked = user.interestedPeople.indexOf(currentUser) == -1 ? false : true;
+	res.json({success: true, alreadyLiked})
 }
 
 const updateInterest = (users) => async (req, res) => {
 	const {currentUser} = req.decoded;
-	const	{current, target} = req.params;
+	const	{target} = req.params;
 	let {likes} = req.body;
 
 	// parse value of likes field
-	if (likes != 'true' && likes != 'false') return res.json({success: false, message: 'Invalid request : likes must be either true or false.'});
+	if (likes != 'true' && likes != 'false' && likes !== true && likes !== false) return res.json({success: false, message: 'Invalid request : likes must be either true or false.'});
 
 	// convert likes into a boolean
-	likes = likes == 'true' ? true : false;
-
-	// check permission
-	if (current != currentUser) return res.json({success: false, message: 'Permission denied : you can\'t update this interaction.'});
+	if (typeof likes == 'string')
+		likes = likes == 'true' ? true : false;
 
 	// check if user try to like himself
-	if (current == target) return res.json({success: false, message: 'Wrong target : interest for himself impossible.'});
+	if (currentUser === target) return res.json({success: false, message: 'Wrong target : interest for himself impossible.'});
 
 	const usersCollection = MongoConnection.db.collection('users');
 	// find the target in DB, can't find if blocked by the target
-	let user = await usersCollection.findOne({"login": current, blocked: {$ne: currentUser}});
+	let user = await usersCollection.findOne({"login": currentUser, blocked: {$ne: currentUser}});
 	if (user.pictures.length == 0) return res.json({success: false, message: 'You must upload one picture before showing your interest to someone.'});
 
 	// find the target in DB, can't find if blocked by the target
@@ -43,7 +40,7 @@ const updateInterest = (users) => async (req, res) => {
 	if (!user) return res.json({success: false, message: 'Wrong target : user targeted doesn\'t exists'});
 
 	// check if target has been already liked
-	const alreadyLiked = user.interestedPeople.indexOf(current);
+	const alreadyLiked = user.interestedPeople.indexOf(currentUser);
 
 	// like action
 	if (likes == true)
@@ -51,39 +48,39 @@ const updateInterest = (users) => async (req, res) => {
 		// already liked
 		if (alreadyLiked != -1)
 		{
-			const message = current + ' already likes ' + target + '.';
+			const message = currentUser + ' already likes ' + target + '.';
 			return res.json({success: true, message: message});
 		}
 
-		// check if target also likes current
-		const match = user.interestedIn.indexOf(current);
+		// check if target also likes currentUser
+		const match = user.interestedIn.indexOf(currentUser);
 
 		// update objects
 		const currentUpdate = { $addToSet: {interestedIn: target} };
 		const targetUpdate = {
-										$addToSet: {interestedPeople: current},
+										$addToSet: {interestedPeople: currentUser},
 										$inc: { interestCounter: +1 }
 									};
 
 		// if match, modify update objects
 		if (match != -1) {
 			currentUpdate.$addToSet.matches = target;
-			targetUpdate.$addToSet.matches = current;
+			targetUpdate.$addToSet.matches = currentUser;
 
 			// send and update user notifications
-			const newNotification = current + " has liked you back !";
+			const newNotification = currentUser + " has liked you back !";
 			Notification.send(users, newNotification, user);
 		}
 		else {
 			// send and update user notifications
-			const newNotification = current + " now likes your profile.";
+			const newNotification = currentUser + " now likes your profile.";
 			Notification.send(users, newNotification, user);
 		}
-		usersCollection.updateOne({ login: current }, currentUpdate);
+		usersCollection.updateOne({ login: currentUser }, currentUpdate);
 		usersCollection.updateOne({ login: target }, targetUpdate);
 
 
-		const message = current + ' now likes ' + target + '.';
+		const message = currentUser + ' now likes ' + target + '.';
 		return res.json({success: true, message: message});
 	}
 
@@ -93,40 +90,40 @@ const updateInterest = (users) => async (req, res) => {
 		// already not liked
 		if (alreadyLiked == -1)
 		{
-			const message = current + ' already doesn\t like ' + target + '.';
+			const message = currentUser + ' already doesn\t like ' + target + '.';
 			return res.json({success: true, message: message});
 		}
 
-		// check if target also likes current
-		const match = user.interestedIn.indexOf(current);
+		// check if target also likes currentUser
+		const match = user.interestedIn.indexOf(currentUser);
 
 		// update objects
 		const currentUpdate = { $pull: {interestedIn: target} };
 		const targetUpdate = {
-										$pull: {interestedPeople: current},
+										$pull: {interestedPeople: currentUser},
 										$inc: { interestCounter: -1 }
 									};
 		// if match, modify update objects
 		if (match != -1) {
 			currentUpdate.$pull.matches = target;
-			targetUpdate.$pull.matches = current;
+			targetUpdate.$pull.matches = currentUser;
 			const chatDeleteObj = {
 								$or: [
-									{ to: current, from: target },
-									{ to: target, from: current }
+									{ to: currentUser, from: target },
+									{ to: target, from: currentUser }
 								]
 							};
 			const chatCollection = MongoConnection.db.collection('chat');
 			const r = chatCollection.deleteMany(chatDeleteObj, (data) => console.log(data));
 
 			// send and update user notifications
-			const newNotification = "The match with " + current + " is over.";
+			const newNotification = "The match with " + currentUser + " is over.";
 			Notification.send(users, newNotification, user);
 		}
-		usersCollection.updateOne({ login: current }, currentUpdate);
+		usersCollection.updateOne({ login: currentUser }, currentUpdate);
 		usersCollection.updateOne({ login: target }, targetUpdate);
 
-		const message = current + ' now doesn\'t like anymore ' + target + '.';
+		const message = currentUser + ' now doesn\'t like anymore ' + target + '.';
 		return res.json({success: true, message: message});
 	}
 }

@@ -6,7 +6,15 @@ import Image from './Image.js'
 
 export default class Profile extends React.Component {
 	render() {
-		const {profile, onReportClick, onBlockClick, alreadyBlocked} = this.props
+		const {
+					profile,
+					onReportClick,
+					onBlockClick,
+					alreadyBlocked,
+					alreadyLiked,
+					myprofile,
+					onLikeClick
+				} = this.props
 		return (
 			<div>
 				<h1>{profile.login}</h1>
@@ -17,7 +25,18 @@ export default class Profile extends React.Component {
 				<Image
 					profile={profile}
 				/>
-				<div className="blockReport">
+				{!myprofile &&
+					<div className="likeAction">
+						{!alreadyLiked &&
+							<span className="like" onClick={(e) => onLikeClick(e, true)}>Like this.</span>
+						}
+						{alreadyLiked &&
+							<span className="like" onClick={(e) => onLikeClick(e, false)}>Unlike this.</span>
+						}
+					</div>
+				}
+				{!myprofile &&
+					<div className="blockReport">
 						<span className="fake" onClick={(e) => onReportClick(e)}>Fake account ?</span>
 						{!alreadyBlocked &&
 							<span className="block" onClick={(e) => onBlockClick(e, true)}>Block this.</span>
@@ -25,7 +44,8 @@ export default class Profile extends React.Component {
 						{alreadyBlocked &&
 							<span className="block" onClick={(e) => onBlockClick(e, false)}>Unblock this.</span>
 						}
-				</div>
+					</div>
+				}
 			</div>
 		)
 	}

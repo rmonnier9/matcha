@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import {
-  SELECT_PROFILE, REQUEST_PROFILE, RECEIVE_PROFILE, INVALIDATE_PROFILE,
-  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT_SUCCESS, LOGOUT_REQUEST
+	LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
+	LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
 } from '../actions'
 
 function auth(state = {
@@ -48,7 +48,11 @@ const rootReducer = combineReducers({
 export default rootReducer
 
 // ------------------ OLD --------------------------- //
+//
 // 
+// import {
+//   SELECT_PROFILE, REQUEST_PROFILE, RECEIVE_PROFILE, INVALIDATE_PROFILE
+// } from '../actions'
 // function selectedProfile(state = '', action) {
 //   switch (action.type) {
 //     case SELECT_PROFILE:

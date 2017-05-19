@@ -40,8 +40,8 @@ app.post('/api/myprofile/pictures', User.postPicture);
 // app.delete('/api/profile/:login/pictures/:id', User.deletePicture);
 
 // Likes  ===============
-app.get('/api/:current/likes/:target', Interaction.getInterest);
-app.put('/api/:current/likes/:target', Interaction.updateInterest(users));
+app.get('/api/likes/:target', Interaction.getInterest);
+app.post('/api/likes/:target', Interaction.updateInterest(users));
 
 // Report and block  ====
 app.post('/api/reports/:target', Interaction.reportUser, Interaction.updateBlock);

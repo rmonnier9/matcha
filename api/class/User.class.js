@@ -19,6 +19,19 @@ class User {
 		return Math.abs(ageDate.getFullYear() - 1970);
 	}
 
+	static getBirthDate(age) {
+		if (!age) return null
+
+		const date = new Date()
+		console.log("date", date);
+		const currentYear = date.getFullYear()
+		console.log("year", currentYear);
+		date.setFullYear(currentYear - age)
+		console.log(date.toDateString());
+
+		return (date)
+	}
+
 	static randomString(length) {
    	let text = "";
    	const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

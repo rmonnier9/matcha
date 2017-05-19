@@ -17,25 +17,43 @@ const advancedSearch = async (req, res, next) => {
 	if (query.name)
 	{
 		const regex = new RegExp(query.name);
-		searchOBJ.$and[i] = {
+		searchOBJ.$and[i++] = {
 			$or: [
 				{ login: regex },
 				{ firstname: regex },
 				{ lastname: regex },
 		] };
 	}
-	// if (query.agemin && query.agemax)
-	// {
-	// 	const ageMin = Date.now() - query.agemin * 360 * 24 * 3600 * 1000
-	// 	const ageMin = Date.now() - query.agemin * 360 * 24 * 3600 * 1000
-	// 	searchOBJ.$and[i] = {
-	// 		$or: [
-	// 			{ login: regex },
-	// 			{ firstname: regex },
-	// 			{ lastname: regex },
-	// 	] };
-	// }
-
+	if (query.age && (query.age === '18to30' || query.age === '30to50' || query.age === 'from50'))
+	{
+		let dateMax, dateMin
+		const {age} = query
+		if (age === '18to30')
+		{
+			dateMax = User.getBirthDate(18)
+			dateMin = User.getBirthDate(30)
+		}
+		else if (age === '30to50')
+		{
+			dateMax = User.getBirthDate(30)
+			dateMin = User.getBirthDate(50)
+		}
+		else
+		{
+			dateMax = User.getBirthDate(50)
+			dateMin = User.getBirthDate(100)
+		}
+		searchOBJ.$and[i++] = {
+			birthDate: {
+				$lt: dateMax
+				}
+		}
+		searchOBJ.$and[i++] = {
+			birthDate: {
+				$gt: dateMin
+				}
+		}
+	}
 	// define number of results per requests
 	const toSkip = !query.start ? 0 : parseInt(query.start)
 	const numberPerRequest = 2
@@ -46,7 +64,7 @@ const advancedSearch = async (req, res, next) => {
 											.skip(toSkip).limit(numberPerRequest);
 	const users = await cursor.toArray();
 
-	const resObj = {success: true, message: 'Search successfull.', users}
+	const resObj = {success: true, message: 'Search successfull.', users, searchOBJ}
 	if (users.length) {
 		query.start = toSkip + numberPerRequest
 		resObj.nextHref = '/search?' + queryString.stringify(query)

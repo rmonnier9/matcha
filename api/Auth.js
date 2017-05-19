@@ -64,6 +64,9 @@ const signin = async (req, res, next) => {
    if (!User.validPassword(password, user.password))
 		return res.json({ success: false, message: 'Authentication failed : wrong password.' }).end();
 
+	if (!user.active)
+		return res.json({ success: false, message: 'Please activate your account. Check your email' }).end();
+
 	// create a session token for 2 hours, send it then end the request
    const token = jwt.sign({currentUser: user.login}, config.secret, { expiresIn: 3600 * 2 });
 // 	res.set('Access-Control-Expose-Headers', 'x-access-token');
@@ -74,11 +77,11 @@ const signin = async (req, res, next) => {
 const isLogged = (req, res, next) => {
 	//get the token from post, get or x-access-token http header field
   const token = req.body.token || req.query.token || req.headers['x-access-token'];
-  if (!token) return res.status(401).json({success: false, error: 'No token provided.'});
+  if (!token) return res.status(401).json({success: false, message: 'No token provided.'});
 
 	// check if token is valid
   jwt.verify(token, config.secret, (err, decoded) => {
-	  if (err) return res.json({ success: false, error: 'Failed to authenticate token.' });
+	  if (err) return res.json({ success: false, message: 'Failed to authenticate token.' });
 
 	 // save token datas into req.decoded and then call next request
 	 req.decoded = decoded;

@@ -61,7 +61,7 @@ const birthDateField = (birthDate) => {
 	if (!birthDate) return (null);
 
 	// check if date format is valid
-	if (!birthDate.match(/^(0?\d|1[012])-(0?\d|[12]\d|3[01])-((?:19|20)\d{2})$/))
+	if (!birthDate.match(/^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$/))
 		return ({field, message: "Invalid date format."});
 
 	// check if user is older than 18

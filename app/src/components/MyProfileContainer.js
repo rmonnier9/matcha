@@ -12,24 +12,29 @@ const FormInput = ({ children, label }) =>
 
 class MyProfileContainer extends Component {
 	state = {
-		data: null,
-		success: false
+		profile: null,
+		errorMessage: ""
 	}
 
 	componentDidMount() {
 		const url = "/myprofile"
-		callApi(url, 'GET').then(json => {
+		callApi(url, 'GET')
+		.then(json => {
 			console.log(json);
 			const {data} = json
-			this.setState({data})
+			const {profile, message} = data
+			if (!data.success)
+				this.setState({errorMessage: message})
+			else
+				this.setState({profile})
 		})
+		.catch(err => {console.log("log error :", err);})
 	}
 
 	render(){
-		const { data, success } = this.state
+		const { profile, errorMessage } = this.state
 
-		if (!data) { return (<div><h1>Loading...</h1></div>) }
-		const {profile, message} = data
+		if (!profile) { return (<div><h1>{errorMessage ? errorMessage : "Loading..."}</h1></div>) }
 		const token = localStorage.getItem("x-access-token")
 		const postImgUrl = "/api/myprofile/pictures?token=" + token
 		const postFormUrl = "/api/myprofile?token=" + token
@@ -37,11 +42,38 @@ class MyProfileContainer extends Component {
 			<div className="profile">
 				<Profile
 					profile={profile}
+					myprofile={true}
 				/>
 				<form action={postFormUrl} method="POST">
-					<input type="text" name="birthDate" />
+					<div>
+						<label for="name">My name is </label>
+						<input class="name" type="text" name="firstname" placeholder="firstname" />
+						<input class="name" type="text" name="lastname" placeholder="lastname" />
+					</div>
+					<br/>
+					<div>
+						<label for="bday">My birthday is...</label>
+						<input id="bday" type="date" name="birthDate" placeholder="birthDate" />
+					</div>
+					<br/>
+					<div>
+						<label for="gender">I'm a...</label>
+						<input id="gender" type="radio" name="gender" value="male"/>Dude
+						<input id="gender" type="radio" name="gender" value="female"/>Girl
+					</div>
+					<br/>
+					<div>
+						<label for="lookingFor">I want to have fun with a...</label>
+						<input id="lookingFor" type="radio" name="lookingFor" value="male"/>Dude
+						<input id="lookingFor" type="radio" name="lookingFor" value="female"/>Girl
+						<input id="lookingFor" type="radio" name="lookingFor" value="both"/>Whatever
+					</div>
+					<br/>
 					<input type="submit" value="submit" />
 				</form>
+				<br />
+				<br />
+				<span>Profile Picture</span>
 				<form action={postImgUrl} method="POST">
 					<input type="file" name="image" />
 					<input type="submit" value="submit" />

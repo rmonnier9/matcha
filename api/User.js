@@ -6,7 +6,7 @@ import fs 							from 'fs'
 import uuid							from 'uuid'
 import path							from 'path'
 import _								from 'lodash'
-import parser					from './parser.js'
+import parser						from './parser.js'
 
 const createFolder = (userPath) => {
   return new Promise((resolve, reject) => {
@@ -64,7 +64,7 @@ const getMyInfo = async (req, res) => {
 	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'}).end();
 
 	// get and send infos then end request
-	const profile = User.getInfos(user);
+	const profile = user
 	return res.json({success: true, message: 'Profile found.', profile}).end();
 }
 
@@ -73,6 +73,7 @@ const updateInfo = async (req, res) => {
   const { body } = req
 
   // parse the form fields
+  console.log("coucou", body);
   const error = parser.updateForm(body);
   if (error != null) return res.json({ success: false, error }).end();
 
@@ -83,9 +84,9 @@ const updateInfo = async (req, res) => {
 	for (let ix in whitelist)
 	{
 		const field = whitelist[ix];
-		if (body.hasOwnProperty(field)) update[field] = body[field];
+		if (body.hasOwnProperty(field) && !update[field]) update[field] = body[field];
 	}
-	if (body.hasOwnProperty('birthDate')) update['birthDate'] = new Date(body['birthDate'])
+	if (body.hasOwnProperty('birthDate') && !update['birthDate']) update['birthDate'] = new Date(body['birthDate'])
 
 	// update user in DB
 	const usersCollection = MongoConnection.db.collection('users');
