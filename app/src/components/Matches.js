@@ -14,6 +14,7 @@ class Matches extends Component {
 			serverResponse: null,
 			data: null,
 			users: [],
+			usersProfile: [],
 			hasMoreItems: true,
 			nextHref: null
 		}
@@ -35,94 +36,54 @@ class Matches extends Component {
 	}
 
 	loadItems = page => {
-		const { ageVal, popVal, tagVal, distVal, users } = this.state
+		const { usersProfile, users } = this.state
 		const { pathname, search } = this.props.location
 		let index = 0;
 		if (this.state.nextHref) {
 			  index = this.state.nextHref;
 		}
+		if (!users.length) return ;
 		const url = "/profile/" + users[index]
 		 callApi(url, 'GET')
 		 .then(json => {
-			 console.log(json);
+			 console.log("first api request", json);
 			 const {data} = json
 			 const usersProfile = [...this.state.usersProfile, data.profile]
-
+			 console.log("test", users.length, index + 1);
 			 if (users.length < index + 1) {
 				 this.setState({
-					 hasMoreItems: false
+					 usersProfile,
+					 nextHref: index + 1
 				 })
 			 } else {
 				 this.setState({
-					 users: users,
-					 nextHref: data.nextHref
+					 usersProfile,
+					 hasMoreItems: false
 				 })
 			 }
 		 })
  	}
 
-	loadItems = page => {
-		const { ageVal, popVal, tagVal, distVal } = this.state
-		const { pathname, search } = this.props.location
-		const url =
-		callApi(url, 'GET').then(json => {
-			console.log(json);
-			const {data} = json
-			const users = [...this.state.users]
-
-			data.users.map(user => {
-				 users.push(user);
-			})
-
-			if (data.nextHref) {
-				 this.setState({
-					  users: users,
-					  nextHref: data.nextHref
-				 })
-			} else {
-				 this.setState({
-					  hasMoreItems: false
-				  })
-			}
-		})
-		//  callApi(url, 'GET').then(json => {
-		// 	 console.log(json);
-		// 	 const {data} = json
-		// 	 const users = [...this.state.users]
-		 //
-		// 	 data.users.map(user => {
-		// 		  users.push(user);
-		// 	 })
-		 //
-		// 	 if (data.nextHref) {
-		// 		  this.setState({
-		// 				users: users,
-		// 				nextHref: data.nextHref
-		// 		  })
-		// 	 } else {
-		// 		  this.setState({
-		// 				hasMoreItems: false
-		// 			})
-		// 	 }
-		//  })
- 	}
-
 	render() {
 		console.log("RENDER", this.state);
-		const {serverResponse, data, users} = this.state
+		const {serverResponse, data, usersProfile} = this.state
 
 		const items = []
-		console.log(users);
-		if (!users.length) items.push(<p key={0}>No results</p>)
+		console.log("users", usersProfile);
+		if (!usersProfile.length) items.push(<p key={0}>No results</p>)
 		else {
-			users.map((user, key) => {
-				const url = "/profile/" + user.login
+			usersProfile.map((user, key) => {
+				const {login} = user
+				const url = "/profile/" + login
+				const chatUrl = "/chat/" + login
 				 items.push(
 	 					<li key={key} className="users" >
-	 						<Link to={url}>{user.login}</Link>
+	 						<Link to={url}>{login}</Link>
 	 						<EncartLeft
 	 							profile={user}
 	 						/>
+							<Link to={chatUrl}>Go to chat
+							</Link>
 	 					</li>
 				 )
 			})

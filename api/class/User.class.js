@@ -59,9 +59,9 @@ class User {
 	}
 
 	static getInfos(user) {
-		const {login, firstname, lastname, about, tags, pictures, profilePicture, popularity, localisation, birthDate} = user;
+		const {login, firstname, lastname, about, tags, pictures, profilePicture, popularity, localisation, birthDate, lastConnection} = user;
 		const age = this.getAge(birthDate);
-		return {login, firstname, lastname, age, about, tags, pictures, profilePicture, popularity, localisation};
+		return {login, firstname, lastname, age, about, tags, pictures, profilePicture, popularity, localisation, lastConnection};
 	}
 }
 

@@ -39,6 +39,7 @@ class ChatServer {
 				this.setResponseListeners(newUser);
 				// send welcome message to user
 				socket.emit('auth', 'you are logged in chat!');
+				console.log(currentUser + ' is connected');
 				// send user joined message to all users
 				// this.io.sockets.emit('userJoined', newUser.user);
 			});
@@ -70,8 +71,9 @@ class ChatServer {
 			user.socket.emit('onlineUsers', onlineUsers);
 		});
 
-		user.socket.on('chat message', ({ message, target }) => {
+		user.socket.on('message', ({ message, target }) => {
 
+			console.log("chat message",message, target);
 			// parse the message
 		  if (!parser.message(message)) return false;
 
@@ -98,7 +100,7 @@ class ChatServer {
 			  if (socketTargets.length) {
 				  const data = {from: user.login, message};
 				  socketTargets.forEach((user) => {
-						  						user.socket.emit('chat message', data);
+						  						user.socket.emit('message', data);
 					  							});
 			  }
 			  else {

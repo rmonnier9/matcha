@@ -15,6 +15,7 @@ import Around from './components/Around.js'
 import Matches from './components/Matches.js'
 import Notifications from './components/Notifications.js'
 import SearchContainer from './components/SearchContainer.js'
+import ChatContainer from './components/ChatContainer.js'
 import Signup from './components/Signup.js'
 import Login from './components/Login.js'
 import NotFound from './components/NotFound.js'
@@ -35,6 +36,7 @@ class MatchaRouter extends Component {
 						<PrivateRoute path="/search" isAuthenticated={isAuthenticated} component={SearchContainer} />
 						<PrivateRoute path="/profile/:login" isAuthenticated={isAuthenticated} component={ProfileContainer} />
 						<PrivateRoute path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfileContainer} />
+						<PrivateRoute path="/chat/:login" isAuthenticated={isAuthenticated} component={ChatContainer} />
 						<Route path="/login" component={Login} />
 						<Route path="/signup" component={Signup} />
 						<Route component={NotFound} />
