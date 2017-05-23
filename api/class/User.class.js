@@ -1,4 +1,4 @@
-import bcrypt   				from 'bcrypt-nodejs';
+import bcrypt   				from 'bcrypt-nodejs'
 
 class User {
 	static generateHash(password) {
@@ -13,10 +13,10 @@ class User {
 	static getAge(birthDate) {
 		if (!birthDate) return null
 		if (!(birthDate instanceof Date))
-			birthDate = new Date(birthDate);
-		const ageDifMs = Date.now() - birthDate.getTime();
-		const ageDate = new Date(ageDifMs);
-		return Math.abs(ageDate.getFullYear() - 1970);
+			birthDate = new Date(birthDate)
+		const ageDifMs = Date.now() - birthDate.getTime()
+		const ageDate = new Date(ageDifMs)
+		return Math.abs(ageDate.getFullYear() - 1970)
 	}
 
 	static getBirthDate(age) {
@@ -34,16 +34,16 @@ class User {
 
 	static randomString(length) {
    	let text = "";
-   	const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+   	const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
    	for (let i = 0; i < length; i++) {
-   		text += possible.charAt(Math.floor(Math.random() * possible.length));
+   		text += possible.charAt(Math.floor(Math.random() * possible.length))
 		}
 		return text;
  	}
 
 	static create(email, login, password, activationString) {
-	  const emptyArray = [];
-	  const newPassword = this.generateHash(password);
+	  const emptyArray = []
+	  const newPassword = this.generateHash(password)
 	  return ({
 		  		login: login,
 				password: newPassword,

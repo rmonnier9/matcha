@@ -59,10 +59,10 @@ const advancedSearch = async (req, res, next) => {
 	const numberPerRequest = 2
 
 	// execute the query in the DB
-	const usersCollection = MongoConnection.db.collection('users');
+	const usersCollection = MongoConnection.db.collection('users')
 	const cursor = usersCollection.find(searchOBJ)
-											.skip(toSkip).limit(numberPerRequest);
-	const users = await cursor.toArray();
+											.skip(toSkip).limit(numberPerRequest)
+	const users = await cursor.toArray()
 
 	const resObj = {success: true, message: 'Search successfull.', users, searchOBJ}
 	if (users.length) {

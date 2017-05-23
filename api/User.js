@@ -15,25 +15,38 @@ const createFolder = (userPath) => {
       else
       {
         fs.mkdir(userPath, (err) => {
-          if (err) throw err;
-			 resolve();
+          if (err) throw err
+			 resolve()
         })
       }
     })
   })
 }
 
-const getInfo = (users) => async (req, res) => {
-	const {currentUser} = req.decoded;
-	const	{login} = req.params;
+const getNotifications = async (req, res) => {
+	const {currentUser} = req.decoded
 
 	// get user from DB
-	const usersCollection = MongoConnection.db.collection('users');
-	const user = await usersCollection.findOne({login: login, blocked: {$ne: currentUser}});
-	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'}).end();
+	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({login: currentUser})
+	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'}).end()
+
+	// get and send infos then end request
+	const {notifications} = user
+	return res.json({success: true, message: 'Notifications found.', notifications}).end()
+}
+
+const getInfo = (users) => async (req, res) => {
+	const {currentUser} = req.decoded
+	const	{login} = req.params
+
+	// get user from DB
+	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({login: login, blocked: {$ne: currentUser}})
+	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'}).end()
 
 	if (currentUser != login) {
-		const alreadyVisited = _.find(user.visitedBy, (visitor) => visitor == currentUser);
+		const alreadyVisited = _.find(user.visitedBy, (visitor) => visitor == currentUser)
 
 		// if first visit
 		if (!alreadyVisited) {
@@ -43,16 +56,16 @@ const getInfo = (users) => async (req, res) => {
 				{
 					$inc: { visits: 1 },
 					$push: { visitedBy: currentUser }
-				});
+				})
 
 			// send and update user notifications
-			const newNotification = currentUser + " has taken a look at your profile.";
-			Notification.send(users, newNotification, user);
+			const newNotification = currentUser + " has taken a look at your profile."
+			Notification.send(users, newNotification, user)
 		}
 	}
 	// get and send infos then end request
-	const profile = User.getInfos(user);
-	return res.json({success: true, message: 'Profile found.', profile}).end();
+	const profile = User.getInfos(user)
+	return res.json({success: true, message: 'Profile found.', profile}).end()
 }
 
 const getMyInfo = async (req, res) => {
@@ -79,14 +92,16 @@ const updateInfo = async (req, res) => {
 
 
 	// filter parameters that can be updated with a whitelist
-	const whitelist = ['firstname', 'lastname', 'gender', 'lookingFor', 'about', 'tags', 'profilePictureId', 'localisation'];
+	const whitelist = ['firstname', 'lastname', 'gender', 'about', 'tags', 'profilePictureId', 'localisation', 'latitude', 'longitude'];
 	const update = {};
+	console.log(body);
 	for (let ix in whitelist)
 	{
 		const field = whitelist[ix];
-		if (body.hasOwnProperty(field) && !update[field]) update[field] = body[field];
+		if (body.hasOwnProperty(field) && body[field]) update[field] = body[field];
 	}
-	if (body.hasOwnProperty('birthDate') && !update['birthDate']) update['birthDate'] = new Date(body['birthDate'])
+	if (body.hasOwnProperty('birthDate') && body['birthDate']) update['birthDate'] = new Date(body['birthDate'])
+	if (body.hasOwnProperty('lookingFor') && body['lookingFor']) update['lookingFor'] = body.lookingFor === 'both' ? ['male', 'female'] : [body.lookingFor]
 
 	// update user in DB
 	const usersCollection = MongoConnection.db.collection('users');
@@ -150,4 +165,4 @@ const postPicture = async (req, res, next) => {
 }
 
 
-export {getInfo, getMyInfo, updateInfo, getPicture, postPicture}
+export {getInfo, getMyInfo, updateInfo, getPicture, postPicture, getNotifications}

@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import callApi from '../callApi.js'
 
 import Profile from './Profile.js'
+import Geolocation from './Geolocation.js'
 
 const FormInput = ({ children, label }) =>
 	<div className="searchInput">
@@ -46,24 +47,24 @@ class MyProfileContainer extends Component {
 				/>
 				<form action={postFormUrl} method="POST">
 					<div>
-						<label for="name">My name is </label>
-						<input class="name" type="text" name="firstname" placeholder="firstname" />
-						<input class="name" type="text" name="lastname" placeholder="lastname" />
+						<label htmlFor="name">My name is </label>
+						<input className="name" type="text" name="firstname" placeholder="firstname" />
+						<input className="name" type="text" name="lastname" placeholder="lastname" />
 					</div>
 					<br/>
 					<div>
-						<label for="bday">My birthday is...</label>
+						<label htmlFor="bday">My birthday is...</label>
 						<input id="bday" type="date" name="birthDate" placeholder="birthDate" />
 					</div>
 					<br/>
 					<div>
-						<label for="gender">I'm a...</label>
+						<label htmlFor="gender">I'm a...</label>
 						<input id="gender" type="radio" name="gender" value="male"/>Dude
 						<input id="gender" type="radio" name="gender" value="female"/>Girl
 					</div>
 					<br/>
 					<div>
-						<label for="lookingFor">I want to have fun with a...</label>
+						<label htmlFor="lookingFor">I want to have fun with a...</label>
 						<input id="lookingFor" type="radio" name="lookingFor" value="male"/>Dude
 						<input id="lookingFor" type="radio" name="lookingFor" value="female"/>Girl
 						<input id="lookingFor" type="radio" name="lookingFor" value="both"/>Whatever
@@ -78,6 +79,7 @@ class MyProfileContainer extends Component {
 					<input type="file" name="image" />
 					<input type="submit" value="submit" />
 				</form>
+				<Geolocation />
 			</div>
 		)
 	}

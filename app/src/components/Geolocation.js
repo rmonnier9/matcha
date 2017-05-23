@@ -4,39 +4,49 @@ import callApi from '../callApi.js'
 
 class Geolocation extends Component {
   state = {
-    loading: true,
-    error: null,
-    lattitude: null,
-    longitude: null
+    completed: false,
+    error: false
   }
 
-  componentDidMount = () => {
-    if (!navigator.geolocation) {
-      const error = "Geolocation is not supported by your browser"
-      return (this.setState({error, loading: false}))
-    }
-    navigator.geolocation.getCurrentPosition(position => {
-      const {latitude, longitude}  = position.coords
-      this.setState({latitude, longitude, loading: false})
-    }, () => {
-      const error = "Unable to retrieve your location"
-      this.setState({loading: false, error})
-    })
+  handleClick = (e) => {
+	 if (!navigator.geolocation) {
+		const error = "Geolocation is not supported by your browser"
+		return (this.setState({error}))
+	 }
+	 navigator.geolocation.getCurrentPosition(position => {
+		const {latitude, longitude}  = position.coords
+		const url = '/myprofile'
+		callApi(url, 'POST', {latitude, longitude})
+		.then(({ data }) => {
+			if (data.success === true)
+			{
+				this.setState({completed: true})
+			}
+			else {
+				this.setState({error: data.message})
+			}
+		})
+	 }, () => {
+		const error = "Unable to retrieve your location"
+		this.setState({error})
+	 })
   }
 
   render() {
-    const {loading, error, latitude, longitude} = this.state
-    if (loading)
-      return (<p>Locating…</p>)
-    if (error)
-      return (<p>{error}</p>)
-    const srcImg = "https://maps.googleapis.com/maps/api/staticmap?center=" +
-                    latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false"
+    const {completed, error} = this.state
     return (
       <div>
-        <p>{"Latitude is " + latitude + "° "}<br/>
-        {"Longitude is " + longitude + "°"}</p>
-        <img src={srcImg}/>
+			{!error && !completed &&
+				<button onClick={(event) => this.handleClick(event)} className="btn btn-primary">
+					Geolocate me !
+				</button>
+			}
+			{error &&
+				<p>{error}</p>
+			}
+			{completed &&
+				<p>Geolocation succesfully completed !</p>
+			}
       </div>
     )
   }

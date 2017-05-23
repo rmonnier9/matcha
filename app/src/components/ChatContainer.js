@@ -7,10 +7,11 @@ const socket = io()
 
 class Message extends Component {
   render() {
+	  const {from, target, text} = this.props
       return (
           <div className="message">
-              <strong>{this.props.user} :</strong>
-              <span>{this.props.text}</span>
+              <strong>{from === target ? from : "me"} : </strong>
+              <span>{text}</span>
           </div>
       )
   }
@@ -26,8 +27,9 @@ class MessageList extends Component {
                       return (
                           <Message
                               key={i}
-                              user={message.user}
+                              from={message.from}
                               text={message.text}
+										target={this.props.target}
                           />
                       );
                   })
@@ -46,7 +48,7 @@ class MessageForm extends Component {
   handleSubmit = (e) => {
       e.preventDefault();
       const message = {
-          user : this.props.user,
+          target : this.props.user,
           text : this.state.text
       }
       this.props.onMessageSubmit(message)
@@ -85,40 +87,52 @@ class ChatContainer extends Component {
 
     componentDidMount = () => {
 		const token = localStorage.getItem('x-access-token')
-		console.log(socket);
 		socket.emit('auth', token)
 		socket.on('message', this._messageReceive)
+
+		const {login} = this.props.match.params
+		const url = '/chat/' + login
+		callApi(url, 'GET')
+		.then(({ data }) => {
+			console.log("chat", data);
+			if (data.success === true)
+			{
+				const {messages} = data
+				if (messages.length !== 0) {
+					this.setState({messages})
+				}
+			}
+		})
     }
 
-    _messageReceive = ({message, from}) => {
-		console.log(message, from)
-		console.log(this.state.target, from);
+    _messageReceive = ({text, from, target}) => {
+		console.log(text, from)
 		if (from !== this.state.target)
 			return ;
 		const {messages} = this.state
-		messages.push({message, user: from})
+		messages.push({from, target, text})
 		this.setState({messages})
     }
 
     handleMessageSubmit = (message) => {
-        const {messages, target} = this.state
+        const {messages} = this.state
         messages.push(message)
         this.setState({messages})
-		  const {text} = message
-		  const data = {message: text, target}
-        socket.emit('message', data)
+        socket.emit('message', message)
     }
 
 
     render() {
+		 console.log("RENDER", this.state.messages, this.state);
         return (
             <div>
                 <MessageList
                     messages={this.state.messages}
+						  target={this.state.target}
                 />
                 <MessageForm
                     onMessageSubmit={this.handleMessageSubmit}
-                    user={this.state.user}
+                    user={this.state.target}
                 />
             </div>
         )

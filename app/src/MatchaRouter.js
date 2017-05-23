@@ -11,7 +11,7 @@ import Header from './components/Header.js'
 import Footer from './components/Footer.js'
 import ProfileContainer from './components/ProfileContainer.js'
 import MyProfileContainer from './components/MyProfileContainer.js'
-import Around from './components/Around.js'
+import Suggestions from './components/Suggestions.js'
 import Matches from './components/Matches.js'
 import Notifications from './components/Notifications.js'
 import SearchContainer from './components/SearchContainer.js'
@@ -30,7 +30,7 @@ class MatchaRouter extends Component {
 				<div>
 					<Header />
 					<Switch>
-						<PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={Around} />
+						<PrivateRoute exact path="/" isAuthenticated={isAuthenticated} component={Suggestions} />
 						<PrivateRoute path="/matches" isAuthenticated={isAuthenticated} component={Matches} />
 						<PrivateRoute path="/notifications" isAuthenticated={isAuthenticated} component={Notifications} />
 						<PrivateRoute path="/search" isAuthenticated={isAuthenticated} component={SearchContainer} />

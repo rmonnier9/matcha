@@ -67,51 +67,51 @@ class ChatServer {
 		user.socket.on('onlineUsers', () => {
 			const onlineUsers = _.map(this.users, (item) => {
 				return item.login;
-			});
-			user.socket.emit('onlineUsers', onlineUsers);
-		});
+			})
+			user.socket.emit('onlineUsers', onlineUsers)
+		})
 
-		user.socket.on('message', ({ message, target }) => {
+		user.socket.on('message', ({ text, target }) => {
 
-			console.log("chat message",message, target);
+			console.log("message", text, target)
 			// parse the message
-		  if (!parser.message(message)) return false;
+		  if (!parser.message(text)) return false
 
 		  // get user from DB
-		  const usersCollection = MongoConnection.db.collection('users');
+		  const usersCollection = MongoConnection.db.collection('users')
 		  usersCollection.findOne({
 			  								login: target,
 			  								blocked: {$not: {$eq: user.login}},
 											matches: user.login
 											}, (err, targetUser) => {
-			  if (err) throw err;
-			  if (!targetUser) return false;
+			  if (err) throw err
+			  if (!targetUser) return false
 
 			  // add message to DB
-			  const chatCollection = MongoConnection.db.collection('chat');
-			  chatCollection.insertOne({ 'from': user.login,
-												  'to': target,
-												  message,
+			  const chatCollection = MongoConnection.db.collection('chat')
+			  chatCollection.insertOne({ from: user.login,
+												  target,
+												  text,
 												  at: moment().format()
-											  });
+											  })
 
 				// check if user is connected
-			  const socketTargets = this.users.filter((user) => user.login == target);
+			  const socketTargets = this.users.filter((user) => user.login == target)
 			  if (socketTargets.length) {
-				  const data = {from: user.login, message};
+				  const message = {from: user.login, target, text}
 				  socketTargets.forEach((user) => {
-						  						user.socket.emit('message', data);
-					  							});
+						  						user.socket.emit('message', message)
+					  							})
 			  }
 			  else {
 				  // send and update user notifications
-					const newNotification = user.login + " has sent you a message.";
-					Notification.send(this.users, newNotification, targetUser);
+					const newNotification = user.login + " has sent you a message."
+					Notification.send(this.users, newNotification, targetUser)
 			  }
 		  })
-		});
-	};
+		})
+	}
 }
 
 
-export default ChatServer;
+export default ChatServer
