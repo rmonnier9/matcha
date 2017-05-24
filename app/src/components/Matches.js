@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
+import React, { Component } 	from 'react'
+import { Link }					from 'react-router-dom'
+import InfiniteScroll			from 'react-infinite-scroller'
+
 import callApi from '../callApi.js'
 import UsersList from './UsersList.js'
-import InfiniteScroll from 'react-infinite-scroller'
 import EncartLeft from './EncartLeft.js'
-import { Link } from 'react-router-dom'
-
 
 class Matches extends Component {
 	constructor(props) {

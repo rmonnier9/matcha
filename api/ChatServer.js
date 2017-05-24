@@ -1,45 +1,46 @@
-import config        		from './config/config.js';
-import MongoConnection		from './config/MongoConnection.js';
-import jwt						from 'jsonwebtoken';
-import _							from 'lodash';
-import parser					from './parser.js';
-import moment					from 'moment';
-import * as Notification		from './Notification.js';
+import jwt						from 'jsonwebtoken'
+import _							from 'lodash'
+import moment					from 'moment'
+
+import config        		from './config/config.js'
+import MongoConnection		from './config/MongoConnection.js'
+import parser					from './parser.js'
+import * as Notification	from './Notification.js'
 
 class ChatServer {
 	constructor(options) {
-		this.io = options.io;
-		this.users = [];
+		this.io = options.io
+		this.users = []
 	};
 
 	init() {
 		this.io.on('connection', (socket) => {
-			console.log('connected');
-			socket.on('auth', this.auth(socket));
+			console.log('connected')
+			socket.on('auth', this.auth(socket))
 		});
 	};
 
 	auth(socket) {
 		return ((token) => {
 			jwt.verify(token, config.secret, (err, decoded) => {
-				if (err) return socket.emit('auth', 'Auth error : Invalid token.');
-				const {currentUser} = decoded;
+				if (err) return socket.emit('auth', 'Auth error : Invalid token.')
+				const {currentUser} = decoded
 
 				// create a new user
-				const newUser = { login: currentUser, socket: socket };
+				const newUser = { login: currentUser, socket: socket }
 				// push to users array
-				this.users.push(newUser);
+				this.users.push(newUser)
 
-				const usersCollection = MongoConnection.db.collection('users');
+				const usersCollection = MongoConnection.db.collection('users')
 			   usersCollection.updateOne({ login: currentUser },
 													{ $set: { lastConnection: 'connected' },
 												});
 
 				// set response listeners for the new user
-				this.setResponseListeners(newUser);
+				this.setResponseListeners(newUser)
 				// send welcome message to user
-				socket.emit('auth', 'you are logged in chat!');
-				console.log(currentUser + ' is connected');
+				socket.emit('auth', 'you are logged in chat!')
+				console.log(currentUser + ' is connected')
 				// send user joined message to all users
 				// this.io.sockets.emit('userJoined', newUser.user);
 			});
@@ -49,20 +50,20 @@ class ChatServer {
 	setResponseListeners(user) {
 		user.socket.on('disconnect', () => {
 			// remove the user
-			_.remove(this.users, (value) => user.socket.id == value.socket.id);
+			_.remove(this.users, (value) => user.socket.id == value.socket.id)
 
 			// check if there is no more socket connection for the user
-			const isConnected = _.find(this.users, (value) => user.login == value.login);
+			const isConnected = _.find(this.users, (value) => user.login == value.login)
 
 			// in that case, set last connection
 			if (!isConnected) {
-				const usersCollection = MongoConnection.db.collection('users');
+				const usersCollection = MongoConnection.db.collection('users')
 				usersCollection.updateOne({ login: user.login },
 													{
 														$set: { lastConnection: moment().format() },
-													});
+													})
 			}
-		});
+		})
 
 		user.socket.on('onlineUsers', () => {
 			const onlineUsers = _.map(this.users, (item) => {

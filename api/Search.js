@@ -1,6 +1,6 @@
 import config        			from './config/config.js'
 import MongoConnection			from './config/MongoConnection.js'
-import User			      		from './class/User.class.js'
+import * as UsersTools		from './UsersTools.js'
 import queryString from 'query-string'
 
 const advancedSearch = async (req, res, next) => {
@@ -30,18 +30,18 @@ const advancedSearch = async (req, res, next) => {
 		const {age} = query
 		if (age === '18to30')
 		{
-			dateMax = User.getBirthDate(18)
-			dateMin = User.getBirthDate(30)
+			dateMax = UsersTools.getBirthDate(18)
+			dateMin = UsersTools.getBirthDate(30)
 		}
 		else if (age === '30to50')
 		{
-			dateMax = User.getBirthDate(30)
-			dateMin = User.getBirthDate(50)
+			dateMax = UsersTools.getBirthDate(30)
+			dateMin = UsersTools.getBirthDate(50)
 		}
 		else
 		{
-			dateMax = User.getBirthDate(50)
-			dateMin = User.getBirthDate(100)
+			dateMax = UsersTools.getBirthDate(50)
+			dateMin = UsersTools.getBirthDate(100)
 		}
 		searchOBJ.$and[i++] = {
 			birthDate: {
@@ -62,9 +62,13 @@ const advancedSearch = async (req, res, next) => {
 	const usersCollection = MongoConnection.db.collection('users')
 	const cursor = usersCollection.find(searchOBJ)
 											.skip(toSkip).limit(numberPerRequest)
-	const users = await cursor.toArray()
+	let users = await cursor.toArray()
 
-	const resObj = {success: true, message: 'Search successfull.', users, searchOBJ}
+	const user = await usersCollection.findOne({login: currentUser})
+	UsersTools.addUsefullData(users, user)
+	users = UsersTools.filterData(users)
+
+	const resObj = {success: true, message: 'Search successfull.', users}
 	if (users.length) {
 		query.start = toSkip + numberPerRequest
 		resObj.nextHref = '/search?' + queryString.stringify(query)

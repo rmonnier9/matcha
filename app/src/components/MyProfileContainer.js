@@ -75,7 +75,7 @@ class MyProfileContainer extends Component {
 				<br />
 				<br />
 				<span>Profile Picture</span>
-				<form action={postImgUrl} method="POST">
+				<form action={postImgUrl} method="POST" encType="multipart/form-data">
 					<input type="file" name="image" />
 					<input type="submit" value="submit" />
 				</form>

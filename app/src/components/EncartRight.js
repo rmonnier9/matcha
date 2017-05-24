@@ -8,7 +8,7 @@ import Tags from './Tags.js'
 const EncartRight = (props) => (
   <div className="encart-right">
     <Age age={props.profile.age}/>
-    <Localisation />
+    <Localisation distance={props.profile.distance}/>
     <Quote />
     <Tags />
   </div>

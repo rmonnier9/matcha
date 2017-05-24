@@ -1,4 +1,4 @@
-import User			   from './class/User.class.js';
+import * as UsersTools		from './UsersTools.js'
 
 const loginField = (login) => {
   const field = "login";
@@ -65,7 +65,7 @@ const birthDateField = (birthDate) => {
 		return ({field, message: "Invalid date format."});
 
 	// check if user is older than 18
-	const age = User.getAge(birthDate);
+	const age = UsersTools.getAge(birthDate);
 	if (age < 18) return ({field, message: "You must be older than 18."});
 	return (null);
 };

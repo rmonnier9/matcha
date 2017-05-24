@@ -30,8 +30,8 @@ app.post('/api/update_password', Auth.updatePassword)
 app.get('/api/forgot_password', Auth.forgotPassword)
 
 // User Datas  ==========
-app.get('/api/profile/:login', User.getInfo(users)) //block report and like also
-app.get('/api/myprofile', User.getMyInfo) //block report and like also
+app.get('/api/profile/:login', User.getInfos(users)) //block report and like also
+app.get('/api/myprofile', User.getMyInfos) //block report and like also
 app.post('/api/myprofile', rejectedCatcher(User.updateInfo))
 // app.delete('/api/profile/:login', User.deleteProfile);
 // app.get('/api/profile/:login/notifications', User.notifications);
@@ -39,7 +39,7 @@ app.post('/api/myprofile', rejectedCatcher(User.updateInfo))
 // Images  ==============
 app.get('/api/pictures/:login/:id', User.getPicture)
 app.post('/api/myprofile/pictures', User.postPicture)
-// app.delete('/api/profile/:login/pictures/:id', User.deletePicture);
+app.delete('/api/myprofile/pictures/:id', User.deletePicture);
 
 // Likes  ===============
 app.get('/api/likes/:target', Interaction.getInterest)

@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
+import React, { Component }	from 'react'
+import InfiniteScroll			from 'react-infinite-scroller'
+import { Link }					from 'react-router-dom'
+import queryString				from 'query-string'
 
-import InfiniteScroll from 'react-infinite-scroller'
-import EncartLeft from './EncartLeft.js'
-import callApi from '../callApi.js'
-import { Link } from 'react-router-dom'
-import queryString from 'query-string'
+import callApi 					from '../callApi.js'
 
-import UsersList from './UsersList.js'
-import SearchParams from './SearchParams.js'
+import EncartLeft 				from './EncartLeft.js'
+import UsersList 					from './UsersList.js'
+import SearchParams				from './SearchParams.js'
 
 class SearchContainer extends Component {
 	constructor(props) {
@@ -23,10 +23,6 @@ class SearchContainer extends Component {
 				min: 0,
 				max: 100,
 			},
-			tagVal: {
-				min: 0,
-				max: 100,
-			},
 			data: null,
 			users: [],
 			hasMoreItems: true,
@@ -35,34 +31,35 @@ class SearchContainer extends Component {
 	}
 
 	loadItems = page => {
-		const { ageVal, popVal, tagVal, distVal } = this.state
+		const { popVal, nextHref } = this.state
 		const { pathname, search } = this.props.location
 		let url
-		if (this.state.nextHref) {
-			  url = this.state.nextHref;
+		if (!nextHref) {
+		  url = pathname + search
+		  url += '&popmin=' + popVal.min
+		  url += '&popmax=' + popVal.max
 		}
 		else {
-			url = pathname + search
-			url += '&popmin=' + popVal.min
-			url += '&popmax=' + popVal.max
+			url = nextHref
 		 }
-		 callApi(url, 'GET').then(json => {
-			 console.log(json);
-			 const {data} = json
+		 callApi(url, 'GET')
+		 .then(({ data }) => {
 			 const users = [...this.state.users]
 
 			 data.users.map(user => {
-				  users.push(user);
+				  users.push(user)
 			 })
 
 			 if (data.nextHref) {
 				  this.setState({
-						users: users,
-						nextHref: data.nextHref
-				  })
+					  users,
+					  nextHref: data.nextHref
+					})
 			 } else {
 				  this.setState({
-						hasMoreItems: false
+					  users,
+					  hasMoreItems: false,
+					  nextHref: null
 					})
 			 }
 		 })

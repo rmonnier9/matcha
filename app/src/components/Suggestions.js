@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
+import InfiniteScroll from 'react-infinite-scroller'
+
 import callApi from '../callApi.js'
 import UsersList from './UsersList.js'
-import InfiniteScroll from 'react-infinite-scroller'
 import EncartLeft from './EncartLeft.js'
 import { Link } from 'react-router-dom'
 
@@ -19,7 +20,6 @@ class Suggestions extends Component {
 		const url = "/suggestions"
 		callApi(url, 'GET')
 		.then(json => {
-			console.log(json);
 			console.log(json);
 			const {data} = json
 			const {users, message} = data

@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Localisation = () => (
+const Localisation = (props) => (
   <div className="localisation">
-    A <span>5</span> kms.
+    A <span>{props.distance}</span> kms.
   </div>
 )
 

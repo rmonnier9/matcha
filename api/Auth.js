@@ -1,9 +1,10 @@
-import config        		from './config/config.js';
-import MongoConnection		from './config/MongoConnection.js';
-import User			      	from './class/User.class.js'
-import jwt						from 'jsonwebtoken';
-import parser					from './parser.js';
-import mail						from './mail.js';
+import jwt						from 'jsonwebtoken'
+
+import config        		from './config/config.js'
+import MongoConnection		from './config/MongoConnection.js'
+import * as UsersTools		from './UsersTools.js'
+import parser					from './parser.js'
+import mail						from './mail.js'
 
 const signup = async (req, res, next) => {
 	const {login, email, password, confirmpassword} = req.body;
@@ -18,8 +19,8 @@ const signup = async (req, res, next) => {
 	if (user) return res.json({ success: false, error: {field: "login", message: "That login is already taken."} }).end();
 
 	// create user obj
-	const activationString = User.randomString(16);
-	const newUser = User.create(email, login, password, activationString);
+	const activationString = UsersTools.randomString(16);
+	const newUser = UsersTools.create(email, login, password, activationString);
 
 	// add user to DB
 	const r = await usersCollection.insertOne(newUser);
@@ -61,7 +62,7 @@ const signin = async (req, res, next) => {
    if (!user) return res.json({ success: false, message: 'Authentication failed : user not found.' }).end();
 
 	// check if password is valid
-   if (!User.validPassword(password, user.password))
+   if (!UsersTools.validPassword(password, user.password))
 		return res.json({ success: false, message: 'Authentication failed : wrong password.' }).end();
 
 	if (!user.active)

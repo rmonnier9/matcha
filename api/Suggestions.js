@@ -1,20 +1,19 @@
-import config        			from './config/config.js'
-import MongoConnection			from './config/MongoConnection.js'
-import User			      		from './class/User.class.js'
-import queryString from 'query-string'
+import queryString 				from 'query-string'
+import _								from 'lodash'
 
-import _					from 'lodash';
-import * as Tools			from './tools';
+import MongoConnection			from './config/MongoConnection.js'
+import config        			from './config/config.js'
+import * as UsersTools			from './UsersTools.js'
 
 const getSearchOBJ = (gender, lookingFor, currentUser) => {
 	const searchOBJ = {
 		$and: [
-			{blockedBy: { $ne: currentUser }},
-			{blocked: {$ne: currentUser}},
-			{gender: {$in: lookingFor}},
-			{lookingFor: gender}
+				{blockedBy: { $ne: currentUser }},
+				{blocked: {$ne: currentUser}},
+				{gender: {$in: lookingFor}},
+				{lookingFor: gender}
 			]
-		};
+		}
 	return (searchOBJ)
 }
 
@@ -30,19 +29,11 @@ const getSuggestions = async (req, res) => {
 	)
 	const cursor = usersCollection.find(searchOBJ)
 	let users = await cursor.toArray()
-	console.log("apres find", users);
-	await Tools.addUsefullData(users, user)
+	UsersTools.addScore(users, user)
+	UsersTools.addUsefullData(users, user)
 	users = users.filter((user) => user.distance < 100)
-
-	const age = Tools.getAge(user.birthdate)
-	users = users.map((user) => {
-		user.score = Tools.getAgeScore(user.age, age);
-		user.score += Tools.getPopScore(user.popularity);
-		user.score += Tools.getDistScore(user.distance);
-		user.score += Tools.getCommonTagsScore(user.commonTags);
-		return (user);
-	})
-	users.sort((userA, userB) => -userA.score - -userB.score);
+	users.sort((userA, userB) => -userA.score - -userB.score)
+	users = UsersTools.filterData(users)
 	users = users.slice(0, 10);
 	const resObj = {success: true, message: 'Search successfull.', users}
 	return res.json(resObj).end();

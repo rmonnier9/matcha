@@ -1,8 +1,5 @@
 import config        			from './config/config.js'
 import MongoConnection			from './config/MongoConnection.js'
-import User			      		from './class/User.class.js'
-import _								from 'lodash'
-import parser						from './parser.js'
 
 const getMessages = async (req, res) => {
 	const {currentUser} = req.decoded

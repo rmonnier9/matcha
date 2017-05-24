@@ -1,6 +1,6 @@
 import config        			from './config/config.js'
 import MongoConnection			from './config/MongoConnection.js'
-import User			      		from './class/User.class.js'
+import * as UsersTools			from './UsersTools.js'
 import * as Notification		from './Notification.js'
 import fs 							from 'fs'
 import uuid							from 'uuid'
@@ -36,7 +36,7 @@ const getNotifications = async (req, res) => {
 	return res.json({success: true, message: 'Notifications found.', notifications}).end()
 }
 
-const getInfo = (users) => async (req, res) => {
+const getInfos = (users) => async (req, res) => {
 	const {currentUser} = req.decoded
 	const	{login} = req.params
 
@@ -64,21 +64,22 @@ const getInfo = (users) => async (req, res) => {
 		}
 	}
 	// get and send infos then end request
-	const profile = User.getInfos(user)
+	const currentUserData = await usersCollection.findOne({login: currentUser})
+	const profile = UsersTools.getInfos(user, currentUserData)
 	return res.json({success: true, message: 'Profile found.', profile}).end()
 }
 
-const getMyInfo = async (req, res) => {
-	const {currentUser} = req.decoded;
+const getMyInfos = async (req, res) => {
+	const {currentUser} = req.decoded
 
 	// get user from DB
-	const usersCollection = MongoConnection.db.collection('users');
-	const user = await usersCollection.findOne({login: currentUser});
-	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'}).end();
+	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({login: currentUser})
+	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'}).end()
 
 	// get and send infos then end request
-	const profile = user
-	return res.json({success: true, message: 'Profile found.', profile}).end();
+	const profile = UsersTools.getPrivateInfos(user)
+	return res.json({success: true, message: 'Profile found.', profile}).end()
 }
 
 const updateInfo = async (req, res) => {
@@ -86,83 +87,101 @@ const updateInfo = async (req, res) => {
   const { body } = req
 
   // parse the form fields
-  console.log("coucou", body);
   const error = parser.updateForm(body);
   if (error != null) return res.json({ success: false, error }).end();
 
 
 	// filter parameters that can be updated with a whitelist
-	const whitelist = ['firstname', 'lastname', 'gender', 'about', 'tags', 'profilePictureId', 'localisation', 'latitude', 'longitude'];
-	const update = {};
-	console.log(body);
+	const whitelist = ['firstname', 'lastname', 'gender', 'about', 'tags', 'profilePictureId', 'localisation', 'latitude', 'longitude']
+	const update = {}
 	for (let ix in whitelist)
 	{
-		const field = whitelist[ix];
-		if (body.hasOwnProperty(field) && body[field]) update[field] = body[field];
+		const field = whitelist[ix]
+		if (body.hasOwnProperty(field) && body[field]) update[field] = body[field]
 	}
 	if (body.hasOwnProperty('birthDate') && body['birthDate']) update['birthDate'] = new Date(body['birthDate'])
 	if (body.hasOwnProperty('lookingFor') && body['lookingFor']) update['lookingFor'] = body.lookingFor === 'both' ? ['male', 'female'] : [body.lookingFor]
 
 	// update user in DB
-	const usersCollection = MongoConnection.db.collection('users');
-   const r = await usersCollection.updateOne({ login: currentUser }, {$set: update});
-	return res.json({success: true, message: 'Profile successfully updated.'}).end();
+	const usersCollection = MongoConnection.db.collection('users')
+   const r = await usersCollection.updateOne({ login: currentUser }, {$set: update})
+	return res.json({success: true, message: 'Profile successfully updated.'}).end()
 }
 
 const getPicture = async (req, res, next) => {
-	const {currentUser} = req.decoded;
-	const	{login, id} = req.params;
+	const {currentUser} = req.decoded
+	const	{login, id} = req.params
 
-	const usersCollection = MongoConnection.db.collection('users');
-	const user = await usersCollection.findOne({ login:  login, blocked: {$ne: currentUser}});
-	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'});
-	const pictureExists = user.pictures.indexOf(id);
-	if (pictureExists == -1) return res.status(404).json({success: false, message: 'Picture not found.'});
+	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({ login:  login, blocked: {$ne: currentUser}})
+	if (!user) return res.status(404).json({success: false, message: 'Profile not found.'})
+	const pictureExists = user.pictures.indexOf(id)
+	if (pictureExists == -1) return res.status(404).json({success: false, message: 'Picture not found.'})
 	res.sendFile(path.resolve(__dirname, './images/' + login + '/' + id), (err) => {
-		if (err) next(err);
-		else console.log('Sent:', id);
+		if (err) next(err)
+	})
+}
+
+const deletePicture = async (req, res, next) => {
+	const {currentUser} = req.decoded
+	const	{id} = req.params
+
+	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({login: currentUser })
+
+	const pictureExists = user.pictures.indexOf(id)
+	if (pictureExists === -1) return res.status(404).json({success: false, message: 'Picture not found.'})
+
+	const userPath = './images/' + currentUser + '/' + id
+	fs.unlink(userPath, (err) => {
+		if (err) next(err)
+
+		let { pictures, profilePicture } = user
+		let index = pictures.indexOf(id)
+		if (profilePicture == index) {
+			pictures.splice(index, 1)
+			index = 0
+		}
+		else {
+			pictures.splice(index, 1)
+			index = pictures.indexOf(id)
+		}
+		const update = {pictures: pictures, profilePicture: index}
+		usersCollection.updateOne({login: currentUser }, {$set: update})
+		return res.json({success: true, message: 'Image succesfully deleted!'}).end()
 	})
 }
 
 const postPicture = async (req, res, next) => {
-	console.log(req);
 	// check if a file has been uploaded
 	if (!req.files || !req.files.image)
 	 return res.status(400).json({success: false, message: 'No images were uploaded.'});
 
-	const {image} = req.files;
-	const {currentUser} = req.decoded;
-	const	{login} = req.params;
-
-	// check permission
-	if (login != currentUser) return res.json({success: false, message: 'Permission denied : you can\'t update this profile.'});
+	const {image} = req.files
+	const {currentUser} = req.decoded
 
 	// check if the user has less than 5 pictures
-	const usersCollection = MongoConnection.db.collection('users');
-	const user = await usersCollection.findOne({login: login });
+	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({login: currentUser })
 	if (user.pictures.length >= 5)
-		return res.status(400).json({success: false, message: 'Too many images.'});
+		return res.status(400).json({success: false, message: 'Too many images.'})
 
 	// create user folder if needed
-	const userPath = './images/' + login;
-	createFolder(userPath).then( () => {
+	const userPath = './images/' + currentUser
+	await createFolder(userPath)
+	// create a unique id for the picture and add it to DB
+   const imageId = uuid.v4()
+   const pictures = [...user.pictures, imageId]
+	const update = {pictures: pictures}
+   const r = await usersCollection.updateOne({login: currentUser }, {$set: update})
 
-		// create a unique id for the picture and add it to DB
-      const imageId = uuid.v4();
-      const pictures = [...user.pictures, imageId];
-      usersCollection.update({login: login }, {pictures: pictures}, (err, r) => {
-      	if (err) throw err;
-
-			// save the picture in user folder and end requests
-      	const imagePath = userPath + '/' + imageId;
-      	image.mv(imagePath, (err) => {
-      		if (err);
-         	return res.status(500).json({success: false, message: err});
-         	return res.json({success: true, message: 'File uploaded!'}).end();
-   		})
-      })
+	// save the picture in user folder and end requests
+	const imagePath = userPath + '/' + imageId
+	image.mv(imagePath, (err) => {
+		if (err) return res.status(500).json({success: false, message: err})
+   	return res.json({success: true, message: 'File uploaded!'}).end()
 	})
 }
 
 
-export {getInfo, getMyInfo, updateInfo, getPicture, postPicture, getNotifications}
+export {getInfos, getMyInfos, updateInfo, getPicture, deletePicture, postPicture, getNotifications}
