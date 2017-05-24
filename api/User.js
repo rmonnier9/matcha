@@ -71,6 +71,7 @@ const getInfos = (users) => async (req, res) => {
 
 const getMyInfos = async (req, res) => {
 	const {currentUser} = req.decoded
+	console.log(req);
 
 	// get user from DB
 	const usersCollection = MongoConnection.db.collection('users')

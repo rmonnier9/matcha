@@ -7,59 +7,64 @@ import parser					from './parser.js'
 import mail						from './mail.js'
 
 const signup = async (req, res, next) => {
-	const {login, email, password, confirmpassword} = req.body;
+	const {login, email, password, confirmpassword} = req.body
 
 	// parse the form fields
-	const error = parser.signupForm(req.body);
-	if (error != null) return res.json({ success: false, error }).end();
+	const error = parser.signupForm(req.body)
+	if (error != null) return res.json({ success: false, error }).end()
 
 	// check if the login already exists
-	const usersCollection = MongoConnection.db.collection('users');
-	const user = await usersCollection.findOne({ 'login':  login });
-	if (user) return res.json({ success: false, error: {field: "login", message: "That login is already taken."} }).end();
+	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({ 'login':  login })
+	if (user) return res.json({ success: false, error: {field: "login", message: "That login is already taken."} }).end()
+
+	const {ip} = req
+	console.log("IP is ", ip);
+
+
 
 	// create user obj
-	const activationString = UsersTools.randomString(16);
-	const newUser = UsersTools.create(email, login, password, activationString);
+	const activationString = UsersTools.randomString(16)
+	const newUser = UsersTools.create(email, login, password, activationString)
 
 	// add user to DB
-	const r = await usersCollection.insertOne(newUser);
+	const r = await usersCollection.insertOne(newUser)
 
 	// send mail to the user and end the request
 	const subject = "Matcha - Account created !";
-	const content = "Welcome to Matcha. Your activation key is : " + activationString;
+	const content = "Welcome to Matcha. Your activation key is : " + activationString
    mail(email, subject, content);
-   return res.json({ success: true, message: 'Account successfully created.' }).end();
+   return res.json({ success: true, message: 'Account successfully created.' }).end()
 }
 
 const emailConfirm = async (req, res) => {
-	const {login, activation} = req.body;
+	const {login, activation} = req.body
 
 	// find user in DB
-	const usersCollection = MongoConnection.db.collection('users');
-	const user = await usersCollection.findOne({ 'login':  login });
-   if (!user) return res.json({ success: false, message: 'User not found.' }).end();
+	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({ 'login':  login })
+   if (!user) return res.json({ success: false, message: 'User not found.' }).end()
 
 	// check if account already activated
 	if (user.active == true)
-		return res.json({ success: false, message: 'Account already activated.' }).end();
+		return res.json({ success: false, message: 'Account already activated.' }).end()
 
 	// check if activation key is valid
 	if (user.activationString != activation)
-		return res.json({ success: false, message: 'Wrong activation key.' }).end();
+		return res.json({ success: false, message: 'Wrong activation key.' }).end()
 
 	// update the user in DB and end the request
-	const r = await usersCollection.updateOne({ 'login':  login }, {active: true, $unset: {activationString: ""}});
-	return res.json({ success: true, message: 'Account successfully activated.' }).end();
+	const r = await usersCollection.updateOne({ 'login':  login }, {active: true, $unset: {activationString: ""}})
+	return res.json({ success: true, message: 'Account successfully activated.' }).end()
 }
 
 const signin = async (req, res, next) => {
-  const {login, password} = req.body;
+  const {login, password} = req.body
 
 	// find user in DB
-  	const usersCollection = MongoConnection.db.collection('users');
-	const user = await usersCollection.findOne({ 'login':  login });
-   if (!user) return res.json({ success: false, message: 'Authentication failed : user not found.' }).end();
+  	const usersCollection = MongoConnection.db.collection('users')
+	const user = await usersCollection.findOne({ 'login':  login })
+   if (!user) return res.json({ success: false, message: 'Authentication failed : user not found.' }).end()
 
 	// check if password is valid
    if (!UsersTools.validPassword(password, user.password))
