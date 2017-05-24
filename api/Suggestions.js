@@ -34,9 +34,9 @@ const getSuggestions = async (req, res) => {
 	users = users.filter((user) => user.distance < 100)
 	users.sort((userA, userB) => -userA.score - -userB.score)
 	users = UsersTools.filterData(users)
-	users = users.slice(0, 10);
+	users = users.slice(0, 10)
 	const resObj = {success: true, message: 'Search successfull.', users}
-	return res.json(resObj).end();
+	return res.json(resObj).end()
 }
 
 export {getSuggestions}

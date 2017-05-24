@@ -17,8 +17,8 @@ class ChatServer {
 		this.io.on('connection', (socket) => {
 			console.log('connected')
 			socket.on('auth', this.auth(socket))
-		});
-	};
+		})
+	}
 
 	auth(socket) {
 		return ((token) => {
@@ -34,7 +34,7 @@ class ChatServer {
 				const usersCollection = MongoConnection.db.collection('users')
 			   usersCollection.updateOne({ login: currentUser },
 													{ $set: { lastConnection: 'connected' },
-												});
+												})
 
 				// set response listeners for the new user
 				this.setResponseListeners(newUser)
@@ -43,8 +43,8 @@ class ChatServer {
 				console.log(currentUser + ' is connected')
 				// send user joined message to all users
 				// this.io.sockets.emit('userJoined', newUser.user);
-			});
-		});
+			})
+		})
 	}
 
 	setResponseListeners(user) {
@@ -67,7 +67,7 @@ class ChatServer {
 
 		user.socket.on('onlineUsers', () => {
 			const onlineUsers = _.map(this.users, (item) => {
-				return item.login;
+				return item.login
 			})
 			user.socket.emit('onlineUsers', onlineUsers)
 		})
