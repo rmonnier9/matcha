@@ -1,27 +1,36 @@
 import React, {Component} from 'react'
 
 import ProfilePicture from './ProfilePicture.js'
-import Name from './Name.js'
-import Popularity from './Popularity.js'
 
 class EncartLeft extends Component {
 	render() {
 		const {profile} = this.props
-		const {lastConnection} = profile
-		return(
+		const {
+			login,
+			profilePicture,
+			pictures,
+			firstname,
+			lastname,
+			popularity,
+			lastConnection
+		} = profile
+
+		return (
 		  <div className="encart-left">
 			 {profile.hasOwnProperty('profilePicture') &&
 				 <ProfilePicture
-					 login={profile.login}
-					 profilePicture={profile.profilePicture}
-					 pictures={profile.pictures}
+					 login={login}
+					 profilePicture={profilePicture}
+					 pictures={pictures}
 				 />
 			 }
-		    <Name
-			 	firstname={profile.firstname}
-				lastname={profile.lastname}/>
-		    <Popularity
-				popularity={profile.popularity}/>
+			 <div className="profile-name">
+		      <span>{firstname} </span>
+		      <span>{lastname}</span>
+		    </div>
+			<div className="popularity">
+			  <span>{popularity}</span>pts.
+			</div>
 			<div className="lastConnection">
 				<span>{lastConnection}</span>
 			</div>

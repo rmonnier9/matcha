@@ -1,17 +1,19 @@
-import React from 'react'
+import React, { Component } 		from 'react'
+import { connect } 					from 'react-redux'
 
 import callApi from '../callApi.js'
 
 import Profile from './Profile.js'
 
 
-class ProfileContainer extends React.Component{
-	constructor(){
-		super()
+class ProfileContainer extends Component{
+	constructor(props){
+		super(props)
 		this.state = {
-							data: null,
-							alreadyBlocked: false,
-							alreadyLiked: false}
+					data: null,
+					alreadyBlocked: false,
+					alreadyLiked: false
+				}
 	}
 
 	onLikeClick = (e, likes) => {
@@ -19,8 +21,6 @@ class ProfileContainer extends React.Component{
 		const url = '/likes/' + login
 		callApi(url, 'POST', {likes})
 		.then(({ data }) => {
-			console.log("result like", data);
-			console.log(likes);
 			if (data.success === true)
 			{
 				if (likes === true) {
@@ -85,6 +85,9 @@ class ProfileContainer extends React.Component{
 
 	render(){
 		const { data, alreadyBlocked, alreadyLiked } = this.state
+		const {currentLogin} = this.props
+		const {login} = this.props.match.params
+		const myprofile = login == currentLogin ? true : false
 
 		if (!data) { return (<div><h1>Loading...</h1></div>) }
 		const {profile} = data
@@ -98,13 +101,20 @@ class ProfileContainer extends React.Component{
 					alreadyBlocked={alreadyBlocked}
 					onLikeClick={this.onLikeClick}
 					alreadyLiked={alreadyLiked}
-					myprofile={false}
+					myprofile={myprofile}
 				/>
 			</div>
 		)
 	}
-
 }
 
+const mapStateToProps = (state) => {
+  const { auth } = state
+  const { currentLogin } = auth
 
-export default ProfileContainer
+  return {
+    currentLogin
+  }
+}
+
+export default connect(mapStateToProps)(ProfileContainer)

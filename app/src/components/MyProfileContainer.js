@@ -1,14 +1,49 @@
 import React, { Component } from 'react'
+import TagsInput from 'react-tagsinput'
+
+import 'react-tagsinput/react-tagsinput.css'
 
 import callApi from '../callApi.js'
 
 import Profile from './Profile.js'
+import MyProfileForm from './MyProfileForm.js'
 import Geolocation from './Geolocation.js'
 
 class MyProfileContainer extends Component {
 	state = {
 		profile: null,
-		errorMessage: ""
+		tags: [],
+		errorMessage: "",
+		fistname: "",
+		lastname: "",
+	}
+
+
+	handleSubmit = (event) => {
+	  event.preventDefault()
+	  const {
+		  firstname,
+		  lastname,
+		  birthDate,
+		  gender,
+		  lookingFor
+	  } = this.state
+	  const data = {
+							firstname: firstname.trim(),
+							lastname: lastname.trim(),
+							birthDate: birthDate,
+							gender: gender,
+							lookingFor: lookingFor,
+							tags: this.state.tags
+						}
+		const url = "/myprofile"
+		callApi(url, 'POST', data)
+		.then(json => {
+			console.log(json);
+			const {data} = json
+			if (!data.success)
+				this.setState({errorMessage: data.message})
+		})
 	}
 
 	componentDidMount() {
@@ -21,13 +56,47 @@ class MyProfileContainer extends Component {
 			if (!data.success)
 				this.setState({errorMessage: message})
 			else
-				this.setState({profile})
+			{
+				console.log(profile);
+				const {
+					firstname,
+					lastname,
+					birthDate,
+					gender,
+					lookingFor,
+					tags,
+				} = profile
+				this.setState({
+					firstname,
+					lastname,
+					birthDate,
+					gender,
+					lookingFor,
+					tags,
+					profile
+				})
+			}
 		})
 		.catch(err => {console.log("log error :", err);})
 	}
 
+	updateFirstname = (e) => this.setState({ firstname: e.target.value })
+	updateLastname = (e) => this.setState({ lastname: e.target.value })
+	updateBirthDate = (e) => this.setState({ birthDate: e.target.value })
+	updateGender = (e) => this.setState({ gender: e.target.value })
+	updateLookingFor = (e) => this.setState({ lookingFor: e.target.value })
+	updateTags = (tags) => {this.setState({tags})}
+
 	render(){
-		const { profile, errorMessage } = this.state
+		console.log("render", this.state);
+		const {
+			firstname,
+			lastname,
+			birthDate,
+			gender,
+			lookingFor,
+			tags, errorMessage, profile
+		} = this.state
 
 		if (!profile) { return (<div><h1>{errorMessage ? errorMessage : "Loading..."}</h1></div>) }
 		const token = localStorage.getItem("x-access-token")
@@ -35,45 +104,28 @@ class MyProfileContainer extends Component {
 		const postFormUrl = "/api/myprofile?token=" + token
 		return (
 			<div className="profile">
-				<Profile
+				{/* <Profile
 					profile={profile}
 					myprofile={true}
+				/> */}
+				<h1>{profile.login}</h1>
+				<MyProfileForm
+					handleSubmit={this.handleSubmit}
+					firstname={firstname}
+					updateFirstname={this.updateFirstname}
+					lastname={lastname}
+					updateLastname={this.updateLastname}
+					birthDate={birthDate}
+					updateBirthDate={this.updateBirthDate}
+					gender={gender}
+					updateGender={this.updateGender}
+					lookingFor={lookingFor}
+					updateLookingFor={this.updateLookingFor}
+					tags={tags}
+					updateTags={this.updateTags}
+					pictures={profile.pictures}
+					login={profile.login}
 				/>
-				<form action={postFormUrl} method="POST">
-					<div>
-						<label htmlFor="name">My name is </label>
-						<input className="name" type="text" name="firstname" placeholder="firstname" />
-						<input className="name" type="text" name="lastname" placeholder="lastname" />
-					</div>
-					<br/>
-					<div>
-						<label htmlFor="bday">My birthday is...</label>
-						<input id="bday" type="date" name="birthDate" placeholder="birthDate" />
-					</div>
-					<br/>
-					<div>
-						<label htmlFor="gender">I'm a...</label>
-						<input id="gender" type="radio" name="gender" value="male"/>Dude
-						<input id="gender" type="radio" name="gender" value="female"/>Girl
-					</div>
-					<br/>
-					<div>
-						<label htmlFor="lookingFor">I want to have fun with a...</label>
-						<input id="lookingFor" type="radio" name="lookingFor" value="male"/>Dude
-						<input id="lookingFor" type="radio" name="lookingFor" value="female"/>Girl
-						<input id="lookingFor" type="radio" name="lookingFor" value="both"/>Whatever
-					</div>
-					<br/>
-					<input type="submit" value="submit" />
-				</form>
-				<br />
-				<br />
-				<span>Profile Picture</span>
-				<form action={postImgUrl} method="POST" encType="multipart/form-data">
-					<input type="file" name="image" />
-					<input type="submit" value="submit" />
-				</form>
-				<Geolocation />
 			</div>
 		)
 	}

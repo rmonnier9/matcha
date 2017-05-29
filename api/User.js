@@ -25,6 +25,7 @@ const createFolder = (userPath) => {
 
 const getNotifications = async (req, res) => {
 	const {currentUser} = req.decoded
+	const {start} = req.query
 
 	// get user from DB
 	const usersCollection = MongoConnection.db.collection('users')
@@ -71,7 +72,7 @@ const getInfos = (users) => async (req, res) => {
 
 const getMyInfos = async (req, res) => {
 	const {currentUser} = req.decoded
-	console.log(req);
+	// console.log(req);
 
 	// get user from DB
 	const usersCollection = MongoConnection.db.collection('users')
@@ -86,6 +87,7 @@ const getMyInfos = async (req, res) => {
 const updateInfo = async (req, res) => {
   const {currentUser} = req.decoded
   const { body } = req
+  console.log(body);
 
   // parse the form fields
   const error = parser.updateForm(body);
@@ -93,14 +95,13 @@ const updateInfo = async (req, res) => {
 
 
 	// filter parameters that can be updated with a whitelist
-	const whitelist = ['firstname', 'lastname', 'gender', 'about', 'tags', 'profilePictureId', 'localisation', 'latitude', 'longitude']
+	const whitelist = ['firstname', 'lastname', 'gender', 'birthDate', 'about', 'tags', 'profilePictureId', 'localisation', 'latitude', 'longitude']
 	const update = {}
 	for (let ix in whitelist)
 	{
 		const field = whitelist[ix]
 		if (body.hasOwnProperty(field) && body[field]) update[field] = body[field]
 	}
-	if (body.hasOwnProperty('birthDate') && body['birthDate']) update['birthDate'] = new Date(body['birthDate'])
 	if (body.hasOwnProperty('lookingFor') && body['lookingFor']) update['lookingFor'] = body.lookingFor === 'both' ? ['male', 'female'] : [body.lookingFor]
 
 	// update user in DB

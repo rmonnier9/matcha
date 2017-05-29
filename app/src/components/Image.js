@@ -3,7 +3,7 @@ import React, {Component}				from 'react'
 
 export default class Image extends Component {
 	render() {
-		const { pictures, login } = this.props.profile
+		const { pictures, login } = this.props
 		const token = localStorage.getItem('x-access-token')
 		let url
 		const imgList = pictures.map((img, key) => {

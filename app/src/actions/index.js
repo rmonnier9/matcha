@@ -72,6 +72,7 @@ export function loginUser(creds) {
 			} else {
 				// if login successful, set token in local storage
 				localStorage.setItem('x-access-token', data.token)
+				localStorage.setItem('login', creds.login)
 				dispatch(receiveLogin(data.token))
 			}
 		})

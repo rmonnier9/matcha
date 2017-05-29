@@ -23,7 +23,8 @@ export default class Profile extends React.Component {
 				<EncartRight
 					profile={profile}/>
 				<Image
-					profile={profile}
+					pictures={profile.pictures}
+					login={profile.login}
 				/>
 				{!myprofile &&
 					<div className="likeAction">

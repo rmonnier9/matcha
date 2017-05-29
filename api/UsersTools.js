@@ -78,11 +78,8 @@ const getBirthDate = (age) => {
 	if (!age) return null
 
 	const date = new Date()
-	console.log("date", date);
 	const currentYear = date.getFullYear()
-	console.log("year", currentYear);
 	date.setFullYear(currentYear - age)
-	console.log(date.toDateString());
 
 	return (date)
 }
@@ -129,7 +126,21 @@ const getInfos = (user, currentUser) => {
 	user.age = getAge(user.birthDate)
 	user.popularity = getPopularity(user.visits, user.interestCounter)
 	user.distance = getDistance(user, currentUser)
+	user.lookingFor = getLookingFor(user.lookingFor)
 	return filterInfos(user)
+}
+
+const getLookingFor = (lookingFor) => {
+	let output
+	if (lookingFor.length = 2)
+		output = 'both'
+	else if (lookingFor.indexOf('male') !== -1)
+		output = 'male'
+	else if (lookingFor.indexOf('female') !== -1)
+		output = 'female'
+	else
+		output = ''
+	return output
 }
 
 const filterInfos = (user) => {
@@ -170,6 +181,7 @@ const getPrivateInfos = (user) => {
 	user.location = {latitude, longitude}
 	user.age = getAge(user.birthDate)
 	user.popularity = getPopularity(user.visits, user.interestCounter)
+	user.lookingFor = getLookingFor(user.lookingFor)
 	return filterPrivateInfos(user)
 }
 
@@ -179,6 +191,7 @@ const filterPrivateInfos = (user) => {
 				firstname,
 				lastname,
 				age,
+				birthDate,
 				gender,
 				lookingFor,
 				about,
@@ -195,6 +208,7 @@ const filterPrivateInfos = (user) => {
 				firstname,
 				lastname,
 				age,
+				birthDate,
 				gender,
 				lookingFor,
 				about,

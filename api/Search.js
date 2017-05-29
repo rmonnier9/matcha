@@ -12,7 +12,7 @@ const advancedSearch = async (req, res, next) => {
 		$and: [
 			{blockedBy: { $ne: currentUser }}
 			]
-		};
+		}
 	let i = 1;
 	if (query.name)
 	{
@@ -22,7 +22,7 @@ const advancedSearch = async (req, res, next) => {
 				{ login: regex },
 				{ firstname: regex },
 				{ lastname: regex },
-		] };
+		] }
 	}
 	if (query.age && (query.age === '18to30' || query.age === '30to50' || query.age === 'from50'))
 	{

@@ -6,7 +6,8 @@ import {
 
 function auth(state = {
     isFetching: false,
-    isAuthenticated: localStorage.getItem('x-access-token') ? true : false
+    isAuthenticated: localStorage.getItem('x-access-token') ? true : false,
+	 currentLogin: localStorage.getItem('login')
   }, action) {
   switch (action.type) {
     case LOGIN_REQUEST:

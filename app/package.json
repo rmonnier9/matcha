@@ -12,6 +12,7 @@
     "react-infinite-scroller": "^1.0.12",
     "react-input-range": "^1.1.3",
     "react-redux": "^5.0.4",
+    "react-tagsinput": "^3.16.1",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0",

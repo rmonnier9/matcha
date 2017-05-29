@@ -1,11 +1,15 @@
 import React from 'react'
 
-const Tags = () => (
-  <div className="tags">
-    <span>#surf</span>
-    <span>#smart</span>
-    <span>#social</span>
-  </div>
+const Tags = (props) => (
+	<div className="tags">
+	{
+		 props.tags.map((tag, i) => {
+			  return (
+					<span key={i}>#{tag} </span>
+			  )
+		 })
+	}
+	</div>
 )
 
 export default Tags
