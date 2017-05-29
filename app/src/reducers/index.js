@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import { combineReducers } 		from 'redux'
 import {
 	LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
 	LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
@@ -34,6 +34,12 @@ function auth(state = {
       	isFetching: true,
       	isAuthenticated: false
 		})
+	case LOGOUT_FAILURE:
+		return Object.assign({}, state, {
+			isFetching: false,
+			isAuthenticated: true,
+			errorMessage: action.message
+		})
 	default:
 		return state
   }
@@ -49,7 +55,7 @@ export default rootReducer
 
 // ------------------ OLD --------------------------- //
 //
-// 
+//
 // import {
 //   SELECT_PROFILE, REQUEST_PROFILE, RECEIVE_PROFILE, INVALIDATE_PROFILE
 // } from '../actions'

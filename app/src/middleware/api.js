@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { receiveProfile } from '../actions'
 
 const callApi = (endpoint, method) => {
 

@@ -1,13 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {
-	BrowserRouter as Router,
 	Route,
-	Switch,
 	Redirect
 } from 'react-router-dom'
 
-const PrivateRoute = ({ component: Component, isAuthenticated: isAuthenticated, ...rest }) => (
+const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => (
   <Route {...rest} render={props => (
     (null && console.log(rest)) || isAuthenticated ? (
       <Component {...props}/>

@@ -87,7 +87,7 @@ class ProfileContainer extends React.Component{
 		const { data, alreadyBlocked, alreadyLiked } = this.state
 
 		if (!data) { return (<div><h1>Loading...</h1></div>) }
-		const {profile, message} = data
+		const {profile} = data
 		console.log("RENDER", profile);
 		return (
 			<div className="profile">

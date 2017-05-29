@@ -7,7 +7,7 @@ import parser					from './parser.js'
 import mail						from './mail.js'
 
 const signup = async (req, res, next) => {
-	const {login, email, password, confirmpassword} = req.body
+	const {email, firstname, lastname, login, password, confirmpassword} = req.body
 
 	// parse the form fields
 	const error = parser.signupForm(req.body)
@@ -15,7 +15,7 @@ const signup = async (req, res, next) => {
 
 	// check if the login already exists
 	const usersCollection = MongoConnection.db.collection('users')
-	const user = await usersCollection.findOne({ 'login':  login })
+	const user = await usersCollection.findOne({ login:  login })
 	if (user) return res.json({ success: false, error: {field: "login", message: "That login is already taken."} }).end()
 
 	const {ip} = req

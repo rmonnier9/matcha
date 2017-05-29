@@ -34,7 +34,7 @@ render(
 
 // Tests
 
-import { selectProfile, fetchProfileIfNeeded, loginUser, logoutUser } from './actions'
+// import { selectProfile, fetchProfileIfNeeded, loginUser, logoutUser } from './actions'
 
 // store.dispatch(loginUser({login: 'rmonnier', password: 'Toto75017'})).then(() => {
 //

@@ -88,15 +88,15 @@ const getBirthDate = (age) => {
 }
 
 // New profile -----------------------------------------------------------------
-const create = (email, login, password, activationString) => {
+const create = (email, firstname, lastname, login, password, activationString) => {
   const emptyArray = []
-  const newPassword = generateHash(password)
+  const hashedPassword = generateHash(password)
   return ({
-	  		login: login,
-			firsname: "",
-			lastname: "",
-			password: newPassword,
-			email: email,
+	  		login,
+			password: hashedPassword,
+	  		email,
+			firstname,
+			lastname,
 			pictures: emptyArray,
 			profilePicture: 0,
 			interestedIn: emptyArray,
@@ -114,7 +114,7 @@ const create = (email, login, password, activationString) => {
 			activationString: activationString,
 			lastConnection: new Date(),
 			birthDate: null,
-		});
+		})
 }
 const filterData = (users) => {
 	return users.map((user) => {

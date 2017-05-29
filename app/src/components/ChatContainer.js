@@ -1,8 +1,7 @@
 import React, {Component}		from 'react'
-import ReactDOM					from 'react-dom'
-import { browserHistory }		from 'react-router'
+import io							from 'socket.io-client'
+
 import callApi						from '../callApi.js'
-import io from 'socket.io-client'
 const socket = io()
 
 class Message extends Component {

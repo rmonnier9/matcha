@@ -1,20 +1,8 @@
-import React						from 'react'
+import React, {Component}				from 'react'
 
 
-export default class Image extends React.Component {
-	constructor() {
-		super()
-		this.state = {
-				selectedImage: null,
-				availableImages: [],
-				inEdit: false,
-				marginLeft: 0,
-		}
-	}
-
-
+export default class Image extends Component {
 	render() {
-		const { availableImages, marginLeft } = this.state
 		const { pictures, login } = this.props.profile
 		const token = localStorage.getItem('x-access-token')
 		let url
@@ -22,7 +10,7 @@ export default class Image extends React.Component {
 			url = "/api/pictures/" + login + "/" + img + "?token=" + token
 			return (
 				<li key={key} className="img" >
-					<img src={url}/>
+					<img alt={img} src={url}/>
 				</li>
 			)
 		})
@@ -33,6 +21,6 @@ export default class Image extends React.Component {
 					{imgList}
 				</ul>
 			</div>
-		);
+		)
 	}
 }

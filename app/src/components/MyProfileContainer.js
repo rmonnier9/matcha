@@ -5,12 +5,6 @@ import callApi from '../callApi.js'
 import Profile from './Profile.js'
 import Geolocation from './Geolocation.js'
 
-const FormInput = ({ children, label }) =>
-	<div className="searchInput">
-		<div className="searchLabel">{label}</div>
-		{children}
-	</div>
-
 class MyProfileContainer extends Component {
 	state = {
 		profile: null,
