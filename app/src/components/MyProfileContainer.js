@@ -50,14 +50,12 @@ class MyProfileContainer extends Component {
 		const url = "/myprofile"
 		callApi(url, 'GET')
 		.then(json => {
-			console.log(json);
 			const {data} = json
 			const {profile, message} = data
 			if (!data.success)
 				this.setState({errorMessage: message})
 			else
 			{
-				console.log(profile);
 				const {
 					firstname,
 					lastname,
@@ -65,6 +63,7 @@ class MyProfileContainer extends Component {
 					gender,
 					lookingFor,
 					tags,
+					location
 				} = profile
 				this.setState({
 					firstname,
@@ -73,7 +72,8 @@ class MyProfileContainer extends Component {
 					gender,
 					lookingFor,
 					tags,
-					profile
+					profile,
+					location
 				})
 			}
 		})
@@ -95,6 +95,7 @@ class MyProfileContainer extends Component {
 			birthDate,
 			gender,
 			lookingFor,
+			location,
 			tags, errorMessage, profile
 		} = this.state
 
@@ -125,6 +126,7 @@ class MyProfileContainer extends Component {
 					updateTags={this.updateTags}
 					pictures={profile.pictures}
 					login={profile.login}
+					location={location}
 				/>
 			</div>
 		)

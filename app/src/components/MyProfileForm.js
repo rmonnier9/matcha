@@ -25,6 +25,7 @@ class MyProfileForm extends Component {
 			updateTags,
 			pictures,
 			login,
+			location
 		} = this.props
 
 		return (
@@ -90,7 +91,9 @@ class MyProfileForm extends Component {
 					<input type="file" name="image" />
 					<input type="submit" value="submit" />
 				</form> */}
-				<Geolocation />
+				<Geolocation
+					location={location}
+				/>
 			</div>
 		)
 	}

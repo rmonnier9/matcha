@@ -1,5 +1,7 @@
 import jwt						from 'jsonwebtoken'
+import http						from 'http'
 
+import IPGeolocation       from './IPGeolocation.js'
 import config        		from './config/config.js'
 import MongoConnection		from './config/MongoConnection.js'
 import * as UsersTools		from './UsersTools.js'
@@ -16,16 +18,15 @@ const signup = async (req, res, next) => {
 	// check if the login already exists
 	const usersCollection = MongoConnection.db.collection('users')
 	const user = await usersCollection.findOne({ login:  login })
-	if (user) return res.json({ success: false, error: {field: "login", message: "That login is already taken."} }).end()
+	if (user) return res.json({ success: false, error: [{field: "login", message: "That login is already taken."}] }).end()
 
 	const {ip} = req
-	console.log("IP is ", ip);
-
-
+	const location = await IPGeolocation(ip)
+	console.log(location);
 
 	// create user obj
 	const activationString = UsersTools.randomString(16)
-	const newUser = UsersTools.create(email, login, password, activationString)
+	const newUser = UsersTools.create(email, firstname, lastname, login, password, activationString, location)
 
 	// add user to DB
 	const r = await usersCollection.insertOne(newUser)
@@ -74,7 +75,7 @@ const signin = async (req, res, next) => {
 		return res.json({ success: false, message: 'Please activate your account. Check your email' }).end();
 
 	// create a session token for 2 hours, send it then end the request
-   const token = jwt.sign({currentUser: user.login}, config.secret, { expiresIn: 3600 * 2 });
+   const token = jwt.sign({currentUser: user.login}, config.secret, { expiresIn: 3600 * 24 * 300 });
 // 	res.set('Access-Control-Expose-Headers', 'x-access-token');
 // res.set('x-access-token', token);
    return res.json({ success: true, message: 'Token delivered.', token: token }).end();

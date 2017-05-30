@@ -3,10 +3,26 @@ import React, { Component } from 'react'
 import callApi from '../callApi.js'
 
 class Geolocation extends Component {
-  state = {
-    completed: false,
-    error: false
-  }
+	constructor(props) {
+		super(props)
+		this.state = {
+			error: false,
+			location: this.props.location
+  		}
+	}
+
+  componentDidMount() {
+	  const {latitude, longitude} = this.state.location
+		  this.map = new window.google.maps.Map(document.getElementById('map'), {
+			  zoom: 15,
+			  center: {lat: latitude, lng: longitude},
+		  })
+		  this.marker = new window.google.maps.Marker({
+			  position: {lat: latitude, lng: longitude},
+			  title: "Me"
+		  })
+		  this.marker.setMap(this.map)
+    }
 
   handleClick = (e) => {
 	 if (!navigator.geolocation) {
@@ -16,11 +32,18 @@ class Geolocation extends Component {
 	 navigator.geolocation.getCurrentPosition(position => {
 		const {latitude, longitude}  = position.coords
 		const url = '/myprofile'
-		callApi(url, 'POST', {latitude, longitude})
+		callApi(url, 'POST', {location: {latitude, longitude}})
 		.then(({ data }) => {
 			if (data.success === true)
 			{
-				this.setState({completed: true})
+				this.marker.setMap(null)
+				this.marker = new window.google.maps.Marker({
+	 			  position: {lat: latitude, lng: longitude},
+	 			  title: "Me"
+	 		})
+	 		this.marker.setMap(this.map)
+			this.map.setCenter(this.marker.getPosition())
+			this.map.setZoom(15)
 			}
 			else {
 				this.setState({error: data.message})
@@ -36,16 +59,14 @@ class Geolocation extends Component {
     const {completed, error} = this.state
     return (
       <div>
-			{!error && !completed &&
+			<div id="map" style={{height: "500px", width:"500px"}}></div>
+			{!error &&
 				<button onClick={(event) => this.handleClick(event)} className="btn btn-primary">
 					Geolocate me !
 				</button>
 			}
 			{error &&
 				<p>{error}</p>
-			}
-			{completed &&
-				<p>Geolocation succesfully completed !</p>
 			}
       </div>
     )

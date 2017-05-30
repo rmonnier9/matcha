@@ -8,6 +8,8 @@
     "query-string": "^4.3.4",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-google-maps": "^6.3.0",
+    "react-images": "^0.5.2",
     "react-infinite-scroll": "^0.1.5",
     "react-infinite-scroller": "^1.0.12",
     "react-input-range": "^1.1.3",

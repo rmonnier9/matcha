@@ -1,7 +1,6 @@
 import bcrypt   				from 'bcrypt-nodejs'
 import geolib						from 'geolib'
 
-
 // Authentication and activation tools -----------------------------------------
 const generateHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null)
@@ -40,14 +39,14 @@ const roundTwo = (nb) => {
 const getPopularity = (visits, likes) => roundTwo((likes * 50) / visits) || 0;
 
 const getDistance = (userA, userB) => {
-	if (!userA.latitude || !userA.longitude || !userB.latitude || !userB.longitude)
+	if (!userA.location.latitude || !userA.location.longitude || !userB.location.latitude || !userB.location.longitude)
 		return null
 	const distance = geolib.getDistance({
-			latitude: userA.latitude,
-			longitude: userA.longitude,
+			latitude: userA.location.latitude,
+			longitude: userA.location.longitude,
 		}, {
-			latitude: userB.latitude,
-			longitude: userB.longitude,
+			latitude: userB.location.latitude,
+			longitude: userB.location.longitude,
 		})
 		const kmDist = distance / 1000
 		return (Math.floor(kmDist))
@@ -85,7 +84,7 @@ const getBirthDate = (age) => {
 }
 
 // New profile -----------------------------------------------------------------
-const create = (email, firstname, lastname, login, password, activationString) => {
+const create = (email, firstname, lastname, login, password, activationString, location) => {
   const emptyArray = []
   const hashedPassword = generateHash(password)
   return ({
@@ -111,8 +110,10 @@ const create = (email, firstname, lastname, login, password, activationString) =
 			activationString: activationString,
 			lastConnection: new Date(),
 			birthDate: null,
+			location,
 		})
 }
+
 const filterData = (users) => {
 	return users.map((user) => {
 		return filterInfos(user)
@@ -177,8 +178,6 @@ const filterInfos = (user) => {
 
 // private profile
 const getPrivateInfos = (user) => {
-	const {latitude, longitude} = user
-	user.location = {latitude, longitude}
 	user.age = getAge(user.birthDate)
 	user.popularity = getPopularity(user.visits, user.interestCounter)
 	user.lookingFor = getLookingFor(user.lookingFor)

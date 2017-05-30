@@ -53,7 +53,8 @@ class Signup extends Component {
 		axios({url, method: 'POST', data})
 		.then(({ data }) => {
 		  if (data.success === true) {
-			  this.props.dispatch(loginUser(data))
+			  console.log("creds", {login: login.value.trim(), password: password.value.trim()});
+			  this.props.dispatch(loginUser({login: login.value.trim(), password: password.value.trim()}))
 			  this.props.history.push('/')
 		  }
 		  else {

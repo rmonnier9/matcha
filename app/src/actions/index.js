@@ -68,7 +68,6 @@ export function loginUser(creds) {
       .then(({data}) => {
 			if (data.success === false) {
          	dispatch(loginError(data.message))
-				return Promise.reject(creds.login)
 			} else {
 				// if login successful, set token in local storage
 				localStorage.setItem('x-access-token', data.token)

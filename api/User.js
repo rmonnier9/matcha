@@ -87,7 +87,6 @@ const getMyInfos = async (req, res) => {
 const updateInfo = async (req, res) => {
   const {currentUser} = req.decoded
   const { body } = req
-  console.log(body);
 
   // parse the form fields
   const error = parser.updateForm(body);
@@ -95,7 +94,7 @@ const updateInfo = async (req, res) => {
 
 
 	// filter parameters that can be updated with a whitelist
-	const whitelist = ['firstname', 'lastname', 'gender', 'birthDate', 'about', 'tags', 'profilePictureId', 'localisation', 'latitude', 'longitude']
+	const whitelist = ['firstname', 'lastname', 'gender', 'birthDate', 'about', 'tags', 'profilePictureId', 'location']
 	const update = {}
 	for (let ix in whitelist)
 	{
