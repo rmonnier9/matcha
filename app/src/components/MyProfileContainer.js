@@ -87,8 +87,27 @@ class MyProfileContainer extends Component {
 	updateLookingFor = (e) => this.setState({ lookingFor: e.target.value })
 	updateTags = (tags) => {this.setState({tags})}
 
+	deletePicture = (e) => {
+		const {id} = e.currentTarget
+		const url = "/myprofile/pictures/" + id
+		callApi(url, 'DELETE')
+		.then(json => {
+			console.log(url, json);
+			console.log(json);
+			const {data} = json
+			const {message} = data
+			if (!data.success)
+			{
+				this.setState({errorMessage: message})
+			}
+			// else
+			// 	this.setState({users: profile.matches})
+		})
+		console.log(e.currentTarget)
+	}
+
 	render(){
-		console.log("render", this.state);
+		// console.log("render", this.state)
 		const {
 			firstname,
 			lastname,
@@ -127,6 +146,7 @@ class MyProfileContainer extends Component {
 					pictures={profile.pictures}
 					login={profile.login}
 					location={location}
+					deletePicture={this.deletePicture}
 				/>
 			</div>
 		)

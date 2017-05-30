@@ -39,7 +39,7 @@ const roundTwo = (nb) => {
 const getPopularity = (visits, likes) => roundTwo((likes * 50) / visits) || 0;
 
 const getDistance = (userA, userB) => {
-	if (!userA.location.latitude || !userA.location.longitude || !userB.location.latitude || !userB.location.longitude)
+	if (!userA.location || !userB.location || !userA.location.latitude || !userA.location.longitude || !userB.location.latitude || !userB.location.longitude)
 		return null
 	const distance = geolib.getDistance({
 			latitude: userA.location.latitude,

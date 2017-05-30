@@ -24,7 +24,6 @@ class Matches extends Component {
 		const url = "/myprofile"
 		callApi(url, 'GET')
 		.then(json => {
-			console.log(json);
 			const {data} = json
 			const {profile, message} = data
 			if (!data.success)
@@ -69,7 +68,6 @@ class Matches extends Component {
 		const {serverResponse, data, usersProfile} = this.state
 
 		const items = []
-		console.log("users", usersProfile);
 		if (!usersProfile.length) items.push(<p key={0}>No results</p>)
 		else {
 			usersProfile.map((user, key) => {

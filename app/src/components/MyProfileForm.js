@@ -8,7 +8,6 @@ import Image from './Image.js'
 
 class MyProfileForm extends Component {
 	render(){
-		console.log(this.props);
 		const {
 			handleSubmit,
 			firstname,
@@ -25,7 +24,8 @@ class MyProfileForm extends Component {
 			updateTags,
 			pictures,
 			login,
-			location
+			location,
+			deletePicture
 		} = this.props
 
 		return (
@@ -33,6 +33,7 @@ class MyProfileForm extends Component {
 				<Image
 					pictures={pictures}
 					login={login}
+					deletePicture={deletePicture}
 				/>
 				<form onSubmit={handleSubmit}>
 					<div>
