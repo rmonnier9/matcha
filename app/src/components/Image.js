@@ -1,7 +1,5 @@
 import React, {Component}				from 'react'
 
-import callApi								from '../callApi.js'
-
 export default class Image extends Component {
 	render() {
 		const { pictures, login, deletePicture } = this.props
@@ -15,7 +13,10 @@ export default class Image extends Component {
 					onClick={deletePicture}
 					id={picture}
 				>
-					<img src={url}/>
+					<img
+						src={url}
+						alt={""}
+					/>
 				</div>
 			)
 		})

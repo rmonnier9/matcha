@@ -30,16 +30,3 @@ render(
 	</Provider>,
 	document.getElementById('root')
 )
-
-
-// Tests
-
-// import { selectProfile, fetchProfileIfNeeded, loginUser, logoutUser } from './actions'
-
-// store.dispatch(loginUser({login: 'rmonnier', password: 'Toto75017'})).then(() => {
-//
-// store.dispatch(selectProfile('rmonnier'))
-//
-// store.dispatch(fetchProfileIfNeeded('rmonnier'))
-//
-// })

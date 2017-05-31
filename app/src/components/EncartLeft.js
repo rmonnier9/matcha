@@ -17,13 +17,11 @@ class EncartLeft extends Component {
 
 		return (
 		  <div className="encart-left">
-			 {profile.hasOwnProperty('profilePicture') &&
-				 <ProfilePicture
-					 login={login}
-					 profilePicture={profilePicture}
-					 pictures={pictures}
-				 />
-			 }
+			 <ProfilePicture
+				 login={login}
+				 profilePicture={profilePicture}
+				 pictures={pictures}
+			 />
 			 <div className="profile-name">
 		      <span>{firstname} </span>
 		      <span>{lastname}</span>

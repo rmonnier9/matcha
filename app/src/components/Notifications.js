@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
+import React, {Component}			from 'react'
 
-import callApi						from '../callApi.js'
+import callApi							from '../callApi.js'
 
 const NotificationsList = (props) => (
 	<div className='notifications'>
@@ -9,8 +9,8 @@ const NotificationsList = (props) => (
 			  props.notifications.map((notification, i) => {
 					return (
 						 <div key={i}>
-							 <strong>{i} : </strong>
-							 <span>{notification}</span>
+							 <span>{notification.content}</span><br/>
+							 on <span>{new Date(notification.date).toDateString()}</span>
 						 </div>
 					)
 			  })
@@ -21,31 +21,55 @@ const NotificationsList = (props) => (
 
 class Notifications extends Component {
   state = {
-	  notifications: []
+	  notifications: [],
+	  hasMoreItems: true,
+	  nextHref: null
   }
 
-	componentDidMount() {
-		const url = '/notifications'
+  loadItems = () => {
+	  const { nextHref, hasMoreItems } = this.state
+	  let url
+	  if (!nextHref || !hasMoreItems) {
+		 url = '/notifications'
+	  }
+	  else {
+		  url = nextHref
+	  }
 		callApi(url, 'GET')
 		.then(({ data }) => {
-			console.log("chat", data);
-			if (data.success === true)
-			{
-				const {notifications} = data
-				if (notifications.length !== 0) {
-					this.setState({notifications})
-				}
+			const notifications = [...this.state.notifications, ...data.notifications]
+
+			if (data.nextHref) {
+				 this.setState({
+					 notifications,
+					 nextHref: data.nextHref
+				  })
+			} else {
+				 this.setState({
+					 notifications,
+					 hasMoreItems: false,
+					 nextHref: null
+				  })
 			}
 		})
+	  }
+
+	componentDidMount() {
+		this.loadItems()
 	}
 
   render() {
+	//   console.log("RENDER", this.state)
+	  const {notifications, hasMoreItems} = this.state
 	  return (
 		  <div className="notifications">
 			  <h2>My notifications</h2>
 			  <NotificationsList
-				  notifications={this.state.notifications}
+				  notifications={notifications}
 			  />
+			  {hasMoreItems &&
+				  <button onClick={this.loadItems}>See more</button>
+			  }
 		  </div>
 	  )
   }

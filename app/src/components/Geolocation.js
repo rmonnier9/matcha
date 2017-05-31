@@ -56,7 +56,7 @@ class Geolocation extends Component {
   }
 
   render() {
-    const {completed, error} = this.state
+    const {error} = this.state
     return (
       <div>
 			<div id="map" style={{height: "500px", width:"500px"}}></div>

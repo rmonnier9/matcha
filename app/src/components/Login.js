@@ -1,12 +1,12 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component }				from 'react'
 import {Redirect, Link} 					from 'react-router-dom'
 import { connect }							from 'react-redux'
 
-import { loginUser, logoutUser }			from '../actions'
+import { loginUser }			from '../actions'
 
 class Login extends Component {
 	render() {
-		const { dispatch, isAuthenticated, errorMessage } = this.props
+		const { isAuthenticated, errorMessage } = this.props
 		const { from } = this.props.location.state || { from: { pathname: '/' } }
 
 		if (isAuthenticated) {

@@ -17,7 +17,7 @@ const getSearchOBJ = (gender, lookingFor, currentUser) => {
 	return (searchOBJ)
 }
 
-const getSuggestions = async (req, res) => {
+const get = async (req, res) => {
 	const {currentUser} = req.decoded;
 
 	const usersCollection = MongoConnection.db.collection('users')
@@ -39,4 +39,4 @@ const getSuggestions = async (req, res) => {
 	return res.json(resObj).end()
 }
 
-export {getSuggestions}
+export {get}

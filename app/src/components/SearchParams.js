@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import InputRange				from 'react-input-range'
-
-import 'react-input-range/lib/css/index.css'
+// import InputRange				from 'react-input-range'
+//
+// import 'react-input-range/lib/css/index.css'
 
 const SearchInput = ({ children, label }) =>
 	<div className="searchInput">
@@ -11,8 +11,17 @@ const SearchInput = ({ children, label }) =>
 
 class SearchParams extends Component {
 	render() {
-		const { onSubmitClick, serverResponse, ageVal, popVal, distVal, name,
-					updateAge, updatePop, updateDist, updateName } = this.props
+		const {
+			serverResponse,
+			ageVal,
+			distVal,
+			name,
+			updateAge,
+			updateDist,
+			updateName,
+			// popVal,
+			// updatePop
+		} = this.props
 		return (
 			<div className="search-params">
 		     <form method="get" action="#">

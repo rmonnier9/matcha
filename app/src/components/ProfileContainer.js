@@ -87,7 +87,7 @@ class ProfileContainer extends Component{
 		const { data, alreadyBlocked, alreadyLiked } = this.state
 		const {currentLogin} = this.props
 		const {login} = this.props.match.params
-		const myprofile = login == currentLogin ? true : false
+		const myprofile = login === currentLogin ? true : false
 
 		if (!data) { return (<div><h1>Loading...</h1></div>) }
 		const {profile} = data

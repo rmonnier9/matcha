@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-const callApi = (endpoint, method, data = {}) => {
+const callApi = (endpoint, method, data = {}, headers = {}) => {
 
 	const token = localStorage.getItem('x-access-token') || null
 	const fullUrl = '/api' + endpoint
-	const config = Object.assign({}, {url: fullUrl}, {method}, {data})
+	const config = Object.assign({}, {url: fullUrl}, {method}, {data, headers})
 
 	if (!token) { return Promise.reject(new Error('No token saved!'))	}
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import TagsInput from 'react-tagsinput'
+import Dropzone from 'react-dropzone'
 
 import 'react-tagsinput/react-tagsinput.css'
 
@@ -25,6 +26,8 @@ class MyProfileForm extends Component {
 			pictures,
 			login,
 			location,
+			handleImageSubmit,
+			onImageDrop,
 			deletePicture
 		} = this.props
 
@@ -35,14 +38,24 @@ class MyProfileForm extends Component {
 					login={login}
 					deletePicture={deletePicture}
 				/>
+				<Dropzone
+					multiple={false}
+					accept="image/*"
+					onDrop={onImageDrop}>
+					<p>Drop an image or click to select a file to upload.</p>
+				</Dropzone>
+				<input type="file" accept="image/*"
+					onChange={handleImageSubmit}
+				/>
+				<br />
 				<form onSubmit={handleSubmit}>
 					<div>
 						<label htmlFor="name">My name is </label>
-						<input className="name" type="text" ref="firstname" placeholder="firstname"
+						<input className="name" type="text" placeholder="firstname"
 							onChange={updateFirstname}
 							value={firstname}
 						/>
-						<input className="name" type="text" ref="lastname" placeholder="lastname"
+						<input className="name" type="text" placeholder="lastname"
 							onChange={updateLastname}
 							value={lastname}
 						/>
@@ -50,7 +63,7 @@ class MyProfileForm extends Component {
 					<br/>
 					<div>
 						<label htmlFor="bday">My birthday is...</label>
-						<input id="bday" type="date" ref="birthDate" placeholder="birthDate"
+						<input id="bday" type="date" placeholder="birthDate"
 							onChange={updateBirthDate}
 							value={birthDate}
 						/>
@@ -58,11 +71,11 @@ class MyProfileForm extends Component {
 					<br/>
 					<div>
 						<label htmlFor="gender">I'm a...</label>
-						<input id="gender" type="radio" name="gender" ref="gender" value="male"
+						<input id="gender" type="radio" name="gender" value="male"
 							onChange={updateGender}
 							checked={"male" === gender}
 						/>Dude
-						<input id="gender" type="radio" name="gender" ref="gender" value="female"
+						<input id="gender" type="radio" name="gender" value="female"
 							onChange={updateGender}
 							checked={"female" === gender}
 						/>Girl
@@ -70,15 +83,15 @@ class MyProfileForm extends Component {
 					<br/>
 					<div>
 						<label htmlFor="lookingFor">I want to have fun with a...</label>
-						<input id="lookingFor" type="radio" name="lookingFor" ref="lookingFor" value="male"
+						<input id="lookingFor" type="radio" name="lookingFor" value="male"
 							onChange={updateLookingFor}
 							checked={"male" === lookingFor}
 						/>Dude
-						<input id="lookingFor" type="radio" name="lookingFor" ref="lookingFor" value="female"
+						<input id="lookingFor" type="radio" name="lookingFor" value="female"
 							onChange={updateLookingFor}
 							checked={"female" === lookingFor}
 						/>Girl
-						<input id="lookingFor" type="radio" name="lookingFor" ref="lookingFor" value="both"
+						<input id="lookingFor" type="radio" name="lookingFor" value="both"
 							onChange={updateLookingFor}
 							checked={"both" === lookingFor}
 						/>Whatever
@@ -88,10 +101,6 @@ class MyProfileForm extends Component {
 					<input type="submit" name="submit" value="Save my changes"/>
 				</form>
 				<br />
-				{/* <form action={postImgUrl} method="POST" encType="multipart/form-data">
-					<input type="file" name="image" />
-					<input type="submit" value="submit" />
-				</form> */}
 				<Geolocation
 					location={location}
 				/>

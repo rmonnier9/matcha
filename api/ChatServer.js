@@ -5,7 +5,7 @@ import moment					from 'moment'
 import config        		from './config/config.js'
 import MongoConnection		from './config/MongoConnection.js'
 import parser					from './parser.js'
-import * as Notification	from './Notification.js'
+import * as Notifications	from './Notifications.js'
 
 class ChatServer {
 	constructor(options) {
@@ -107,7 +107,7 @@ class ChatServer {
 			  else {
 				  // send and update user notifications
 					const newNotification = user.login + " has sent you a message."
-					Notification.send(this.users, newNotification, targetUser)
+					Notifications.send(this.users, newNotification, targetUser)
 			  }
 		  })
 		})

@@ -1,20 +1,23 @@
-import * as Auth from './Auth.js'
-import * as User from './User.js'
-import * as Interaction from './Interaction.js'
-import * as Search from './Search.js'
-import * as Chat from './Chat.js'
-import * as Suggestions from './Suggestions.js'
+import * as Auth 					from './Auth.js'
+import * as User 					from './User.js'
+import * as Pictures				from './Pictures.js'
+import * as Interactions		from './Interactions.js'
+import * as Search				from './Search.js'
+import * as Chat					from './Chat.js'
+import * as Suggestions			from './Suggestions.js'
+import * as Notifications		from './Notifications.js'
+import * as Matches				from './Matches.js'
 
-function rejectedCatcher(handler) {
-  return function(req, res, next) {
-    handler(req, res, next).catch(error => {next(error);})
-  };
+const rejectedCatcher = (handler) => {
+  return (req, res, next) => {
+    handler(req, res, next).catch(error => {next(error)})
+  }
 }
 
-const routes = (app, users) => {
+const routes = (app, users, upload) => {
 console.log(Auth)
 console.log(User)
-console.log(Interaction)
+console.log(Interactions)
 
 // User authentification  ==========
 app.post('/api/signup', rejectedCatcher(Auth.signup))
@@ -33,38 +36,38 @@ app.get('/api/forgot_password', Auth.forgotPassword)
 app.get('/api/profile/:login', User.getInfos(users)) //block report and like also
 app.get('/api/myprofile', User.getMyInfos) //block report and like also
 app.post('/api/myprofile', rejectedCatcher(User.updateInfo))
-// app.delete('/api/profile/:login', User.deleteProfile);
-// app.get('/api/profile/:login/notifications', User.notifications);
+// app.delete('/api/profile/:login', User.deleteProfile)
+// app.get('/api/profile/:login/notifications', User.notifications)
 
 // Images  ==============
-app.get('/api/pictures/:login/:id', User.getPicture)
-app.post('/api/myprofile/pictures', User.postPicture)
-app.delete('/api/myprofile/pictures/:id', User.deletePicture);
+app.get('/api/pictures/:login/:id', Pictures.get)
+app.post('/api/myprofile/pictures',  Pictures.saveCheck, upload.single('imageUploaded'), Pictures.save)
+app.delete('/api/myprofile/pictures/:id', Pictures.remove)
 
 // Likes  ===============
-app.get('/api/likes/:target', Interaction.getInterest)
-app.post('/api/likes/:target', Interaction.updateInterest(users))
+app.get('/api/likes/:target', Interactions.getInterest)
+app.post('/api/likes/:target', Interactions.updateInterest(users))
 
 // Report and block  ====
-app.post('/api/reports/:target', Interaction.reportUser, Interaction.updateBlock)
-app.get('/api/blocks/:target', Interaction.getBlockStatus)
-app.post('/api/blocks/:target', Interaction.updateBlock)
+app.post('/api/reports/:target', Interactions.reportUser, Interactions.updateBlock)
+app.get('/api/blocks/:target', Interactions.getBlockStatus)
+app.post('/api/blocks/:target', Interactions.updateBlock)
 
 // chat  ===============
 app.get('/api/chat/:target', rejectedCatcher(Chat.getMessages))
 
-// notifications  ===============
-app.get('/api/notifications', rejectedCatcher(User.getNotifications))
+// Notifications  ===============
+app.get('/api/notifications', rejectedCatcher(Notifications.get))
 
-// notifications  ===============
-app.get('/api/suggestions', rejectedCatcher(Suggestions.getSuggestions))
+// Matches  ===============
+app.get('/api/matches', rejectedCatcher(Matches.get))
 
-// search  ===============
+// Suggestions		===============
+app.get('/api/suggestions', rejectedCatcher(Suggestions.get))
+
+// Search  ===============
 app.get('/api/search', rejectedCatcher(Search.advancedSearch))
-
-// Suggestion  ===========
-// app.get('/api/suggestions', suggestion);
 
 }
 
-export default routes;
+export default routes

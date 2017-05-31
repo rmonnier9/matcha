@@ -30,7 +30,6 @@ const IPGeolocation = (ip) => {
 			res.on('end', () => {
 				try {
 					const parsedData = JSON.parse(rawData)
-					console.log(parsedData);
 					const location = parsedData.loc.split(',')
 					resolve({latitude: location[0], longitude: location[1]})
 				}

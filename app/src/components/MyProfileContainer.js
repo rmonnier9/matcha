@@ -1,21 +1,16 @@
 import React, { Component } from 'react'
-import TagsInput from 'react-tagsinput'
-
-import 'react-tagsinput/react-tagsinput.css'
 
 import callApi from '../callApi.js'
-
-import Profile from './Profile.js'
 import MyProfileForm from './MyProfileForm.js'
-import Geolocation from './Geolocation.js'
 
 class MyProfileContainer extends Component {
 	state = {
 		profile: null,
+		pictures: [],
 		tags: [],
 		errorMessage: "",
 		fistname: "",
-		lastname: "",
+		lastname: ""
 	}
 
 
@@ -39,10 +34,31 @@ class MyProfileContainer extends Component {
 		const url = "/myprofile"
 		callApi(url, 'POST', data)
 		.then(json => {
-			console.log(json);
 			const {data} = json
 			if (!data.success)
 				this.setState({errorMessage: data.message})
+		})
+	}
+
+	onImageDrop = (files) => {
+		this.handleImageUpload(files[0])
+	}
+
+	handleImageUpload = (file) => {
+		const url = "/myprofile/pictures"
+
+		const formData = new FormData();
+		formData.append("imageUploaded", file);
+
+		callApi(url, 'POST', formData, { "Content-Type": "multipart/form-data" })
+		.then(json => {
+			const {data} = json
+			const {pictures, message} = data
+			if (!data.success)
+				this.setState({errorMessage: message})
+			else {
+				this.setState({pictures})
+			}
 		})
 	}
 
@@ -57,6 +73,7 @@ class MyProfileContainer extends Component {
 			else
 			{
 				const {
+					pictures,
 					firstname,
 					lastname,
 					birthDate,
@@ -66,6 +83,7 @@ class MyProfileContainer extends Component {
 					location
 				} = profile
 				this.setState({
+					pictures,
 					firstname,
 					lastname,
 					birthDate,
@@ -86,29 +104,57 @@ class MyProfileContainer extends Component {
 	updateGender = (e) => this.setState({ gender: e.target.value })
 	updateLookingFor = (e) => this.setState({ lookingFor: e.target.value })
 	updateTags = (tags) => {this.setState({tags})}
+	handleImageSubmit = (e) => {
+		this.setState({ imageUpload: e.target.files })
+
+		const reader = new FileReader()
+		const file = e.target.files[0]
+		reader.onload = (upload) => {
+			this.setState({
+				data_uri: upload.target.result,
+				filename: file.name,
+				filetype: file.type
+			})
+			let data = {
+				data_uri: this.state.data_uri,
+				filename: this.state.filename,
+				filetype: this.state.filetype
+			}
+			const url = "/myprofile/pictures/"
+			callApi(url, 'POST', data, {
+				encType: "multipart/form-data"
+			})
+			.then(json => {
+				console.log(json)
+			})
+		}
+		reader.readAsDataURL(file)
+		// e.target.value = null
+	}
 
 	deletePicture = (e) => {
 		const {id} = e.currentTarget
 		const url = "/myprofile/pictures/" + id
 		callApi(url, 'DELETE')
 		.then(json => {
-			console.log(url, json);
-			console.log(json);
 			const {data} = json
 			const {message} = data
 			if (!data.success)
 			{
 				this.setState({errorMessage: message})
 			}
-			// else
-			// 	this.setState({users: profile.matches})
+			else {
+				const pictures = this.state.pictures.filter((picture) =>
+					(picture === id ? null : picture))
+				this.setState({pictures})
+			}
 		})
-		console.log(e.currentTarget)
 	}
 
 	render(){
-		// console.log("render", this.state)
+		console.log("render", this.state)
 		const {
+			pictures,
 			firstname,
 			lastname,
 			birthDate,
@@ -119,9 +165,6 @@ class MyProfileContainer extends Component {
 		} = this.state
 
 		if (!profile) { return (<div><h1>{errorMessage ? errorMessage : "Loading..."}</h1></div>) }
-		const token = localStorage.getItem("x-access-token")
-		const postImgUrl = "/api/myprofile/pictures?token=" + token
-		const postFormUrl = "/api/myprofile?token=" + token
 		return (
 			<div className="profile">
 				{/* <Profile
@@ -143,9 +186,11 @@ class MyProfileContainer extends Component {
 					updateLookingFor={this.updateLookingFor}
 					tags={tags}
 					updateTags={this.updateTags}
-					pictures={profile.pictures}
+					pictures={pictures}
 					login={profile.login}
 					location={location}
+					handleImageSubmit={this.handleImageSubmit}
+					onImageDrop={this.onImageDrop}
 					deletePicture={this.deletePicture}
 				/>
 			</div>

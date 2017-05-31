@@ -5,29 +5,24 @@ import EncartLeft from './EncartLeft.js'
 
 class UsersList extends Component {
 	render() {
-		const { users, serverResponse } = this.props
-		console.log(users, serverResponse);
-		let usersList = null;
-		if (users) {
-			usersList = users.map((user, key) => {
-				const url = "/profile/" + user.login
-				console.log(user);
-				return (
-					<li key={key} className="users" >
-						<Link to={url}>{user.login}</Link>
-						<EncartLeft
-							profile={user}
-						/>
-					</li>
-				)
-			})
-		}
-		else {
-			usersList = <p>No Users found</p>
-		}
+		if (this.props.users.length === 0)
+			return (<div>No Users found</div>)
 		return (
-			<div className="users-list">
-				{usersList}
+			<div className='users-list'>
+				{
+					this.props.users.map((user, i) => {
+						const {login} = user
+						const url = "/profile/" + login
+						return (
+							 <div key={i} className="user">
+								 <Link to={url}>{login}</Link>
+								 <EncartLeft
+									 profile={user}
+								 />
+							 </div>
+						)
+					  })
+				}
 			</div>
 		)
 	}

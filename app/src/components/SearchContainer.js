@@ -1,13 +1,8 @@
 import React, { Component }	from 'react'
-import InfiniteScroll			from 'react-infinite-scroller'
-import { Link }					from 'react-router-dom'
 import queryString				from 'query-string'
 
-import callApi 					from '../callApi.js'
-
-import EncartLeft 				from './EncartLeft.js'
-import UsersList 					from './UsersList.js'
 import SearchParams				from './SearchParams.js'
+import InfiniteUsersScroll		from './InfiniteUsersScroll.js'
 
 class SearchContainer extends Component {
 	constructor(props) {
@@ -22,48 +17,9 @@ class SearchContainer extends Component {
 			popVal: {
 				min: 0,
 				max: 100,
-			},
-			data: null,
-			users: [],
-			hasMoreItems: true,
-			nextHref: null
+			}
 		}
 	}
-
-	loadItems = page => {
-		const { popVal, nextHref } = this.state
-		const { pathname, search } = this.props.location
-		let url
-		if (!nextHref) {
-		  url = pathname + search
-		  url += '&popmin=' + popVal.min
-		  url += '&popmax=' + popVal.max
-		}
-		else {
-			url = nextHref
-		 }
-		 callApi(url, 'GET')
-		 .then(({ data }) => {
-			 const users = [...this.state.users]
-
-			 data.users.map(user => {
-				  users.push(user)
-			 })
-
-			 if (data.nextHref) {
-				  this.setState({
-					  users,
-					  nextHref: data.nextHref
-					})
-			 } else {
-				  this.setState({
-					  users,
-					  hasMoreItems: false,
-					  nextHref: null
-					})
-			 }
-		 })
- 	}
 
 	updateAge = (e) => this.setState({ ageVal: e.target.value })
 	updatePop = (value) => this.setState({ popVal: value })
@@ -71,26 +27,20 @@ class SearchContainer extends Component {
 	updateName = (e) => this.setState({ name: e.target.value })
 
 	render() {
-		console.log("RENDER", this.state);
-		const {serverResponse, ageVal, distVal, popVal, name, data, users} = this.state
+		// console.log("RENDER", this.state);
+		const {
+			ageVal,
+			distVal,
+			popVal,
+			name,
+			serverResponse
+		} = this.state
 
-		const items = []
-		if (!users.length) items.push(<p key={0}>No results</p>)
-		else {
-			users.map((user, key) => {
-				const url = "/profile/" + user.login
-				 items.push(
-	 					<li key={key} className="users" >
-	 						<Link to={url}>{user.login}</Link>
-	 						<EncartLeft
-	 							profile={user}
-	 						/>
-	 					</li>
-				 )
-			})
-		}
-		const loader = <div className="loader">Loading ...</div>;
-
+		const { pathname, search } = this.props.location
+		let baseUrl
+		baseUrl = pathname + search
+		baseUrl += '&popmin=' + popVal.min
+		baseUrl += '&popmax=' + popVal.max
 		return (
 			<div className="search">
 				<h2>Search my soulmate</h2>
@@ -106,16 +56,11 @@ class SearchContainer extends Component {
 					updatePop={this.updatePop}
 					updateName={this.updateName}
 				/>
-				<InfiniteScroll
-					pageStart={0}
-					loadMore={this.loadItems}
-					hasMore={this.state.hasMoreItems}
-					loader={loader}>
-
-					<div className="users">
-						{items}
-					</div>
-				</InfiniteScroll>
+				{search &&
+					<InfiniteUsersScroll
+						baseUrl={baseUrl}
+					/>
+				}
 			</div>
 		)
 	}

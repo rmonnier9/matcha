@@ -22,7 +22,6 @@ const signup = async (req, res, next) => {
 
 	const {ip} = req
 	const location = await IPGeolocation(ip)
-	console.log(location);
 
 	// create user obj
 	const activationString = UsersTools.randomString(16)

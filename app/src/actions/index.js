@@ -50,14 +50,14 @@ function receiveLogout() {
 	}
 }
 
-function logoutError(message) {
-  return {
-    type: LOGOUT_FAILURE,
-    isFetching: false,
-    isAuthenticated: true,
-    message
-  }
-}
+// function logoutError(message) {
+//   return {
+//     type: LOGOUT_FAILURE,
+//     isFetching: false,
+//     isAuthenticated: true,
+//     message
+//   }
+// }
 
 // login action function, calls the API to get a token
 export function loginUser(creds) {

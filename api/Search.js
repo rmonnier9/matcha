@@ -1,11 +1,12 @@
+import queryString				from 'query-string'
+
 import config        			from './config/config.js'
 import MongoConnection			from './config/MongoConnection.js'
-import * as UsersTools		from './UsersTools.js'
-import queryString from 'query-string'
+import * as UsersTools			from './UsersTools.js'
 
 const advancedSearch = async (req, res, next) => {
-	const {currentUser} = req.decoded;
-	const {query} = req;
+	const {currentUser} = req.decoded
+	const {query} = req
 
 	// initialize the search object (parameter of find() )
 	const searchOBJ = {
@@ -13,7 +14,7 @@ const advancedSearch = async (req, res, next) => {
 			{blockedBy: { $ne: currentUser }}
 			]
 		}
-	let i = 1;
+	let i = 1
 	if (query.name)
 	{
 		const regex = new RegExp(query.name);

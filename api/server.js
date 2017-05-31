@@ -12,8 +12,9 @@ import MongoConnection  from './config/MongoConnection.js'
 import morgan      	 	from 'morgan'
 import cookieParser 		from 'cookie-parser'
 import bodyParser   		from 'body-parser'
-import fileUpload	  		from 'express-fileupload'
 import path           	from 'path'
+import multer	  			from 'multer'
+const upload = multer({ dest: 'uploads/' })
 
 import config         	from './config/config.js'
 import routes         	from './routes.js'
@@ -27,7 +28,7 @@ app.use(morgan('dev'))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use(fileUpload())
+
 
 // front app for chat tests
 // app.get('/', function(req, res){
@@ -45,7 +46,7 @@ const chatServer = new ChatServer({io: io})
 chatServer.init()
 
 // load all API routes
-routes(app, chatServer.users)
+routes(app, chatServer.users, upload)
 
 // custom error handling
 app.use((err, req, res, next) => {
