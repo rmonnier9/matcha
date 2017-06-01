@@ -1,27 +1,27 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import {
-	Redirect
-} from 'react-router-dom'
-import { logoutUser } from './actions'
+  Redirect,
+} from 'react-router-dom';
+import { logoutUser } from './actions';
 
 class Logout extends Component {
-	render() {
-		const { isAuthenticated } = this.props
-		const { from } = this.props.location.state || { from: { pathname: '/' } }
+  handleClick() {
+    this.props.dispatch(logoutUser());
+  }
 
-     return (
-       <div>
-         <button onClick={(event) => this.handleClick(event)} className="btn btn-primary">
-           Logout
-         </button>
-       </div>
-     )
-   }
+  render() {
+    const { isAuthenticated } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
 
-   handleClick(event) {
-     this.props.dispatch(logoutUser())
-   }
+    return (
+      <div>
+        <button onClick={event => this.handleClick(event)} className="btn btn-primary">
+          Logout
+        </button>
+      </div>
+    );
+  }
 }
 
 
-export default Logout
+export default Logout;

@@ -1,58 +1,56 @@
-import { combineReducers } 		from 'redux'
+import { combineReducers } from 'redux';
 import {
-	LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
-	LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE
-} from '../actions'
+  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
+  LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE,
+} from '../actions';
 
 function auth(state = {
-    isFetching: false,
-    isAuthenticated: localStorage.getItem('x-access-token') ? true : false,
-	 currentLogin: localStorage.getItem('login')
-  }, action) {
+  isFetching: false,
+  isAuthenticated: !!localStorage.getItem('x-access-token'),
+  currentLogin: localStorage.getItem('login'),
+}, action) {
   switch (action.type) {
     case LOGIN_REQUEST:
       return Object.assign({}, state, {
         isFetching: true,
         isAuthenticated: false,
-        user: action.creds
-      })
+        user: action.creds,
+      });
     case LOGIN_SUCCESS:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: true,
-		  errorMessage: ''
-      })
+        message: '',
+      });
     case LOGIN_FAILURE:
       return Object.assign({}, state, {
         isFetching: false,
         isAuthenticated: false,
-        errorMessage: action.message
-      })
-	case LOGOUT_REQUEST:
-		return Object.assign({}, state, action)
-	case LOGOUT_SUCCESS:
-   	return Object.assign({}, state, {
-      	isFetching: true,
-      	isAuthenticated: false
-		})
-	case LOGOUT_FAILURE:
-		return Object.assign({}, state, {
-			isFetching: false,
-			isAuthenticated: true,
-			errorMessage: action.message
-		})
-	default:
-		return state
+        message: action.message,
+      });
+    case LOGOUT_REQUEST:
+      return Object.assign({}, state, action);
+    case LOGOUT_SUCCESS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        isAuthenticated: false,
+      });
+    case LOGOUT_FAILURE:
+      return Object.assign({}, state, {
+        isFetching: false,
+        isAuthenticated: true,
+        message: action.message,
+      });
+    default:
+      return state;
   }
 }
 
-
-
 const rootReducer = combineReducers({
-	auth
-})
+  auth,
+});
 
-export default rootReducer
+export default rootReducer;
 
 // ------------------ OLD --------------------------- //
 //
@@ -98,10 +96,10 @@ export default rootReducer
 //
 // function currentProfile(state = {}, action) {
 //   switch (action.type) {
-// 	  case INVALIDATE_PROFILE:
-// 	  case RECEIVE_PROFILE:
-// 	  case REQUEST_PROFILE:
-// 	  	return Object.assign({}, state, {
+//  case INVALIDATE_PROFILE:
+//  case RECEIVE_PROFILE:
+//  case REQUEST_PROFILE:
+//    return Object.assign({}, state, {
 //         [action.login]: profile(state[action.login], action)
 //       })
 //     default:

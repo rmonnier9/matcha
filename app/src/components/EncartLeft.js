@@ -2,8 +2,8 @@ import React from 'react';
 
 import ProfilePicture from './ProfilePicture.js';
 
-const EncartLeft = () => {
-  const { profile } = this.props;
+const EncartLeft = (props) => {
+  const { profile } = props;
   const {
     login,
     profilePicture,

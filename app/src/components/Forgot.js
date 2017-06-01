@@ -7,7 +7,7 @@ import { loginUser } from '../actions';
 class Login extends Component {
   handleClick = (event) => {
     event.preventDefault();
-    const { login, password } = this.refs;
+    const { login, password } = this;
     const creds = {
       login: login.value.trim(),
       password: password.value.trim(),
@@ -29,8 +29,8 @@ class Login extends Component {
       <div className="signup">
         <h2 className="form-signup-heading">Sign up</h2>
         <form onSubmit={event => this.handleClick(event)}>
-          <input type="text" ref="login" className="form-control" placeholder="Login" required />
-          <input type="password" ref="password" className="form-control" placeholder="Password" required />
+          <input type="text" ref={(c) => { this.login = c; }} className="form-control" placeholder="Login" required />
+          <input type="password" ref={(c) => { this.password = c; }} className="form-control" placeholder="Password" required />
           <input type="submit" name="submit" value="Login" />
         </form>
 

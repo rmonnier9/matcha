@@ -1,56 +1,56 @@
-import React, { Component }				from 'react'
-import {Redirect, Link} 					from 'react-router-dom'
-import { connect }							from 'react-redux'
+import React, { Component } from 'react';
+import { Redirect, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import { loginUser }			from '../actions'
+import { loginUser } from '../actions';
 
 class Login extends Component {
-	render() {
-		const { isAuthenticated, errorMessage } = this.props
-		const { from } = this.props.location.state || { from: { pathname: '/' } }
+  handleClick = (event) => {
+    event.preventDefault();
+    const { login, password } = this;
+    const creds = {
+      login: login.value.trim(),
+      password: password.value.trim(),
+    };
+    this.props.dispatch(loginUser(creds));
+  }
 
-		if (isAuthenticated) {
-			return (
-				<Redirect to={from}/>
-			)
-		}
+  render() {
+    const { isAuthenticated, errorMessage } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
 
-     return (
-	 <div className="signup">
-		<h2 className="form-signup-heading">Sign up</h2>
-		<form onSubmit={(event) => this.handleClick(event)}>
-	      <input type='text' ref='login' className="form-control" placeholder='Login' required autoFocus/>
-	      <input type='password' ref='password' className="form-control" placeholder='Password' required/>
-			<input type="submit" name="submit" value="Login"/>
-		</form>
+    if (isAuthenticated) {
+      return (
+        <Redirect to={from} />
+      );
+    }
 
-      {errorMessage &&
-        <p>{errorMessage}</p>
-      }
-		<Link to="/signup">Sign up ?</Link>
-       </div>
-     )
-   }
+    return (
+      <div className="signup">
+        <h2 className="form-signup-heading">Sign up</h2>
+        <form onSubmit={event => this.handleClick(event)}>
+          <input type="text" ref={(c) => { this.login = c; }} className="form-control" placeholder="Login" required />
+          <input type="password" ref={(c) => { this.password = c; }} className="form-control" placeholder="Password" required />
+          <input type="submit" name="submit" value="Login" />
+        </form>
 
-   handleClick = (event) => {
-	  event.preventDefault()
-     const {login, password} = this.refs
-     const creds = {
-		  					login: login.value.trim(),
-							password: password.value.trim()
-						}
-     this.props.dispatch(loginUser(creds))
-   }
-}
-
-const mapStateToProps = (state) => {
-  const { auth } = state
-  const { isAuthenticated, errorMessage } = auth
-
-  return {
-    isAuthenticated,
-    errorMessage
+        {errorMessage &&
+          <p>{errorMessage}</p>
+        }
+        <Link to="/signup">Sign up ?</Link>
+      </div>
+    );
   }
 }
 
-export default connect(mapStateToProps)(Login)
+const mapStateToProps = (state) => {
+  const { auth } = state;
+  const { isAuthenticated, errorMessage } = auth;
+
+  return {
+    isAuthenticated,
+    errorMessage,
+  };
+};
+
+export default connect(mapStateToProps)(Login);

@@ -4,12 +4,12 @@ const ProfilePicture = (props) => {
   const { login, pictures, profilePicture } = props;
   const img = pictures[profilePicture];
   const token = localStorage.getItem('x-access-token');
-  const url = '/api/pictures/' + { login } + { img } + '?token=' + token;
+  const url = `/api/pictures/${login}/${img}?token=${token}`;
   return (
-  <div className="profile-picture">
-  <img alt="profile" src={url} />
-	  </div>
-	);
+    <div className="profile-picture">
+      <img alt="profile" src={url} />
+    </div>
+  );
 };
 
 export default ProfilePicture;

@@ -1,114 +1,114 @@
-import React, { Component } from 'react'
-import TagsInput from 'react-tagsinput'
-import Dropzone from 'react-dropzone'
+import React from 'react';
+import TagsInput from 'react-tagsinput';
 
-import 'react-tagsinput/react-tagsinput.css'
+import 'react-tagsinput/react-tagsinput.css';
 
-import Geolocation from './Geolocation.js'
-import Image from './Image.js'
+import Geolocation from './Geolocation.js';
 
-class MyProfileForm extends Component {
-	render(){
-		const {
-			handleSubmit,
-			firstname,
-			updateFirstname,
-			lastname,
-			updateLastname,
-			birthDate,
-			updateBirthDate,
-			gender,
-			updateGender,
-			lookingFor,
-			updateLookingFor,
-			tags,
-			updateTags,
-			pictures,
-			login,
-			location,
-			handleImageSubmit,
-			onImageDrop,
-			deletePicture
-		} = this.props
+const MyProfileForm = (props) => {
+  const {
+    handleSubmit,
+    firstname,
+    updateFirstname,
+    lastname,
+    updateLastname,
+    birthDate,
+    updateBirthDate,
+    gender,
+    updateGender,
+    lookingFor,
+    updateLookingFor,
+    tags,
+    updateTags,
+    location,
+  } = props;
 
-		return (
-			<div className="myprofileform">
-				<Image
-					pictures={pictures}
-					login={login}
-					deletePicture={deletePicture}
-				/>
-				<Dropzone
-					multiple={false}
-					accept="image/*"
-					onDrop={onImageDrop}>
-					<p>Drop an image or click to select a file to upload.</p>
-				</Dropzone>
-				<input type="file" accept="image/*"
-					onChange={handleImageSubmit}
-				/>
-				<br />
-				<form onSubmit={handleSubmit}>
-					<div>
-						<label htmlFor="name">My name is </label>
-						<input className="name" type="text" placeholder="firstname"
-							onChange={updateFirstname}
-							value={firstname}
-						/>
-						<input className="name" type="text" placeholder="lastname"
-							onChange={updateLastname}
-							value={lastname}
-						/>
-					</div>
-					<br/>
-					<div>
-						<label htmlFor="bday">My birthday is...</label>
-						<input id="bday" type="date" placeholder="birthDate"
-							onChange={updateBirthDate}
-							value={birthDate}
-						/>
-					</div>
-					<br/>
-					<div>
-						<label htmlFor="gender">I'm a...</label>
-						<input id="gender" type="radio" name="gender" value="male"
-							onChange={updateGender}
-							checked={"male" === gender}
-						/>Dude
-						<input id="gender" type="radio" name="gender" value="female"
-							onChange={updateGender}
-							checked={"female" === gender}
-						/>Girl
-					</div>
-					<br/>
-					<div>
-						<label htmlFor="lookingFor">I want to have fun with a...</label>
-						<input id="lookingFor" type="radio" name="lookingFor" value="male"
-							onChange={updateLookingFor}
-							checked={"male" === lookingFor}
-						/>Dude
-						<input id="lookingFor" type="radio" name="lookingFor" value="female"
-							onChange={updateLookingFor}
-							checked={"female" === lookingFor}
-						/>Girl
-						<input id="lookingFor" type="radio" name="lookingFor" value="both"
-							onChange={updateLookingFor}
-							checked={"both" === lookingFor}
-						/>Whatever
-					</div>
-					<br/>
-					<TagsInput value={tags} onChange={updateTags} />
-					<input type="submit" name="submit" value="Save my changes"/>
-				</form>
-				<br />
-				<Geolocation
-					location={location}
-				/>
-			</div>
-		)
-	}
+  return (
+    <div className="myprofileform">
+      <br />
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">My name is </label>
+          <input
+            type="text"
+            placeholder="firstname"
+            className="name"
+            onChange={updateFirstname}
+            value={firstname}
+          />
+          <input
+            type="text"
+            placeholder="lastname"
+            className="name"
+            onChange={updateLastname}
+            value={lastname}
+          />
+        </div>
+        <br />
+        <div>
+          <label htmlFor="bday">My birthday is...</label>
+          <input
+            type="date"
+            placeholder="birthDate"
+            className="bday"
+            onChange={updateBirthDate}
+            value={birthDate}
+          />
+        </div>
+        <br />
+        <div>
+          <label htmlFor="gender">{"I'm a..."}</label>
+          <input
+            type="radio"
+            value="male"
+            className="gender"
+            onChange={updateGender}
+            checked={gender === 'male'}
+          />Dude
+          <input
+            type="radio"
+            value="female"
+            className="gender"
+            onChange={updateGender}
+            checked={gender === 'female'}
+          />Girl
+        </div>
+        <br />
+        <div>
+          <label htmlFor="lookingFor">I want to have fun with a...</label>
+          <input
+            type="radio"
+            value="male"
+            className="lookingFor"
+            onChange={updateLookingFor}
+            checked={lookingFor === 'male'}
+          />Dude
+          <input
+            type="radio"
+            value="female"
+            className="lookingFor"
+            onChange={updateLookingFor}
+            checked={lookingFor === 'female'}
+          />Girl
+          <input
+            type="radio"
+            value="both"
+            className="lookingFor"
+            onChange={updateLookingFor}
+            checked={lookingFor === 'both'}
+          />Whatever
+        </div>
+        <br />
+        <TagsInput value={tags} onChange={updateTags} />
+        <input type="submit" value="Save my changes" />
+      </form>
+      <br />
+      <Geolocation
+        location={location}
+      />
+    </div>
+  );
+};
 
-}
 
-
-export default MyProfileForm
+export default MyProfileForm;

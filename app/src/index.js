@@ -16,14 +16,14 @@ const store = createStore(
   rootReducer,
   applyMiddleware(
     thunkMiddleware, // lets us dispatch() functions
-	 api, // make api call when there is [CALL_API] prop in actions
+    api, // make api call when there is [CALL_API] prop in actions
     loggerMiddleware, // neat middleware that logs actions
   ),
 );
 
 render(
   <Provider store={store}>
-  <MatchaRouter />
-	</Provider>,
-	document.getElementById('root'),
+    <MatchaRouter />
+  </Provider>,
+  document.getElementById('root'),
 );

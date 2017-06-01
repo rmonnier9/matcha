@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -20,44 +20,47 @@ import Signup from './components/Signup.js';
 import Forgot from './components/Forgot.js';
 import NotFound from './components/NotFound.js';
 
-class MatchaRouter extends Component {
-  render() {
-    const { isAuthenticated } = this.props;
+const MatchaRouter = (props) => {
+  const { isAuthenticated } = props;
 
-    return (
-      <Router>
-        <div>
-          <Header />
-          <Switch>
-            <PrivateRoute
-					exact path="/" isAuthenticated={isAuthenticated}
-					component={Suggestions} />
-            <PrivateRoute
-					path="/matches" isAuthenticated={isAuthenticated}
-					component={Matches} />
-            <PrivateRoute path="/notifications" isAuthenticated={isAuthenticated} component={Notifications} />
-            <PrivateRoute path="/search" isAuthenticated={isAuthenticated} component={SearchContainer} />
-            <PrivateRoute path="/profile/:login" isAuthenticated={isAuthenticated} component={ProfileContainer} />
-            <PrivateRoute path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfileContainer} />
-            <PrivateRoute path="/chat/:login" isAuthenticated={isAuthenticated} component={ChatContainer} />
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={Signup} />
-            <Route path="/forgot" component={Forgot} />
-            <Route component={NotFound} />
-          </Switch>
-          <Footer />
-        </div>
-      </Router>
-    );
-  }
-}
+  return (
+    <Router>
+      <div>
+        <Header />
+        <Switch>
+          <PrivateRoute
+            exact
+            path="/"
+            isAuthenticated={isAuthenticated}
+            component={Suggestions}
+          />
+          <PrivateRoute
+            path="/matches"
+            isAuthenticated={isAuthenticated}
+            component={Matches}
+          />
+          <PrivateRoute path="/notifications" isAuthenticated={isAuthenticated} component={Notifications} />
+          <PrivateRoute path="/search" isAuthenticated={isAuthenticated} component={SearchContainer} />
+          <PrivateRoute path="/profile/:login" isAuthenticated={isAuthenticated} component={ProfileContainer} />
+          <PrivateRoute path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfileContainer} />
+          <PrivateRoute path="/chat/:login" isAuthenticated={isAuthenticated} component={ChatContainer} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/forgot" component={Forgot} />
+          <Route component={NotFound} />
+        </Switch>
+        <Footer />
+      </div>
+    </Router>
+  );
+};
 
 MatchaRouter.propTypes = {
-  isAuthenticated: PropTypes.element,
+  isAuthenticated: PropTypes.bool,
 };
 
 MatchaRouter.defaultProps = {
-  isAuthenticated: false
+  isAuthenticated: false,
 };
 
 //= ====================================
