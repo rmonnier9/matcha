@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
-import callApi from '../callApi.js'
+import callApi from '../callApi.js';
 
 class Geolocation extends Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			error: false,
-			location: this.props.location
-  		}
-	}
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: false,
+      location: this.props.location,
+    };
+  }
 
   componentDidMount() {
 	  const {latitude, longitude} = this.state.location

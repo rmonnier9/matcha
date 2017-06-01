@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const Footer = () => (
   <footer className="footer">
@@ -6,6 +6,6 @@ const Footer = () => (
       Robin Monnier
     </p>
   </footer>
-)
+);
 
-export default Footer
+export default Footer;
