@@ -5,17 +5,21 @@ import callApi from '../callApi.js';
 import UsersList from './UsersList.js';
 
 class InfiniteUsersScroll extends Component {
-  state = {
-    users: [],
-    hasMoreItems: true,
-    nextHref: null,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: [],
+      baseUrl: props.baseUrl,
+      hasMoreItems: true,
+      nextHref: null,
+    };
+  }
 
   loadItems = () => {
-    const { nextHref, hasMoreItems } = this.state;
+    const { nextHref, hasMoreItems, baseUrl } = this.state;
     let url;
     if (!nextHref || !hasMoreItems) {
-      url = this.props.baseUrl;
+      url = baseUrl;
     } else {
       url = nextHref;
     }

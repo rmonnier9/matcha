@@ -1,6 +1,6 @@
-import MongoConnection  	from './config/MongoConnection.js'
-import mail						from './mail.js'
-import * as Notifications	from './Notifications.js'
+import MongoConnection from './config/MongoConnection.js'
+import mail from './mail.js'
+import * as Notifications from './Notifications.js'
 
 const getInterest = async (req, res) => {
   const	{target} = req.params

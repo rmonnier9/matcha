@@ -1,11 +1,11 @@
-import config        			from './config/config.js'
-import MongoConnection			from './config/MongoConnection.js'
-import * as UsersTools			from './UsersTools.js'
-import * as Notification		from './Notifications.js'
-import fs 							from 'fs'
-import path							from 'path'
-import _								from 'lodash'
-import parser						from './parser.js'
+import config from './config/config.js'
+import MongoConnection from './config/MongoConnection.js'
+import * as UsersTools from './UsersTools.js'
+import * as Notification from './Notifications.js'
+import fs from 'fs'
+import path from 'path'
+import _ from 'lodash'
+import parser from './parser.js'
 
 // browser expect a content type img, res.json is then useless
 const get = async (req, res, next) => {
@@ -23,6 +23,21 @@ const get = async (req, res, next) => {
 		if (err || pictureExists == -1) res.sendFile(defaultPath, (err) => {if (err) next(err)})
 		else res.sendFile(imgPath, (err) => {if (err) next(err)})
 	})
+}
+
+const setAsProfile = async (req, res) => {
+  	const {currentUser} = req.decoded
+    const	{id} = req.params
+
+    const usersCollection = MongoConnection.db.collection('users')
+    const user = await usersCollection.findOne({login: currentUser })
+
+    const pictureIndex = user.pictures.indexOf(id)
+  	if (pictureIndex === -1) return res.json({success: false, message: 'Picture not found in db.'})
+
+    const update = {profilePicture: pictureIndex}
+    usersCollection.updateOne({login: currentUser }, {$set: update})
+    return res.json({success: true, message: 'Successfully defined as profile picture !'}).end()
 }
 
 const remove = async (req, res, next) => {
@@ -80,4 +95,4 @@ const save = async (req, res, next) => {
 }
 
 
-export {save, saveCheck, get, remove}
+export {save, saveCheck, get, remove, setAsProfile }

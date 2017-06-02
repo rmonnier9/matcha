@@ -8,15 +8,27 @@ class ImageManager extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      profilePicture: props.profilePicture,
       pictures: props.pictures,
     };
   }
 
   onImageDrop = (files) => {
-    this.handleImageUpload(files[0]);
+    this.imageUpload(files[0]);
   }
 
-  handleImageUpload = (file) => {
+  setProfilePicture = (id) => {
+    const url = `/myprofile/pictures/${id}`;
+    callApi(url, 'GET')
+    .then((json) => {
+      const { success } = json.data;
+      if (success) {
+        this.setState({ profilePicture: id });
+      }
+    });
+  }
+
+  imageUpload = (file) => {
     const url = '/myprofile/pictures';
 
     const formData = new FormData();
@@ -57,6 +69,7 @@ class ImageManager extends Component {
         <Image
           login={login}
           pictures={pictures}
+          setProfilePicture={this.setProfilePicture}
           deletePicture={this.deletePicture}
         />
         <Dropzone

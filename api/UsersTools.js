@@ -1,5 +1,5 @@
-import bcrypt   				from 'bcrypt-nodejs'
-import geolib						from 'geolib'
+import bcrypt from 'bcrypt-nodejs';
+import geolib from 'geolib';
 
 // Authentication and activation tools -----------------------------------------
 const generateHash = (password) => {
