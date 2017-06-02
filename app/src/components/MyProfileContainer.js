@@ -6,10 +6,10 @@ import ImageManager from './ImageManager.js';
 
 class MyProfileContainer extends Component {
   state = {
-    profile: null,
+    profileLoaded: false,
+    message: '',
     pictures: [],
     tags: [],
-    message: '',
     fistname: '',
     lastname: '',
   }
@@ -24,31 +24,29 @@ class MyProfileContainer extends Component {
       } else {
         const {
           pictures,
+          tags,
           firstname,
           lastname,
           birthDate,
           gender,
           lookingFor,
-          tags,
           location,
+          login,
         } = profile;
+        this.login = login;
         this.setState({
+          profileLoaded: true,
           pictures,
+          location,
           firstname,
           lastname,
           birthDate,
           gender,
           lookingFor,
           tags,
-          profile,
-          location,
         });
       }
     });
-  }
-
-  onImageDrop = (files) => {
-    this.handleImageUpload(files[0]);
   }
 
   handleSubmit = (event) => {
@@ -59,6 +57,7 @@ class MyProfileContainer extends Component {
       birthDate,
       gender,
       lookingFor,
+      tags,
     } = this.state;
     const data = {
       firstname: firstname.trim(),
@@ -66,7 +65,7 @@ class MyProfileContainer extends Component {
       birthDate,
       gender,
       lookingFor,
-      tags: this.state.tags,
+      tags,
     };
     const url = '/myprofile';
     callApi(url, 'POST', data)
@@ -78,7 +77,6 @@ class MyProfileContainer extends Component {
     });
   }
 
-
   updateFirstname = e => this.setState({ firstname: e.target.value })
   updateLastname = e => this.setState({ lastname: e.target.value })
   updateBirthDate = e => this.setState({ birthDate: e.target.value })
@@ -89,6 +87,7 @@ class MyProfileContainer extends Component {
   render() {
     // console.log("render", this.state)
     const {
+      profileLoaded,
       pictures,
       firstname,
       lastname,
@@ -96,21 +95,22 @@ class MyProfileContainer extends Component {
       gender,
       lookingFor,
       location,
-      tags, message, profile,
+      tags,
+      message,
     } = this.state;
+    const { login } = this;
 
-    if (!profile) {
+    if (!profileLoaded) {
       return (<div><h1>{message || 'Loading...'}</h1></div>);
     }
     return (
       <div className="profile">
-        <h1>{profile.login}</h1>
+        <h1>{login}</h1>
         <ImageManager
           pictures={pictures}
-          login={profile.login}
+          login={login}
         />
         <MyProfileForm
-          handleSubmit={this.handleSubmit}
           firstname={firstname}
           updateFirstname={this.updateFirstname}
           lastname={lastname}
@@ -123,8 +123,9 @@ class MyProfileContainer extends Component {
           updateLookingFor={this.updateLookingFor}
           tags={tags}
           updateTags={this.updateTags}
-          login={profile.login}
+          login={login}
           location={location}
+          handleSubmit={this.handleSubmit}
         />
       </div>
     );

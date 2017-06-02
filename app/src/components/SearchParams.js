@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-// import InputRange from 'react-input-range';
-//
-// import 'react-input-range/lib/css/index.css';
+import TagsInput from 'react-tagsinput';
+import InputRange from 'react-input-range';
+
+import 'react-input-range/lib/css/index.css';
 
 const SearchInput = ({ children, label }) =>
 (<div className="searchInput">
@@ -12,48 +13,47 @@ const SearchInput = ({ children, label }) =>
 class SearchParams extends Component {
   render() {
     const {
-      serverResponse,
-      ageVal,
-      distVal,
       name,
-      updateAge,
-      updateDist,
       updateName,
-      // popVal,
-      // updatePop
+      tags,
+      updateTags,
+      ageVal,
+      updateAge,
+      distVal,
+      updateDist,
+      popVal,
+      updatePop,
+      message,
+      onSubmit,
     } = this.props;
     return (
       <div className="search-params">
         <form method="get" action="#">
-          <div className="errorMessageMain">{serverResponse}</div>
+          <div className="errorMessageMain">{message}</div>
           <div className="leftSearch">
             <SearchInput label="Name">
               <input type="text" name="name" value={name} onChange={updateName} />
             </SearchInput>
-            <br />
-            {/* <SearchInput label="Popularity">
-            <br />
-            <InputRange maxValue={100} minValue={0} value={popVal} onChange={updatePop} />
-          </SearchInput> */}
+            <TagsInput value={tags} onChange={updateTags} />
             <br />
           </div>
           <div className="rightSearch">
-            <div hidden>
-            <input
-              className="distance" type="radio" name="distance" value="0to15"
-              onChange={updateDist}
-              checked={distVal === '0to15'}
-            />From 0 to 15km
-            <input
-              className="distance" type="radio" name="distance" value="to50"
-              onChange={updateDist}
-              checked={distVal === 'to50'}
-            />Until 50km
-            <input
-              className="distance" type="radio" name="distance" value="to150"
-              onChange={updateDist}
-              checked={distVal === 'to150'}
-            />Until 150km
+            <div>
+              <input
+                className="distance" type="radio" name="distance" value="0to15"
+                onChange={updateDist}
+                checked={distVal === '0to15'}
+              />From 0 to 15km
+              <input
+                className="distance" type="radio" name="distance" value="to50"
+                onChange={updateDist}
+                checked={distVal === 'to50'}
+              />Until 50km
+              <input
+                className="distance" type="radio" name="distance" value="to150"
+                onChange={updateDist}
+                checked={distVal === 'to150'}
+              />Until 150km
             </div>
             <div>
               <input
@@ -72,6 +72,9 @@ class SearchParams extends Component {
                 checked={ageVal === 'from50'}
               />45 and beyond
             </div>
+            <label htmlFor="inputPopularity" className="sr-only">Popularity</label>
+            <InputRange maxValue={100} minValue={0} value={popVal} onChange={updatePop} />
+            <br />
           </div>
           <input type="submit" value="Find my soulmate!" />
         </form>

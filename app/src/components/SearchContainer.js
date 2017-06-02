@@ -10,30 +10,33 @@ class SearchContainer extends Component {
     const { search } = this.props.location;
     const query = queryString.parse(search);
     this.state = {
-      serverResponse: null,
       name: query.name,
+      tags: [],
       ageVal: query.age,
       distVal: query.distance,
       popVal: {
         min: 0,
         max: 100,
       },
+      message: '',
     };
   }
 
-  updateAge = e => this.setState({ ageVal: e.target.value })
-  updatePop = value => this.setState({ popVal: value })
-  updateDist = e => this.setState({ distVal: e.target.value })
   updateName = e => this.setState({ name: e.target.value })
+  updateAge = e => this.setState({ ageVal: e.target.value })
+  updateDist = e => this.setState({ distVal: e.target.value })
+  updatePop = value => this.setState({ popVal: value })
+  updateTags = tags => this.setState({ tags })
 
   render() {
     // console.log("RENDER", this.state);
     const {
+      name,
+      tags,
       ageVal,
       distVal,
       popVal,
-      name,
-      serverResponse,
+      message,
     } = this.state;
 
     const { pathname, search } = this.props.location;
@@ -45,16 +48,18 @@ class SearchContainer extends Component {
       <div className="search">
         <h2>Search my soulmate</h2>
         <SearchParams
-          onSubmitClick={this.search}
-          serverResponse={serverResponse}
-          ageVal={ageVal}
-          distVal={distVal}
-          popVal={popVal}
           name={name}
-          updateAge={this.updateAge}
-          updateDist={this.updateDist}
-          updatePop={this.updatePop}
           updateName={this.updateName}
+          tags={tags}
+          updateTags={this.updateTags}
+          ageVal={ageVal}
+          updateAge={this.updateAge}
+          distVal={distVal}
+          updateDist={this.updateDist}
+          popVal={popVal}
+          updatePop={this.updatePop}
+          message={message}
+          onSubmit={this.onSubmit}
         />
         {search &&
           <InfiniteUsersScroll
