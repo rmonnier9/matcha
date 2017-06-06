@@ -1,8 +1,22 @@
 import queryString from 'query-string';
 
-import config from './config/config.js';
 import MongoConnection from './config/MongoConnection.js';
 import * as UsersTools from './UsersTools.js';
+
+const addNameQuery = (searchOBJ, name) => {
+  if (name) {
+    const regex = new RegExp(name);
+
+    searchOBJ.$and.push({
+      $or: [
+        { login: regex },
+        { firstname: regex },
+        { lastname: regex },
+      ],
+    });
+  }
+  return searchOBJ;
+};
 
 const addAgeQuery = (searchOBJ, age) => {
   if (age && (age === '18to30' || age === '30to50' || age === 'from50')) {
@@ -11,13 +25,14 @@ const addAgeQuery = (searchOBJ, age) => {
     if (age === '18to30') {
       dateMax = UsersTools.getBirthDate(18);
       dateMin = UsersTools.getBirthDate(30);
-    }    else if (age === '30to50') {
+    } else if (age === '30to50') {
       dateMax = UsersTools.getBirthDate(30);
       dateMin = UsersTools.getBirthDate(50);
     } else {
       dateMax = UsersTools.getBirthDate(50);
       dateMin = UsersTools.getBirthDate(100);
     }
+
     searchOBJ.$and.push({
       birthDate: {
         $lt: dateMax,
@@ -34,6 +49,7 @@ const addAgeQuery = (searchOBJ, age) => {
 
 const addDistQuery = (searchOBJ, location, dist) => {
   if (dist && (dist === '0to15' || dist === 'to50' || dist === 'to150')) {
+    const { latitude, longitude } = location;
     let distMax;
     if (dist === '0to15') {
       distMax = 15 * 1000;
@@ -42,7 +58,7 @@ const addDistQuery = (searchOBJ, location, dist) => {
     } else {
       distMax = 150 * 1000;
     }
-    const { latitude, longitude } = location;
+
     searchOBJ.$and.push({
       loc: {
         $near: {
@@ -57,10 +73,24 @@ const addDistQuery = (searchOBJ, location, dist) => {
   return searchOBJ;
 };
 
+const addTagsQuery = (searchOBJ, tags) => {
+  if (tags) {
+    const tagsQuery = Object.prototype.toString.call(tags) === '[object Array]' ? tags : [tags];
+
+    searchOBJ.$and.push({
+      tags: {
+        $in: tagsQuery,
+      },
+    });
+  }
+  return searchOBJ;
+};
+
 const advancedSearch = async (req, res) => {
   const { currentUser } = req.decoded;
   const { query } = req;
 
+  // get current user from db
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: currentUser });
 
@@ -70,36 +100,33 @@ const advancedSearch = async (req, res) => {
       { blockedBy: { $ne: currentUser } },
     ],
   };
-  if (query.name) {
-    const regex = new RegExp(query.name);
-    searchOBJ.$and.push({
-      $or: [
-        { login: regex },
-        { firstname: regex },
-        { lastname: regex },
-      ],
-    });
-  }
+  // add query params
+  searchOBJ = addNameQuery(searchOBJ, query.name);
   searchOBJ = addAgeQuery(searchOBJ, query.age);
   searchOBJ = addDistQuery(searchOBJ, user.location, query.distVal);
-  console.log(searchOBJ);
+  searchOBJ = addTagsQuery(searchOBJ, query.tags);
+
   // define number of results per requests
   const toSkip = !query.start ? 0 : parseInt(query.start, 10);
   const numberPerRequest = 2;
 
-  // execute the query in the DB
+  // get users from db
   const cursor = usersCollection.find(searchOBJ)
-  .skip(toSkip).limit(numberPerRequest);
+                                .skip(toSkip).limit(numberPerRequest);
   let users = await cursor.toArray();
 
+  // format users' data
   UsersTools.addUsefullData(users, user);
   users = UsersTools.filterData(users);
 
-  const resObj = { success: true, message: 'Search successfull.', users };
-  if (users.length) {
+  // format server response
+  const resObj = { error: '', users };
+  if (users.length === numberPerRequest) {
     query.start = toSkip + numberPerRequest;
     resObj.nextHref = `/search?${queryString.stringify(query)}`;
   }
+
+    // send response and end request
   return res.json(resObj).end();
 };
 

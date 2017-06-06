@@ -33,7 +33,7 @@ class Geolocation extends Component {
     navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
       const url = '/myprofile';
-      callApi(url, 'POST', { location: { latitude, longitude } })
+      callApi(url, 'POST', { coordinates: [longitude, latitude] })
       .then(({ data }) => {
         if (data.success === true) {
           this.marker.setMap(null);

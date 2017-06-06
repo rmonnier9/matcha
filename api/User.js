@@ -58,18 +58,22 @@ const updateInfo = async (req, res) => {
   if (error != null) return res.json({ success: false, error }).end();
 
   // filter parameters that can be updated with a whitelist
-  const whitelist = ['firstname', 'lastname', 'gender', 'birthDate', 'about', 'tags', 'profilePictureId', 'location'];
+  const whitelist = [
+    'firstname', 'lastname', 'gender', 'birthDate', 'about',
+    'tags', 'profilePictureId', 'loc',
+  ];
   const update = {};
-  for (const ix in whitelist) {
-    if ({}.hasOwnProperty.call(whitelist, ix)) {
-      const field = whitelist[ix];
-      if ({}.hasOwnProperty.call(body, field) && body[field]) {
-        update[field] = body[field];
-      }
+  whitelist.forEach((field) => {
+    if ({}.hasOwnProperty.call(body, field) && body[field]) {
+      update[field] = body[field];
     }
+  });
+  if (body.lookingFor) {
+    update.lookingFor = body.lookingFor === 'both' ? ['male', 'female'] : [body.lookingFor];
   }
-  if ({}.hasOwnProperty.call(body, 'lookingFor') && body.lookingFor) update.lookingFor = body.lookingFor === 'both' ? ['male', 'female'] : [body.lookingFor];
-
+  if (body.loc) {
+    update.lookingFor = body.lookingFor === 'both' ? ['male', 'female'] : [body.lookingFor];
+  }
   // update user in DB
   const usersCollection = MongoConnection.db.collection('users');
   usersCollection.updateOne({ login: currentUser }, { $set: update });

@@ -5,7 +5,7 @@ import EncartLeft from './EncartLeft.js';
 
 const UsersList = (props) => {
   if (props.users.length === 0) {
-    return (<div>No Users found</div>);
+    return (<div>Nothing to show</div>);
   }
   return (
     <div className="users-list">

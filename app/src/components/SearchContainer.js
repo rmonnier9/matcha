@@ -52,6 +52,7 @@ class SearchContainer extends Component {
     this.setState({ users: [],
       hasMoreItems: true,
       nextHref: null,
+      loadStarted: true,
     });
   }
 
