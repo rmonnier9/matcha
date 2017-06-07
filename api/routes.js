@@ -13,14 +13,15 @@ const rejectedCatcher = handler => (req, res, next) => {
 };
 
 const routes = (app, users, upload) => {
-  console.log(Auth);
-  console.log(User);
-  console.log(Interactions);
+  // console.log(Auth);
+  // console.log(User);
+  // console.log(Interactions);
 
   // User authentification  ==========
   app.post('/api/signup', rejectedCatcher(Auth.signup));
   app.post('/api/signin', Auth.signin);
   app.post('/api/confirm', Auth.emailConfirm);
+  app.post('/api/forgot_password', Auth.forgotPassword);
 
   // Logged part  ====================
   app.use('/api', Auth.isLogged);
@@ -28,7 +29,6 @@ const routes = (app, users, upload) => {
 
   // Password  ============
   app.post('/api/update_password', Auth.updatePassword);
-  app.get('/api/forgot_password', Auth.forgotPassword);
 
   // User Datas  ==========
   app.get('/api/profile/:login', User.getInfos(users)); // block report and like also

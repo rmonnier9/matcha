@@ -6,11 +6,11 @@ const getSearchOBJ = (gender, lookingFor, currentUser, loc) => {
   const { coordinates } = loc;
   const searchOBJ = {
     $and: [
-      // { login: { $ne: currentUser } },
-      // { blockedBy: { $ne: currentUser } },
-      // { blocked: { $ne: currentUser } },
-      // { gender: { $in: lookingFor } },
-      // { lookingFor: gender },
+      { login: { $ne: currentUser } },
+      { blockedBy: { $ne: currentUser } },
+      { blocked: { $ne: currentUser } },
+      { gender: { $in: lookingFor } },
+      { lookingFor: gender },
       { loc: {
         $near: {
           $geometry: {
@@ -48,8 +48,7 @@ const get = async (req, res) => {
   // format users' data
   UserScore.addScore(users, user);
   UsersTools.addUsefullData(users, user);
-  users = users.filter(current => current.distance < 100);
-  users.sort((userA, userB) => -userA.score - -userB.score);
+  users.sort((userA, userB) => (userB.score - userA.score));
   users = UsersTools.filterData(users);
   users = users.slice(0, 10);
 

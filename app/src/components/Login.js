@@ -38,6 +38,7 @@ class Login extends Component {
           <p>{errorMessage}</p>
         }
         <Link to="/signup">Sign up ?</Link>
+        <Link to="/forgot">Forgot password ?</Link>
       </div>
     );
   }

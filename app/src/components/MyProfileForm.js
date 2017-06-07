@@ -12,6 +12,9 @@ const MyProfileForm = (props) => {
     updateFirstname,
     lastname,
     updateLastname,
+    oldEmail,
+    email,
+    updateEmail,
     birthDate,
     updateBirthDate,
     gender,
@@ -21,6 +24,7 @@ const MyProfileForm = (props) => {
     tags,
     updateTags,
     location,
+    message,
   } = props;
 
   return (
@@ -42,6 +46,17 @@ const MyProfileForm = (props) => {
             className="name"
             onChange={updateLastname}
             value={lastname}
+          />
+        </div>
+        <br />
+        <div>
+          <label htmlFor="email">Email : {oldEmail}</label>
+          <input
+            type="email"
+            placeholder="new email"
+            className="email"
+            onChange={updateEmail}
+            value={email}
           />
         </div>
         <br />
@@ -102,6 +117,7 @@ const MyProfileForm = (props) => {
         <TagsInput value={tags} onChange={updateTags} />
         <input type="submit" value="Save my changes" />
       </form>
+      <p>{message}</p>
       <br />
       <Geolocation
         location={location}

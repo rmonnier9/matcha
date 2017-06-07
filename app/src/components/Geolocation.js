@@ -5,6 +5,7 @@ import callApi from '../callApi.js';
 class Geolocation extends Component {
   constructor(props) {
     super(props);
+    console.log(this.props.location);
     this.state = {
       error: false,
       location: this.props.location,

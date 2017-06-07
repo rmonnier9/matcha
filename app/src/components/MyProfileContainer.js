@@ -12,6 +12,7 @@ class MyProfileContainer extends Component {
     tags: [],
     fistname: '',
     lastname: '',
+    email: '',
   }
 
   componentDidMount() {
@@ -27,6 +28,7 @@ class MyProfileContainer extends Component {
           tags,
           firstname,
           lastname,
+          email,
           birthDate,
           gender,
           lookingFor,
@@ -34,6 +36,7 @@ class MyProfileContainer extends Component {
           login,
         } = profile;
         this.login = login;
+        this.oldEmail = email;
         this.setState({
           profileLoaded: true,
           pictures,
@@ -54,6 +57,7 @@ class MyProfileContainer extends Component {
     const {
       firstname,
       lastname,
+      email,
       birthDate,
       gender,
       lookingFor,
@@ -62,6 +66,7 @@ class MyProfileContainer extends Component {
     const data = {
       firstname: firstname.trim(),
       lastname: lastname.trim(),
+      email,
       birthDate,
       gender,
       lookingFor,
@@ -73,12 +78,15 @@ class MyProfileContainer extends Component {
       const { success, message } = json.data;
       if (!success) {
         this.setState({ message });
+      } else {
+        this.setState({ message: 'Profile successfully updated !', email: '' })
       }
     });
   }
 
   updateFirstname = e => this.setState({ firstname: e.target.value })
   updateLastname = e => this.setState({ lastname: e.target.value })
+  updateEmail = e => this.setState({ email: e.target.value })
   updateBirthDate = e => this.setState({ birthDate: e.target.value })
   updateGender = e => this.setState({ gender: e.target.value })
   updateLookingFor = e => this.setState({ lookingFor: e.target.value })
@@ -97,8 +105,9 @@ class MyProfileContainer extends Component {
       location,
       tags,
       message,
+      email,
     } = this.state;
-    const { login } = this;
+    const { login, oldEmail } = this;
 
     if (!profileLoaded) {
       return (<div><h1>{message || 'Loading...'}</h1></div>);
@@ -115,6 +124,9 @@ class MyProfileContainer extends Component {
           updateFirstname={this.updateFirstname}
           lastname={lastname}
           updateLastname={this.updateLastname}
+          email={email}
+          oldEmail={oldEmail}
+          updateEmail={this.updateEmail}
           birthDate={birthDate}
           updateBirthDate={this.updateBirthDate}
           gender={gender}
@@ -125,6 +137,7 @@ class MyProfileContainer extends Component {
           updateTags={this.updateTags}
           login={login}
           location={location}
+          message={message}
           handleSubmit={this.handleSubmit}
         />
       </div>

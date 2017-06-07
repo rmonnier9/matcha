@@ -42,22 +42,29 @@ const emailConfirm = async (req, res) => {
 
   // find user in DB
   const usersCollection = MongoConnection.db.collection('users');
-  const user = await usersCollection.findOne({ login: login });
-  if (!user) return res.json({ success: false, message: 'User not found.' }).end();
+  const user = await usersCollection.findOne({ login });
+  if (!user) return res.json({ error: 'User not found.' }).end();
+
+  const update = { $set: { active: true }, $unset: { activationString: '', newEmail: '' } };
 
   // check if account already activated
-  if (user.active === true) {
-    return res.json({ success: false, message: 'Account already activated.' }).end();
+  if (user.newEmail) {
+    update.$set = { email: user.newEmail };
+  } else if (user.active === true) {
+    return res.json({ error: 'Account already activated.' }).end();
   }
 
   // check if activation key is valid
+  if (!activation) {
+    return res.json({ error: 'No activation key.' }).end();
+  }
   if (user.activationString !== activation) {
-    return res.json({ success: false, message: 'Wrong activation key.' }).end();
+    return res.json({ error: 'Wrong activation key.' }).end();
   }
 
   // update the user in DB and end the request
-  usersCollection.updateOne({ login }, { active: true, $unset: { activationString: '' } });
-  return res.json({ success: true, message: 'Account successfully activated.' }).end();
+  usersCollection.updateOne({ login }, update);
+  return res.json({ error: '' }).end();
 };
 
 const signin = async (req, res) => {
@@ -83,6 +90,35 @@ const signin = async (req, res) => {
   // res.set('Access-Control-Expose-Headers', 'x-access-token');
   // res.set('x-access-token', token);
   return res.json({ success: true, message: 'Token delivered.', token }).end();
+};
+
+const forgotPassword = async (req, res) => {
+  const { login, email } = req.body;
+
+  // find the user in DB
+  const usersCollection = MongoConnection.db.collection('users');
+  const user = await usersCollection.findOne({ login });
+  if (!user || user.email !== email) {
+    return res.json({ error: 'Wrong login/email association.' }).end();
+  }
+
+  // generate new random password
+  const newPassword = UsersTools.randomString(12);
+
+  // hash the password
+  const hashedPassword = UsersTools.generateHash(newPassword);
+
+  // save the new password in DB
+  const update = { password: hashedPassword };
+  usersCollection.updateOne({ login }, { $set: update });
+
+  // find the user in DB to get email
+
+  // send mail with password and then end the request
+  const subject = 'Forgot password - New password';
+  const content = `Your new password is ${newPassword}`;
+  mail(email, subject, content);
+  return res.json({ error: '' });
 };
 
 const isLogged = (req, res, next) => {
@@ -122,32 +158,7 @@ const updatePassword = async (req, res) => {
   const update = { password: hashedPassword };
   const usersCollection = MongoConnection.db.collection('users');
   usersCollection.updateOne({ login: currentUser }, { $set: update });
-  res.json({ success: true, message: 'Password successfully updated.' });
-};
-
-const forgotPassword = async (req, res) => {
-  const { currentUser } = req.decoded;
-
-  // generate new random password
-  const newPassword = UsersTools.randomString(12);
-
-  // hash the password
-  const hashedPassword = UsersTools.generateHash(newPassword);
-
-  // save the new password in DB
-  const update = { password: hashedPassword };
-  const usersCollection = MongoConnection.db.collection('users');
-  usersCollection.updateOne({ login: currentUser }, { $set: update });
-
-  // find the user in DB to get email
-  const user = await usersCollection.findOne({ login: currentUser });
-  const { email } = user;
-
-  // send mail with password and then end the request
-  const subject = 'Forgot password - Your new password';
-  const content = `Your new password is ${newPassword}`;
-  mail(email, subject, content);
-  return res.json({ success: true, message: 'New password generated. Check your email.' });
+  return res.json({ success: true, message: 'Password successfully updated.' });
 };
 
 export { signup, signin, isLogged, whoami, updatePassword, forgotPassword, emailConfirm };

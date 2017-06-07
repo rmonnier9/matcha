@@ -15,9 +15,10 @@ import SearchContainer from './components/SearchContainer.js';
 import ProfileContainer from './components/ProfileContainer.js';
 import MyProfileContainer from './components/MyProfileContainer.js';
 import ChatContainer from './components/ChatContainer.js';
+import EmailConfirm from './components/EmailConfirm.js';
 import Login from './components/Login.js';
 import Signup from './components/Signup.js';
-import Forgot from './components/Forgot.js';
+import ForgotPassword from './components/ForgotPassword.js';
 import NotFound from './components/NotFound.js';
 
 const MatchaRouter = (props) => {
@@ -44,9 +45,10 @@ const MatchaRouter = (props) => {
           <PrivateRoute path="/profile/:login" isAuthenticated={isAuthenticated} component={ProfileContainer} />
           <PrivateRoute path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfileContainer} />
           <PrivateRoute path="/chat/:login" isAuthenticated={isAuthenticated} component={ChatContainer} />
+          <Route path="/confirm" component={EmailConfirm} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
-          <Route path="/forgot" component={Forgot} />
+          <Route path="/forgot" component={ForgotPassword} />
           <Route component={NotFound} />
         </Switch>
         <Footer />

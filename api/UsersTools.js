@@ -189,11 +189,11 @@ const getPrivateInfos = (user) => {
 
 const filterPrivateInfos = (user) => {
   const { login,
-    email,
     firstname,
     lastname,
-    age,
+    email,
     birthDate,
+    age,
     gender,
     lookingFor,
     about,
@@ -206,9 +206,9 @@ const filterPrivateInfos = (user) => {
   } = user;
   return {
     login,
-    email,
     firstname,
     lastname,
+    email,
     age,
     birthDate,
     gender,
