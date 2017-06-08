@@ -145,20 +145,28 @@ const whoami = (req, res) => {
 
 const updatePassword = async (req, res) => {
   const { currentUser } = req.decoded;
-  const { password, confirmpassword } = req.body;
+  const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+  // find user in DB
+  const usersCollection = MongoConnection.db.collection('users');
+  const user = await usersCollection.findOne({ login: currentUser });
+  if (!user) return res.json({ error: 'User not found.' }).end();
+
+  if (!UsersTools.validPassword(oldPassword, user.password)) {
+    return res.json({ error: 'Wrong old password.' }).end();
+  }
 
   // parse the form fields
-  const error = parser.passwordField(password, confirmpassword);
-  if (error != null) return res.json({ success: false, error });
+  const error = parser.passwordField(newPassword, confirmNewPassword);
+  if (error != null) return res.json({ error });
 
   // hash the password
-  const hashedPassword = UsersTools.generateHash(password);
+  const hashedPassword = UsersTools.generateHash(newPassword);
 
   // save the new password in DB and then end the request
   const update = { password: hashedPassword };
-  const usersCollection = MongoConnection.db.collection('users');
   usersCollection.updateOne({ login: currentUser }, { $set: update });
-  return res.json({ success: true, message: 'Password successfully updated.' });
+  return res.json({ error: '' });
 };
 
 export { signup, signin, isLogged, whoami, updatePassword, forgotPassword, emailConfirm };

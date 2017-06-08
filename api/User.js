@@ -12,7 +12,7 @@ const getInfos = users => async (req, res) => {
   // get user from DB
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login, blocked: { $ne: currentUser } });
-  if (!user) return res.status(404).json({ success: false, message: 'Profile not found.' }).end();
+  if (!user) return res.json({ error: 'Profile not found.' }).end();
 
   if (currentUser !== login) {
     const alreadyVisited = _.find(user.visitedBy, visitor => visitor === currentUser);
@@ -33,7 +33,7 @@ const getInfos = users => async (req, res) => {
   // get and send infos then end request
   const currentUserData = await usersCollection.findOne({ login: currentUser });
   const profile = UsersTools.getInfos(user, currentUserData);
-  return res.json({ success: true, message: 'Profile found.', profile }).end();
+  return res.json({ error: '', profile }).end();
 };
 
 const getMyInfos = async (req, res) => {
@@ -47,7 +47,7 @@ const getMyInfos = async (req, res) => {
 
   // get and send infos then end request
   const profile = UsersTools.getPrivateInfos(user);
-  return res.json({ success: true, message: 'Profile found.', profile }).end();
+  return res.json({ error: '', profile }).end();
 };
 
 const changeEmail = (update, email, login) => {
@@ -69,7 +69,7 @@ const updateInfo = async (req, res) => {
 
   // parse the form fields
   const error = parser.updateForm(body);
-  if (error != null) return res.json({ success: false, error }).end();
+  if (error != null) return res.json({ error }).end();
 
   // filter parameters that can be updated with a whitelist
   const whitelist = [
@@ -105,7 +105,7 @@ const updateInfo = async (req, res) => {
   // update user in DB
   const usersCollection = MongoConnection.db.collection('users');
   usersCollection.updateOne({ login: currentUser }, { $set: update });
-  return res.json({ success: true, message: 'Profile successfully updated.' }).end();
+  return res.json({ error: '' }).end();
 };
 
 export { getInfos, getMyInfos, updateInfo };

@@ -2,14 +2,15 @@ import React from 'react';
 
 import InfiniteUsersScroll from './InfiniteUsersScroll.js';
 
-const Matches = () => (
+const MyProfileMatches = () => (
   <div className="mymatches">
     <h2>My matches</h2>
     <InfiniteUsersScroll
-      baseUrl={'/matches'}
+      baseUrl={'/myprofile/matches'}
+      showChat
     />
   </div>
 );
 
 
-export default Matches;
+export default MyProfileMatches;

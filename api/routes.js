@@ -7,6 +7,8 @@ import * as Chat from './Chat.js';
 import * as Suggestions from './Suggestions.js';
 import * as Notifications from './Notifications.js';
 import * as Matches from './Matches.js';
+import * as Likes from './Likes.js';
+import * as Visits from './Visits.js';
 
 const rejectedCatcher = handler => (req, res, next) => {
   handler(req, res, next).catch((error) => { next(error); });
@@ -59,7 +61,9 @@ const routes = (app, users, upload) => {
   app.get('/api/notifications', rejectedCatcher(Notifications.get));
 
   // Matches  ===============
-  app.get('/api/matches', rejectedCatcher(Matches.get));
+  app.get('/api/myprofile/matches', rejectedCatcher(Matches.get));
+  app.get('/api/myprofile/visits', rejectedCatcher(Visits.get));
+  app.get('/api/myprofile/likes', rejectedCatcher(Likes.get));
 
   // Suggestions ===============
   app.get('/api/suggestions', rejectedCatcher(Suggestions.get));

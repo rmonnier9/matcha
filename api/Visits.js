@@ -8,7 +8,7 @@ const get = async (req, res) => {
   // get current user from db
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: currentUser });
-  const { matches = [] } = user;
+  const { visitedBy = [] } = user;
 
   // define number of results per requests
   const toSkip = !start ? 0 : parseInt(start, 10);
@@ -16,7 +16,7 @@ const get = async (req, res) => {
   const nextStart = toSkip + numberPerRequest;
 
   // get users from db
-  const cursor = usersCollection.find({ login: { $in: matches } })
+  const cursor = usersCollection.find({ login: { $in: visitedBy } })
                                 .skip(toSkip).limit(numberPerRequest);
   let users = await cursor.toArray();
 
@@ -26,8 +26,8 @@ const get = async (req, res) => {
 
   // format server response
   const resObj = { error: '', users };
-  if (matches.length > nextStart) {
-    resObj.nextHref = `/myprofile/matches?start=${nextStart}`;
+  if (visitedBy.length > nextStart) {
+    resObj.nextHref = `/myprofile/visits?start=${nextStart}`;
   }
 
   // send response and end request

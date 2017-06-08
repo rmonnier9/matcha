@@ -1,144 +1,60 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import callApi from '../callApi.js';
-import MyProfileForm from './MyProfileForm.js';
 import ImageManager from './ImageManager.js';
+import Geolocation from './Geolocation.js';
+import UpdatePassword from './UpdatePassword.js';
+import UpdateInfos from './UpdateInfos.js';
 
 class MyProfileContainer extends Component {
   state = {
     profileLoaded: false,
-    message: '',
-    pictures: [],
-    tags: [],
-    fistname: '',
-    lastname: '',
-    email: '',
+    error: '',
   }
 
   componentDidMount() {
     const url = '/myprofile';
     callApi(url, 'GET')
     .then((json) => {
-      const { success, profile, message } = json.data;
-      if (!success) {
-        this.setState({ message });
+      const { error, profile } = json.data;
+      if (error) {
+        this.setState({ error });
       } else {
-        const {
-          pictures,
-          tags,
-          firstname,
-          lastname,
-          email,
-          birthDate,
-          gender,
-          lookingFor,
-          location,
-          login,
-        } = profile;
-        this.login = login;
-        this.oldEmail = email;
+        this.profile = profile;
         this.setState({
           profileLoaded: true,
-          pictures,
-          location,
-          firstname,
-          lastname,
-          birthDate,
-          gender,
-          lookingFor,
-          tags,
         });
       }
     });
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const {
-      firstname,
-      lastname,
-      email,
-      birthDate,
-      gender,
-      lookingFor,
-      tags,
-    } = this.state;
-    const data = {
-      firstname: firstname.trim(),
-      lastname: lastname.trim(),
-      email,
-      birthDate,
-      gender,
-      lookingFor,
-      tags,
-    };
-    const url = '/myprofile';
-    callApi(url, 'POST', data)
-    .then((json) => {
-      const { success, message } = json.data;
-      if (!success) {
-        this.setState({ message });
-      } else {
-        this.setState({ message: 'Profile successfully updated !', email: '' })
-      }
-    });
-  }
-
-  updateFirstname = e => this.setState({ firstname: e.target.value })
-  updateLastname = e => this.setState({ lastname: e.target.value })
-  updateEmail = e => this.setState({ email: e.target.value })
-  updateBirthDate = e => this.setState({ birthDate: e.target.value })
-  updateGender = e => this.setState({ gender: e.target.value })
-  updateLookingFor = e => this.setState({ lookingFor: e.target.value })
-  updateTags = tags => this.setState({ tags })
-
   render() {
     // console.log("render", this.state)
     const {
       profileLoaded,
-      pictures,
-      firstname,
-      lastname,
-      birthDate,
-      gender,
-      lookingFor,
-      location,
-      tags,
-      message,
-      email,
+      error,
     } = this.state;
-    const { login, oldEmail } = this;
 
-    if (!profileLoaded) {
-      return (<div><h1>{message || 'Loading...'}</h1></div>);
+    if (error || !profileLoaded) {
+      return (<div><h1>{error || 'Loading...'}</h1></div>);
     }
     return (
       <div className="profile">
-        <h1>{login}</h1>
+        <h1>{this.profile.login}</h1>
+        <nav>
+          <Link to="/myprofile/visits">My visits</Link>
+          <Link to="/myprofile/likes">My likes</Link>
+        </nav>
         <ImageManager
-          pictures={pictures}
-          login={login}
+          profile={this.profile}
         />
-        <MyProfileForm
-          firstname={firstname}
-          updateFirstname={this.updateFirstname}
-          lastname={lastname}
-          updateLastname={this.updateLastname}
-          email={email}
-          oldEmail={oldEmail}
-          updateEmail={this.updateEmail}
-          birthDate={birthDate}
-          updateBirthDate={this.updateBirthDate}
-          gender={gender}
-          updateGender={this.updateGender}
-          lookingFor={lookingFor}
-          updateLookingFor={this.updateLookingFor}
-          tags={tags}
-          updateTags={this.updateTags}
-          login={login}
-          location={location}
-          message={message}
-          handleSubmit={this.handleSubmit}
+        <UpdateInfos
+          profile={this.profile}
+        />
+        <UpdatePassword />
+        <Geolocation
+          loc={this.profile.loc}
         />
       </div>
     );

@@ -12,10 +12,14 @@ const UsersList = (props) => {
       {
         props.users.map((user) => {
           const { login } = user;
-          const url = `/profile/${login}`;
+          const urlProfile = `/profile/${login}`;
+          const urlChat = `/chat/${login}`;
           return (
             <div key={login} className="user">
-              <Link to={url}>{login}</Link>
+              <Link to={urlProfile}>{login}</Link>
+              {props.showChat &&
+                <Link to={urlChat}>Open Chat</Link>
+              }
               <EncartLeft
                 profile={user}
               />

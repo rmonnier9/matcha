@@ -3,9 +3,7 @@ import TagsInput from 'react-tagsinput';
 
 import 'react-tagsinput/react-tagsinput.css';
 
-import Geolocation from './Geolocation.js';
-
-const MyProfileForm = (props) => {
+const UpdateInfosComponent = (props) => {
   const {
     handleSubmit,
     firstname,
@@ -15,20 +13,20 @@ const MyProfileForm = (props) => {
     oldEmail,
     email,
     updateEmail,
-    birthDate,
+    birthDate = '',
     updateBirthDate,
     gender,
     updateGender,
     lookingFor,
     updateLookingFor,
+    about,
+    updateAbout,
     tags,
     updateTags,
-    location,
-    message,
   } = props;
 
   return (
-    <div className="myprofileform">
+    <div className="updateinfoscomponent">
       <br />
       <form onSubmit={handleSubmit}>
         <div>
@@ -67,7 +65,7 @@ const MyProfileForm = (props) => {
             placeholder="birthDate"
             className="bday"
             onChange={updateBirthDate}
-            value={birthDate}
+            value={birthDate || new Date().toISOString().substr(0, 10)}
           />
         </div>
         <br />
@@ -114,17 +112,23 @@ const MyProfileForm = (props) => {
           />Whatever
         </div>
         <br />
+        <div>
+          <label htmlFor="name">About me : </label>
+          <input
+            type="text"
+            style={{ height: '200px', width: '420px' }}
+            placeholder="About me..."
+            className="about"
+            onChange={updateAbout}
+            value={about}
+          />
+        </div>
         <TagsInput value={tags} onChange={updateTags} />
         <input type="submit" value="Save my changes" />
       </form>
-      <p>{message}</p>
-      <br />
-      <Geolocation
-        location={location}
-      />
     </div>
   );
 };
 
 
-export default MyProfileForm;
+export default UpdateInfosComponent;

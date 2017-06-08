@@ -2,100 +2,55 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import callApi from '../callApi.js';
-import Profile from './Profile.js';
-
+import ProfileComponent from './ProfileComponent.js';
+import LikeContainer from './LikeContainer.js';
+import BlockContainer from './BlockContainer.js';
 
 class ProfileContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
       profile: null,
-      alreadyBlocked: false,
-      alreadyLiked: false,
+      error: '',
     };
   }
 
   componentDidMount() {
     const { url } = this.props.match;
     callApi(url, 'GET').then((json) => {
-      const { profile } = json.data;
-      this.setState({ profile });
-    });
-    const { login } = this.props.match.params;
-    const alreadyBlockedURL = `/blocks/${login}`;
-    callApi(alreadyBlockedURL, 'GET').then((json) => {
-      const { alreadyBlocked } = json.data;
-      if (alreadyBlocked) this.setState({ alreadyBlocked });
-    });
-    const alreadyLikedURL = `/likes/${login}`;
-    callApi(alreadyLikedURL, 'GET').then((json) => {
-      const { alreadyLiked } = json.data;
-      if (alreadyLiked) this.setState({ alreadyLiked });
-    });
-  }
-
-  onLikeClick = (e, likes) => {
-    const { login } = this.props.match.params;
-    const url = `/likes/${login}`;
-    callApi(url, 'POST', { likes })
-    .then((json) => {
-      const { success } = json.data;
-      if (success === true) {
-        if (likes === true) {
-          this.setState({ alreadyLiked: true });
-        } else {
-          this.setState({ alreadyLiked: false });
-        }
-      }
-    });
-  }
-
-  onBlockClick = (e, blocks) => {
-    const { login } = this.props.match.params;
-    const url = `/blocks/${login}`;
-    callApi(url, 'POST', { blocks })
-    .then((json) => {
-      const { success } = json.data;
-      if (success === true) {
-        if (blocks === true) {
-          this.props.history.push('/');
-        } else {
-          this.setState({ alreadyBlocked: false });
-        }
-      }
-    });
-  }
-
-  onReportClick = () => {
-    const { login } = this.props.match.params;
-    const url = `/reports/${login}`;
-    callApi(url, 'POST')
-    .then((json) => {
-      const { success } = json.data;
-      if (success === true) {
-        this.props.history.push('/');
+      const { error, profile } = json.data;
+      if (error) {
+        this.setState({ error });
+      } else {
+        this.setState({ profile });
       }
     });
   }
 
   render() {
-    const { profile, alreadyBlocked, alreadyLiked } = this.state;
+    // console.log('RENDER', this.state);
+    const { profile, error } = this.state;
     const { currentLogin } = this.props;
     const { login } = this.props.match.params;
-    const myprofile = login === currentLogin;
+    const isMyProfile = login === currentLogin;
 
-    if (!profile) { return (<div><h1>Loading...</h1></div>); }
-    // console.log('RENDER', profile);
+    if (error || !profile) {
+      return (<div><h1>{error || 'Loading...'}</h1></div>);
+    }
     return (
       <div className="profile">
-        <Profile
+        <h1>{profile.login}</h1>
+        <ProfileComponent
           profile={profile}
-          onReportClick={this.onReportClick}
-          onBlockClick={this.onBlockClick}
-          alreadyBlocked={alreadyBlocked}
-          onLikeClick={this.onLikeClick}
-          alreadyLiked={alreadyLiked}
-          myprofile={myprofile}
+          isMyProfile={isMyProfile}
+        />
+        <LikeContainer
+          login={login}
+          isMyProfile={isMyProfile}
+        />
+        <BlockContainer
+          login={login}
+          isMyProfile={isMyProfile}
         />
       </div>
     );

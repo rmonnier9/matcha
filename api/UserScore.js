@@ -2,11 +2,11 @@ import { getAge } from './UsersTools.js';
 
 // score computation for suggestions
 const getAgeScore = (ageA, ageB) => {
-  const ageDiff = ageA - ageB;
-  if (ageDiff < 2 || ageDiff > -2) return 100;
-  else if (ageDiff < 5 || ageDiff > -5) return 75;
-  else if (ageDiff < 10 || ageDiff > -10) return 50;
-  else if (ageDiff < 20 || ageDiff > -20) return 25;
+  const ageDiff = Math.abs(ageA - ageB);
+  if (ageDiff < 2) return 100;
+  else if (ageDiff < 5) return 75;
+  else if (ageDiff < 10) return 50;
+  else if (ageDiff < 20) return 25;
   return (0);
 };
 

@@ -40,7 +40,6 @@ class Signup extends Component {
 
   render() {
     const { message } = this.state;
-
     return (
       <div className="signin">
         <h2 className="form-signin-heading">Sign up</h2>
@@ -55,20 +54,6 @@ class Signup extends Component {
           <input type="login" ref={(c) => { this.login = c; }} className="form-control" placeholder="Login" required />
           <label htmlFor="inputPassword" className="sr-only">Password</label>
           <input type="password" ref={(c) => { this.password = c; }} className="form-control" placeholder="Password" required />
-          <select name="month" id="month">
-          	<option value="1">01</option>
-          	<option value="2">02</option>
-          	<option value="3">03</option>
-          	<option value="4">04</option>
-          	<option value="5">05</option>
-          	<option value="6">06</option>
-          	<option value="7">07</option>
-          	<option value="8">08</option>
-          	<option value="9">09</option>
-          	<option value="10">10</option>
-          	<option value="11">11</option>
-          	<option value="12">12</option>
-          </select>
           <label htmlFor="inputPassword" className="sr-only">Confirm password</label>
           <input type="password" ref={(c) => { this.confirmpassword = c; }} className="form-control" placeholder="Confirm password" required />
           <input type="submit" name="submit" value="Create my profile" />

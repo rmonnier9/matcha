@@ -5,21 +5,22 @@ import callApi from '../callApi.js';
 class Geolocation extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props.location);
+
     this.state = {
       error: false,
-      location: this.props.location,
     };
   }
 
   componentDidMount() {
-    const { latitude, longitude } = this.state.location;
+    const { coordinates } = this.props.loc;
+    const lng = coordinates[0];
+    const lat = coordinates[1];
     this.map = new window.google.maps.Map(document.getElementById('map'), {
       zoom: 15,
-      center: { lat: latitude, lng: longitude },
+      center: { lat, lng },
     });
     this.marker = new window.google.maps.Marker({
-      position: { lat: latitude, lng: longitude },
+      position: { lat, lng },
       title: 'Me',
     });
     this.marker.setMap(this.map);
@@ -35,8 +36,11 @@ class Geolocation extends Component {
       const { latitude, longitude } = position.coords;
       const url = '/myprofile';
       callApi(url, 'POST', { coordinates: [longitude, latitude] })
-      .then(({ data }) => {
-        if (data.success === true) {
+      .then((json) => {
+        const { error } = json.data;
+        if (error) {
+          this.setState({ error });
+        } else {
           this.marker.setMap(null);
           this.marker = new window.google.maps.Marker({
             position: { lat: latitude, lng: longitude },
@@ -45,8 +49,6 @@ class Geolocation extends Component {
           this.marker.setMap(this.map);
           this.map.setCenter(this.marker.getPosition());
           this.map.setZoom(15);
-        } else {
-          this.setState({ error: data.message });
         }
       });
     }, () => {
@@ -60,14 +62,10 @@ class Geolocation extends Component {
     return (
       <div>
         <div id="map" style={{ height: '500px', width: '500px' }} />
-        {!error &&
-          <button onClick={event => this.handleClick(event)} className="btn btn-primary">
-            Geolocate me !
-          </button>
-        }
-        {error &&
-          <p>{error}</p>
-        }
+        <button onClick={event => this.handleClick(event)} className="btn btn-primary">
+          Geolocate me !
+        </button>
+        <p>{error}</p>
       </div>
     );
   }

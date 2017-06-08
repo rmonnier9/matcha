@@ -13,6 +13,7 @@ class InfiniteUsersScroll extends Component {
       hasMoreItems: true,
       nextHref: null,
     };
+    this.showChat = props.showChat;
   }
 
   loadItems = () => {
@@ -56,6 +57,7 @@ class InfiniteUsersScroll extends Component {
       >
         <UsersList
           users={users}
+          showChat={this.showChat}
         />
       </InfiniteScroll>
     );

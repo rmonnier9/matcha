@@ -12,9 +12,12 @@ const loginField = (login) => {
   return (null);
 };
 
-const emailField = (email) => {
+const emailField = (email, required) => {
   const field = 'email';
-  if (!email) return { field, message: 'Email is required.' };
+  if (!email) {
+    if (required) return { field, message: 'Email is required.' };
+    return (null);
+  }
 
   // check format
   const reg = /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
@@ -121,7 +124,7 @@ const message = (text) => {
 const signupForm = (data) => {
   const error = [];
   let testVal;
-  testVal = emailField(data.email);
+  testVal = emailField(data.email, true);
   if (testVal != null) error.push(testVal);
   testVal = nameField('firstname', data.firstname);
   if (testVal != null) error.push(testVal);
@@ -141,7 +144,7 @@ const updateForm = (data) => {
   if (testVal != null) error.push(testVal);
   testVal = nameField('lastname', data.lastname);
   if (testVal != null) error.push(testVal);
-  testVal = emailField(data.email);
+  testVal = emailField(data.email, false);
   if (testVal != null) error.push(testVal);
   testVal = genderField(data.gender);
   if (testVal != null) error.push(testVal);

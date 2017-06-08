@@ -16,7 +16,7 @@ class Login extends Component {
   }
 
   render() {
-    const { isAuthenticated, errorMessage } = this.props;
+    const { isAuthenticated, message } = this.props;
     const { from } = this.props.location.state || { from: { pathname: '/' } };
 
     if (isAuthenticated) {
@@ -26,16 +26,16 @@ class Login extends Component {
     }
 
     return (
-      <div className="signup">
-        <h2 className="form-signup-heading">Sign up</h2>
+      <div className="login">
+        <h2 className="form-login-heading">Login</h2>
         <form onSubmit={event => this.handleClick(event)}>
           <input type="text" ref={(c) => { this.login = c; }} className="form-control" placeholder="Login" required />
           <input type="password" ref={(c) => { this.password = c; }} className="form-control" placeholder="Password" required />
           <input type="submit" name="submit" value="Login" />
         </form>
 
-        {errorMessage &&
-          <p>{errorMessage}</p>
+        {message &&
+          <p>{message}</p>
         }
         <Link to="/signup">Sign up ?</Link>
         <Link to="/forgot">Forgot password ?</Link>
@@ -46,11 +46,11 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
   const { auth } = state;
-  const { isAuthenticated, errorMessage } = auth;
+  const { isAuthenticated, message } = auth;
 
   return {
     isAuthenticated,
-    errorMessage,
+    message,
   };
 };
 

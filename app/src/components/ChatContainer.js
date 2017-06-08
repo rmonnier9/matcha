@@ -4,8 +4,8 @@ import callApi from '../callApi.js';
 
 const socket = io();
 
-const Message = () => {
-  const { from, target, text } = this.props;
+const Message = (props) => {
+  const { from, target, text } = props;
   return (
     <div className="message">
       <strong>{from === target ? from : 'me'} : </strong>
@@ -14,16 +14,16 @@ const Message = () => {
   );
 };
 
-const MessageList = () => (
+const MessageList = props => (
   <div className="messages">
     <h2> Conversation: </h2>
     {
-      this.props.messages.map(message => (
+      props.messages.map((message, index) => (
         <Message
-          key={message.text}
+          key={index}
           from={message.from}
           text={message.text}
-          target={this.props.target}
+          target={props.target}
         />
       ))
     }
@@ -69,11 +69,10 @@ class ChatContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [],
       messages: [],
-      text: '',
-      target: props.match.params.login,
+      error: '',
     };
+    this.target = props.match.params.login;
   }
 
   componentDidMount = () => {
@@ -84,20 +83,18 @@ class ChatContainer extends Component {
     const { login } = this.props.match.params;
     const url = `/chat/${login}`;
     callApi(url, 'GET')
-    .then(({ data }) => {
-      // console.log('chat', data);
-      if (data.success === true) {
-        const { messages } = data;
-        if (messages.length !== 0) {
-          this.setState({ messages });
-        }
+    .then((json) => {
+      const { error, messages } = json.data;
+      if (error) {
+        this.setState({ error });
+      } else if (messages.length !== 0) {
+        this.setState({ messages });
       }
     });
   }
 
   messageReceive = ({ text, from, target }) => {
-    // console.log(text, from);
-    if (from !== this.state.target) { return; }
+    if (from !== this.target) { return; }
     const { messages } = this.state;
     messages.push({ from, target, text });
     this.setState({ messages });
@@ -117,11 +114,11 @@ class ChatContainer extends Component {
       <div>
         <MessageList
           messages={this.state.messages}
-          target={this.state.target}
+          target={this.target}
         />
         <MessageForm
           onMessageSubmit={this.handleMessageSubmit}
-          user={this.state.target}
+          user={this.target}
         />
       </div>
     );

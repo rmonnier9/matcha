@@ -89,6 +89,12 @@ const addUsefullData = (users, currentUser) => (
 const create = (email, firstname, lastname, login, password, activationString, location) => {
   const emptyArray = [];
   const hashedPassword = generateHash(password);
+  const lat = parseFloat(location.latitude);
+  const lng = parseFloat(location.longitude);
+  const loc = {
+    type: 'Point',
+    coordinates: [lng, lat],
+  };
   return ({
     login,
     password: hashedPassword,
@@ -112,21 +118,13 @@ const create = (email, firstname, lastname, login, password, activationString, l
     activationString,
     lastConnection: new Date(),
     birthDate: null,
-    location,
+    loc,
   });
 };
 
 // Infos to send --------------------------------------------------------------
 
 // public profile
-const getInfos = (user, currentUser) => {
-  user.age = getAge(user.birthDate);
-  user.popularity = getPopularity(user.visits, user.interestCounter);
-  user.distance = getDistance(user, currentUser);
-  user.lookingFor = getLookingFor(user.lookingFor);
-  return filterInfos(user);
-};
-
 const getLookingFor = (lookingFor) => {
   let output;
   if (lookingFor.length === 2) {
@@ -173,6 +171,14 @@ const filterInfos = (user) => {
   };
 };
 
+const getInfos = (user, currentUser) => {
+  user.age = getAge(user.birthDate);
+  user.popularity = getPopularity(user.visits, user.interestCounter);
+  user.distance = getDistance(user, currentUser);
+  user.lookingFor = getLookingFor(user.lookingFor);
+  return filterInfos(user);
+};
+
 const filterData = users => (
   users.map(user => (
     filterInfos(user)
@@ -201,7 +207,7 @@ const filterPrivateInfos = (user) => {
     pictures,
     profilePicture,
     popularity,
-    location,
+    loc,
     lastConnection,
   } = user;
   return {
@@ -218,7 +224,7 @@ const filterPrivateInfos = (user) => {
     pictures,
     profilePicture,
     popularity,
-    location,
+    loc,
     lastConnection,
   };
 };

@@ -97,7 +97,9 @@ const advancedSearch = async (req, res) => {
   // initialize the search object (parameter of find() )
   let searchOBJ = {
     $and: [
+      { login: { $ne: currentUser } },
       { blockedBy: { $ne: currentUser } },
+      { blocked: { $ne: currentUser } },
     ],
   };
   // add query params
