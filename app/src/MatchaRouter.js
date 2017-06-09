@@ -22,7 +22,7 @@ import Login from './components/Login.js';
 import Signup from './components/Signup.js';
 import ForgotPassword from './components/ForgotPassword.js';
 import NotFound from './components/NotFound.js';
-import NotificationContainer from './NotificationContainer';
+import NotificationContainer from './components/NotificationContainer';
 
 const MatchaRouter = (props) => {
   const { isAuthenticated } = props;

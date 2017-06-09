@@ -58,8 +58,10 @@ const getTagsInCommon = (userA, userB) => {
 
 const getAge = (birthDate) => {
   if (!birthDate) return null;
-  if (!(birthDate instanceof Date));
-  birthDate = new Date(birthDate);
+  if (!(birthDate instanceof Date)) {
+    birthDate = new Date(birthDate);
+  }
+
   const ageDifMs = Date.now() - birthDate.getTime();
   const ageDate = new Date(ageDifMs);
   return Math.abs(ageDate.getFullYear() - 1970);
@@ -85,6 +87,13 @@ const addUsefullData = (users, currentUser) => (
   })
 );
 
+const addAge = (users) => (
+  users.map((user) => {
+    user.age = getAge(user.birthDate);
+    return (user)
+  })
+);
+
 // New profile -----------------------------------------------------------------
 const create = (email, firstname, lastname, login, password, activationString, location) => {
   const emptyArray = [];
@@ -102,7 +111,7 @@ const create = (email, firstname, lastname, login, password, activationString, l
     firstname,
     lastname,
     pictures: emptyArray,
-    profilePicture: 0,
+    profilePicture: -1,
     interestedIn: emptyArray,
     interestedPeople: emptyArray,
     blocked: emptyArray,
@@ -148,6 +157,7 @@ const filterInfos = (user) => {
     lookingFor,
     about,
     tags,
+    tagsInCommon,
     pictures,
     profilePicture,
     popularity,
@@ -163,6 +173,7 @@ const filterInfos = (user) => {
     lookingFor,
     about,
     tags,
+    tagsInCommon,
     pictures,
     profilePicture,
     popularity,
@@ -237,6 +248,7 @@ export { getInfos,
   getAge,
   filterData,
   addUsefullData,
+  addAge,
   validPassword,
   generateHash,
 };

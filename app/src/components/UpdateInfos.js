@@ -20,7 +20,7 @@ class UpdateInfos extends Component {
     this.state = {
       firstname,
       lastname,
-      birthDate,
+      birthDate: new Date(birthDate).toISOString().substr(0, 10),
       gender,
       lookingFor,
       about,

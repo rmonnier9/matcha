@@ -73,6 +73,7 @@ const birthDateField = (birthDate) => {
   const field = 'birthdate';
   if (!birthDate) return (null);
 
+  console.log(birthDate);
   // check if date format is valid
   if (!birthDate.match(/^((?:19|20)\d{2})-(0?\d|1[012])-(0?\d|[12]\d|3[01])$/)) {
     return ({ field, message: 'Invalid date format.' });

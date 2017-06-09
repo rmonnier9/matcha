@@ -19,8 +19,8 @@ class Signup extends Component {
       firstname: firstname.value.trim(),
       lastname: lastname.value.trim(),
       login: login.value.trim(),
-      password: password.value.trim(),
-      confirmpassword: confirmpassword.value.trim(),
+      password: password.value,
+      confirmpassword: confirmpassword.value,
     };
     const url = '/api/signup/';
     axios({ url, method: 'POST', data })

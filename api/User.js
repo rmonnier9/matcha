@@ -61,7 +61,7 @@ const changeEmail = (update, email, login) => {
   const content = `To confirm your email update, please check : <a>localhost:3000/confirm?login=${login}&activation=${activationString}</a>`;
   mail(email, subject, content);
   return (update);
-}
+};
 
 const updateInfo = async (req, res) => {
   const { currentUser } = req.decoded;
@@ -83,6 +83,9 @@ const updateInfo = async (req, res) => {
   if (body.lookingFor) {
     update.lookingFor = body.lookingFor === 'both' ? ['male', 'female'] : [body.lookingFor];
   }
+  if (body.birthDate) {
+    update.birthDate = new Date(body.birthDate);
+  }
   if (body.lat && body.lng) {
     const lat = parseFloat(body.lat);
     const lng = parseFloat(body.lng);
@@ -94,7 +97,7 @@ const updateInfo = async (req, res) => {
     }
   }
   if (body.profilePictureId) {
-    const id = parseInt(body.profilePictureId);
+    const id = parseInt(body.profilePictureId, 10);
     if (id >= 0 && id <= 4) {
       update.profilePictureId = id;
     }

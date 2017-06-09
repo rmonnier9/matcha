@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import Localisation from './Localisation.js';
-import Tags from './Tags.js';
 import LookingFor from './LookingFor.js';
 
 class EncartRight extends Component {
@@ -22,7 +21,6 @@ class EncartRight extends Component {
       age,
       lookingFor,
       about,
-      tags,
     } = profile;
     const gender = this.gracefulGender(profile.gender);
 
@@ -38,7 +36,6 @@ class EncartRight extends Component {
         <div className="about">
           <span>{about}</span>
         </div>
-        <Tags tags={tags} />
         <Localisation distance={distance} />
       </div>
     );

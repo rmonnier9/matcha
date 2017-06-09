@@ -10,7 +10,7 @@ const get = async (req, res, next) => {
 
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login, blocked: { $ne: currentUser } });
-  if (!user) return res.sendFile(defaultPath, (err) => { if (err) next(err); });
+  if (!user || id === 'default') return res.sendFile(defaultPath, (err) => { if (err) next(err); });
 
   const pictureExists = user.pictures.indexOf(id);
   const imgPath = path.resolve(__dirname, `./uploads/${id}`);

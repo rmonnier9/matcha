@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 import InfiniteScroll from 'react-infinite-scroller';
 
+import SortBar from './SortBar.js';
 import SearchParams from './SearchParams.js';
 import callApi from '../callApi.js';
 import UsersList from './UsersList.js';
@@ -11,14 +12,15 @@ class SearchContainer extends Component {
     super(props);
     const { search } = this.props.location;
     const query = queryString.parse(search);
+    console.log(query);
     this.state = {
       name: query.name || '',
-      tags: [],
+      tags: query.tags || [],
       ageVal: query.age,
       distVal: query.distance,
       popVal: {
-        min: 0,
-        max: 100,
+        min: parseInt(query.popmin, 10) || 0,
+        max: parseInt(query.popmax, 10) || 100,
       },
       message: '',
       users: [],
@@ -44,6 +46,7 @@ class SearchContainer extends Component {
       popmin: popVal.min,
       popmax: popVal.max,
       tags,
+      sort: event.target.sort.value,
     };
     const { pathname } = this.props.location;
     const search = queryString.stringify(query);
@@ -110,20 +113,23 @@ class SearchContainer extends Component {
     return (
       <div className="search">
         <h2>Search my soulmate</h2>
-        <SearchParams
-          message={message}
-          name={name}
-          updateName={this.updateName}
-          tags={tags}
-          updateTags={this.updateTags}
-          ageVal={ageVal}
-          updateAge={this.updateAge}
-          distVal={distVal}
-          updateDist={this.updateDist}
-          popVal={popVal}
-          updatePop={this.updatePop}
-          onSubmit={this.onSubmit}
-        />
+        <form onSubmit={event => this.onSubmit(event)}>
+          <SearchParams
+            message={message}
+            name={name}
+            updateName={this.updateName}
+            tags={tags}
+            updateTags={this.updateTags}
+            ageVal={ageVal}
+            updateAge={this.updateAge}
+            distVal={distVal}
+            updateDist={this.updateDist}
+            popVal={popVal}
+            updatePop={this.updatePop}
+            onSubmit={this.onSubmit}
+          />
+          <SortBar defaultSort={'popularity'} />
+        </form>
         {loadStarted &&
           <InfiniteScroll
             pageStart={0}
