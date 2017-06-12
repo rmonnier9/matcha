@@ -28,7 +28,7 @@ const updateInterest = users => async (req, res) => {
   }
 
   // convert likes into a boolean
-  if (typeof likes === 'string') {
+  if (typeof likes === typeof '') {
     likes = likes === 'true';
   }
 

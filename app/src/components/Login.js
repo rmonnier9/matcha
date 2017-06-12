@@ -4,7 +4,21 @@ import { connect } from 'react-redux';
 
 import { loginUser } from '../actions';
 
+export default connect(
+  ({ auth: { isAuthenticated, message } }) => ({
+    isAuthenticated,
+    message,
+  }),
+)(
 class Login extends Component {
+
+  state = {
+    login: '',
+    password: '',
+  }
+
+  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+
   handleClick = (event) => {
     event.preventDefault();
     const { login, password } = this;
@@ -28,9 +42,21 @@ class Login extends Component {
     return (
       <div className="login">
         <h2 className="form-login-heading">Login</h2>
-        <form onSubmit={event => this.handleClick(event)}>
-          <input type="text" ref={(c) => { this.login = c; }} className="form-control" placeholder="Login" required />
-          <input type="password" ref={(c) => { this.password = c; }} className="form-control" placeholder="Password" required />
+        <form onSubmit={this.handleClick} onChange={this.handleChange}>
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Login"
+            required
+            name="login"
+          />
+          <input
+            type="password"
+            className="form-control"
+            placeholder="Password"
+            required
+            name="password"
+          />
           <input type="submit" name="submit" value="Login" />
         </form>
 
@@ -42,16 +68,4 @@ class Login extends Component {
       </div>
     );
   }
-}
-
-const mapStateToProps = (state) => {
-  const { auth } = state;
-  const { isAuthenticated, message } = auth;
-
-  return {
-    isAuthenticated,
-    message,
-  };
-};
-
-export default connect(mapStateToProps)(Login);
+})

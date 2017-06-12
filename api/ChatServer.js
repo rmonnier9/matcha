@@ -7,6 +7,8 @@ import MongoConnection from './config/MongoConnection.js';
 import parser from './parser.js';
 import * as Notifications from './Notifications.js';
 
+// reddis
+
 class ChatServer {
   constructor(options) {
     this.io = options.io;

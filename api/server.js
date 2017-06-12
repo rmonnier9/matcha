@@ -18,7 +18,6 @@ const io = socketIo(server);
 const upload = multer({ dest: 'uploads/' });
 
 // connect app to the database
-MongoConnection.connect();
 
 // load requests parsers
 app.use(morgan('dev'));

@@ -7,17 +7,18 @@ import LikeContainer from './LikeContainer.js';
 import BlockContainer from './BlockContainer.js';
 
 class ProfileContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      profile: null,
-      error: '',
-    };
-  }
+  state = {
+    profile: null,
+    error: '',
+  };
+
+  _mounted = false;
 
   componentDidMount() {
+    this._mounted = true;
     const { url } = this.props.match;
     callApi(url, 'GET').then((json) => {
+      if (!this._mounted) return false;
       const { error, profile } = json.data;
       if (error) {
         this.setState({ error });
@@ -25,6 +26,10 @@ class ProfileContainer extends Component {
         this.setState({ profile });
       }
     });
+  }
+
+  componentWillUnmount() {
+    this._mounted = false;
   }
 
   render() {

@@ -28,14 +28,12 @@ function receiveLogin(id_token) {
   };
 }
 
-function loginError(message) {
-  return {
-    type: LOGIN_FAILURE,
-    isFetching: false,
-    isAuthenticated: false,
-    message,
-  };
-}
+const loginError = (message) =>  ({
+  type: LOGIN_FAILURE,
+  isFetching: false,
+  isAuthenticated: false,
+  message,
+});
 
 function requestLogout() {
   return {

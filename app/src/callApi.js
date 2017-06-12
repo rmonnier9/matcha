@@ -1,5 +1,15 @@
 import axios from 'axios';
 
+// const api = axios.create({
+//   baseURL: 'http://localhost:8080',
+// });
+//
+// api.interceptors.request.use((config) => {
+//   return {
+//     ...config
+//   }
+// })
+
 const callApi = (endpoint, method, data = {}, headers = {}) => {
   const token = localStorage.getItem('x-access-token') || null;
   const fullUrl = `/api${endpoint}`;
