@@ -14,7 +14,7 @@ function requestLogin(creds) {
     isFetching: true,
     isAuthenticated: false,
     creds,
-  }
+  };
 }
 
 function receiveLogin(id_token) {
@@ -23,7 +23,7 @@ function receiveLogin(id_token) {
     isFetching: false,
     isAuthenticated: true,
     id_token,
-  }
+  };
 }
 
 function loginError(message) {
@@ -32,7 +32,7 @@ function loginError(message) {
     isFetching: false,
     isAuthenticated: false,
     message,
-  }
+  };
 }
 
 function requestLogout() {
@@ -40,15 +40,23 @@ function requestLogout() {
     type: LOGOUT_REQUEST,
     isFetching: true,
     isAuthenticated: true,
-  }
+  };
 }
 
 function receiveLogout() {
-	return {
-		type: LOGOUT_SUCCESS,
-		isFetching: false,
-		isAuthenticated: false,
-	}
+  return {
+    type: LOGOUT_SUCCESS,
+    isFetching: false,
+    isAuthenticated: false,
+  };
+}
+
+export function receiveNotification(message, level) {
+  return {
+    type: ADD_NOTIFICATION,
+    message,
+    level,
+  };
 }
 
 // function logoutError(message) {

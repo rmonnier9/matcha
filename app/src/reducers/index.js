@@ -50,7 +50,7 @@ function auth(state = {
 function notification(state = {}, action) {
   switch (action.type) {
     case ADD_NOTIFICATION: {
-      const { message, level } = action.payload;
+      const { message, level } = action;
       return Object.assign({}, state, {
         message,
         level,

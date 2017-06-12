@@ -26,7 +26,7 @@ const roundTwo = (nb) => {
   return (nbR / 100);
 };
 
-const getPopularity = (visits, likes) => roundTwo((likes * 50) / visits) || 0;
+const getPopularity = (visits, likes) => roundTwo((likes * 50) / (visits + 1));
 
 const getDistance = (userA, userB) => {
   if (!userA.location || !userB.location ||
@@ -87,11 +87,8 @@ const addUsefullData = (users, currentUser) => (
   })
 );
 
-const addAge = (users) => (
-  users.map((user) => {
-    user.age = getAge(user.birthDate);
-    return (user)
-  })
+const addAge = users => (
+  users.map(user => ({ ...user, age: getAge(user.birthDate) }))
 );
 
 // New profile -----------------------------------------------------------------
@@ -163,6 +160,7 @@ const filterInfos = (user) => {
     popularity,
     distance,
     lastConnection,
+    compatibility,
   } = user;
   return {
     login,
@@ -179,6 +177,7 @@ const filterInfos = (user) => {
     popularity,
     distance,
     lastConnection,
+    compatibility,
   };
 };
 

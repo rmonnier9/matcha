@@ -86,9 +86,9 @@ const updateInfo = async (req, res) => {
   if (body.birthDate) {
     update.birthDate = new Date(body.birthDate);
   }
-  if (body.lat && body.lng) {
-    const lat = parseFloat(body.lat);
-    const lng = parseFloat(body.lng);
+  if (body.latitude && body.longitude) {
+    const lat = parseFloat(body.latitude);
+    const lng = parseFloat(body.longitude);
     if (lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180) {
       update.loc = {
         type: 'Point',

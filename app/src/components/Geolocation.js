@@ -35,7 +35,7 @@ class Geolocation extends Component {
     navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
       const url = '/myprofile';
-      callApi(url, 'POST', { coordinates: [longitude, latitude] })
+      callApi(url, 'POST', { longitude, latitude })
       .then((json) => {
         const { error } = json.data;
         if (error) {

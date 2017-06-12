@@ -12,7 +12,6 @@ class SearchContainer extends Component {
     super(props);
     const { search } = this.props.location;
     const query = queryString.parse(search);
-    console.log(query);
     this.state = {
       name: query.name || '',
       tags: query.tags || [],
@@ -62,7 +61,6 @@ class SearchContainer extends Component {
 
   getSearchURL = () => {
     const { pathname, search } = this.props.location;
-    if (!search) return '';
     return (pathname + search);
   }
 

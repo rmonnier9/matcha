@@ -145,7 +145,7 @@ const advancedSearch = async (req, res) => {
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: currentUser });
 
-  // initialize the search object (parameter of find() )
+  // initialize the match object
   let matchObj = initMatchObj(currentUser);
 
   // add query params
@@ -161,6 +161,7 @@ const advancedSearch = async (req, res) => {
   const toSkip = !query.start ? 0 : parseInt(query.start, 10);
   const numberPerRequest = 2;
 
+  // get users from db
   const cursor = usersCollection.aggregate([
     { $geoNear: geoNearObj },
     { $match: matchObj },
@@ -174,7 +175,7 @@ const advancedSearch = async (req, res) => {
   let users = await cursor.toArray();
 
   // format users' data
-  UsersTools.addAge(users);
+  users = UsersTools.addAge(users);
   users = UsersTools.filterData(users);
 
   // format server response

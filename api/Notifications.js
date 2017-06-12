@@ -4,7 +4,7 @@ const send = (userSocketList, newNotification, currentUser) => {
   const askedUser = userSocketList.filter(userSocket => userSocket.login === currentUser.login);
 
   // send socket notification
-  if (askedUser.length) askedUser.forEach(user => user.socket.emit('notifications', newNotification));
+  if (askedUser.length) askedUser.forEach(user => user.socket.emit('notification', newNotification));
 
  // save notification in db
   const notificationObj = {
