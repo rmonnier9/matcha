@@ -12,24 +12,15 @@ class ProfileContainer extends Component {
     error: '',
   };
 
-  _mounted = false;
-
   componentDidMount() {
-    this._mounted = true;
     const { url } = this.props.match;
-    callApi(url, 'GET').then((json) => {
-      if (!this._mounted) return false;
-      const { error, profile } = json.data;
+    callApi(url, 'GET').then(({ data: { error, profile } }) => {
       if (error) {
         this.setState({ error });
       } else {
         this.setState({ profile });
       }
     });
-  }
-
-  componentWillUnmount() {
-    this._mounted = false;
   }
 
   render() {
@@ -62,13 +53,8 @@ class ProfileContainer extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const { auth } = state;
-  const { currentLogin } = auth;
-
-  return {
-    currentLogin,
-  };
-};
+const mapStateToProps = ({ auth: { currentLogin } }) => ({
+  currentLogin,
+});
 
 export default connect(mapStateToProps)(ProfileContainer);

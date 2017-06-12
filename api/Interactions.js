@@ -9,12 +9,12 @@ const getInterest = async (req, res) => {
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: target, blocked: { $ne: currentUser } });
   if (!user) {
-    return res.json({ error: 'User targeted doesn\'t exists' });
+    return res.send({ error: 'User targeted doesn\'t exists' });
   }
 
   // check if currentUser likes target
   const alreadyLiked = user.interestedPeople.indexOf(currentUser) !== -1;
-  return res.json({ error: '', alreadyLiked });
+  return res.send({ error: '', alreadyLiked });
 };
 
 const updateInterest = users => async (req, res) => {
@@ -24,7 +24,7 @@ const updateInterest = users => async (req, res) => {
 
   // parse value of likes field
   if (likes !== 'true' && likes !== 'false' && likes !== true && likes !== false) {
-    return res.json({ error: 'Likes must be either true or false.' });
+    return res.send({ error: 'Likes must be either true or false.' });
   }
 
   // convert likes into a boolean
@@ -34,19 +34,19 @@ const updateInterest = users => async (req, res) => {
 
   // check if user try to like himself
   if (currentUser === target) {
-    return res.json({ error: 'interest for himself impossible.' });
+    return res.send({ error: 'interest for himself impossible.' });
   }
 
   const usersCollection = MongoConnection.db.collection('users');
   // find the target in DB, can't find if blocked by the target
   let user = await usersCollection.findOne({ login: currentUser, blocked: { $ne: currentUser } });
   if (user.pictures.length === 0) {
-    return res.json({ error: 'You must upload one picture before showing your interest to someone.' });
+    return res.send({ error: 'You must upload one picture before showing your interest to someone.' });
   }
 
   // find the target in DB, can't find if blocked by the target
   user = await usersCollection.findOne({ login: target, blocked: { $ne: currentUser } });
-  if (!user) return res.json({ error: 'User targeted doesn\'t exists' });
+  if (!user) return res.send({ error: 'User targeted doesn\'t exists' });
 
   // check if target has been already liked
   const alreadyLiked = user.interestedPeople.indexOf(currentUser);
@@ -56,7 +56,7 @@ const updateInterest = users => async (req, res) => {
     // already liked
     if (alreadyLiked !== -1) {
       const error = `${currentUser} already likes ${target}.`;
-      return res.json({ error });
+      return res.send({ error });
     }
 
     // check if target also likes currentUser
@@ -85,14 +85,14 @@ const updateInterest = users => async (req, res) => {
     usersCollection.updateOne({ login: currentUser }, currentUpdate);
     usersCollection.updateOne({ login: target }, targetUpdate);
 
-    return res.json({ error: '' });
+    return res.send({ error: '' });
   }
 
   // unlike action
   // already not liked
   if (alreadyLiked === -1) {
     const error = `${currentUser} already doesn\t like ${target}.`;
-    return res.json({ error });
+    return res.send({ error });
   }
 
   // check if target also likes currentUser
@@ -124,7 +124,7 @@ const updateInterest = users => async (req, res) => {
   usersCollection.updateOne({ login: currentUser }, currentUpdate);
   usersCollection.updateOne({ login: target }, targetUpdate);
 
-  return res.json({ error: '' });
+  return res.send({ error: '' });
 };
 
 const getBlockStatus = async (req, res) => {
@@ -139,7 +139,7 @@ const getBlockStatus = async (req, res) => {
   let alreadyBlocked = user.blockedBy.indexOf(currentUser);
 
   alreadyBlocked = alreadyBlocked !== -1;
-  return res.json({ error: '', alreadyBlocked });
+  return res.send({ error: '', alreadyBlocked });
 };
 
 const updateBlock = async (req, res) => {
@@ -149,7 +149,7 @@ const updateBlock = async (req, res) => {
 
   // parse value of blocks field
   if (blocks !== 'true' && blocks !== 'false' && blocks !== true && blocks !== false) {
-    return res.json({ error: 'Blocks must be either true or false.' });
+    return res.send({ error: 'Blocks must be either true or false.' });
   }
 
   // convert blocks into a boolean
@@ -159,7 +159,7 @@ const updateBlock = async (req, res) => {
 
   // check if user try to block himself
   if (currentUser === target) {
-    return res.json({ error: 'Block himself impossible.' });
+    return res.send({ error: 'Block himself impossible.' });
   }
 
   // find the target in DB, can't find if blocked by the target
@@ -171,19 +171,19 @@ const updateBlock = async (req, res) => {
   if (blocks === true) {
     if (blocked !== -1) {
       const error = `${currentUser} has already blocked ${target}.`;
-      return res.json({ error });
+      return res.send({ error });
     }
     usersCollection.updateOne({ login: currentUser }, { $addToSet: { blocked: target } });
     usersCollection.updateOne({ login: target }, { $addToSet: { blockedBy: currentUser } });
-    return res.json({ error: '' });
+    return res.send({ error: '' });
   }
   if (blocked === -1) {
     const error = `${currentUser} is already not blocked by ${target}.`;
-    return res.json({ error });
+    return res.send({ error });
   }
   usersCollection.updateOne({ login: currentUser }, { $pull: { blocked: target } });
   usersCollection.updateOne({ login: target }, { $pull: { blockedBy: currentUser } });
-  return res.json({ error: '' });
+  return res.send({ error: '' });
 };
 
 const reportUser = async (req, res, next) => {
@@ -191,7 +191,7 @@ const reportUser = async (req, res, next) => {
   const { target } = req.params;
 
   if (currentUser === target) {
-    return res.json({ error: 'Report himself impossible.' });
+    return res.send({ error: 'Report himself impossible.' });
   }
 
   const usersCollection = MongoConnection.db.collection('users');

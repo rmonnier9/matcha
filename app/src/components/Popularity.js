@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Popularity = props => (
+const Popularity = ({ popularity }) => (
   <div className="popularity">
-    <span>{props.popularity}</span>pts.
+    <span>{popularity}</span>pts.
   </div>
 );
 

@@ -5,15 +5,11 @@ import callApi from '../callApi.js';
 import ImageDisplayer from './ImageDisplayer.js';
 
 class ImageManager extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      profilePicture: props.profile.profilePicture,
-      pictures: props.profile.pictures,
-      error: '',
-    };
-    this.login = props.profile.login;
-  }
+  state = {
+    profilePicture: this.props.profile.profilePicture,
+    pictures: this.props.profile.pictures,
+    error: '',
+  };
 
   onImageDrop = (files) => {
     this.imageUpload(files[0]);
@@ -22,8 +18,7 @@ class ImageManager extends Component {
   setProfilePicture = (id) => {
     const url = `/myprofile/pictures/${id}`;
     callApi(url, 'GET')
-    .then((json) => {
-      const { error, profilePicture } = json.data;
+    .then(({ data: { error, profilePicture } }) => {
       if (error) {
         this.setState({ error });
       } else {
@@ -39,8 +34,7 @@ class ImageManager extends Component {
     formData.append('imageUploaded', file);
 
     callApi(url, 'POST', formData, { 'Content-Type': 'multipart/form-data' })
-    .then((json) => {
-      const { pictures, error } = json.data;
+    .then(({ data: { pictures, error } }) => {
       if (error) {
         this.setState({ error });
       } else {
@@ -52,8 +46,7 @@ class ImageManager extends Component {
   deletePicture = (id) => {
     const url = `/myprofile/pictures/${id}`;
     callApi(url, 'DELETE')
-    .then((json) => {
-      const { error } = json.data;
+    .then(({ data: { error } }) => {
       if (error) {
         this.setState({ error });
       } else {
@@ -64,7 +57,7 @@ class ImageManager extends Component {
   }
 
   render() {
-    const { login } = this;
+    const { login } = this.props.profile;
     const { pictures, profilePicture, error } = this.state;
     return (
       <div className="image-manager">

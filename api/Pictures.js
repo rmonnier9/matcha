@@ -32,7 +32,7 @@ const setAsProfile = async (req, res) => {
 
   const update = { profilePicture: pictureIndex };
   usersCollection.updateOne({ login: currentUser }, { $set: update });
-  return res.json({ error: '', profilePicture: pictureIndex }).end();
+  return res.send({ error: '', profilePicture: pictureIndex });
 };
 
 const remove = async (req, res) => {
@@ -43,7 +43,7 @@ const remove = async (req, res) => {
   const user = await usersCollection.findOne({ login: currentUser });
 
   const pictureExists = user.pictures.indexOf(id);
-  if (pictureExists === -1) return res.json({ error: 'Picture not found in db.' });
+  if (pictureExists === -1) return res.send({ error: 'Picture not found in db.' });
 
   const imgPath = `./uploads/${id}`;
   fs.unlink(imgPath, (err) => {
@@ -55,7 +55,7 @@ const remove = async (req, res) => {
 
     const update = { pictures, profilePicture };
     usersCollection.updateOne({ login: currentUser }, { $set: update });
-    return res.json({ error: '' }).end();
+    return res.send({ error: '' });
   });
 };
 
@@ -65,7 +65,7 @@ const saveCheck = async (req, res, next) => {
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: currentUser });
   if (user.pictures.length >= 5) {
-    return res.json({ error: 'Too many images.' });
+    return res.send({ error: 'Too many images.' });
   }
   req.user = user;
   return next();
@@ -78,7 +78,7 @@ const save = async (req, res) => {
 
  // check if a file has been uploaded
   if (!req.file) {
-    return res.json({ error: 'No images were uploaded.' });
+    return res.send({ error: 'No images were uploaded.' });
   }
 
  // save filename in db
@@ -86,7 +86,7 @@ const save = async (req, res) => {
   const update = { pictures };
   const usersCollection = MongoConnection.db.collection('users');
   usersCollection.updateOne({ login: currentUser }, { $set: update });
-  return res.json({ error: '', pictures }).end();
+  return res.send({ error: '', pictures });
 };
 
 

@@ -24,7 +24,7 @@ const get = async (req, res) => {
   // get user from DB
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: currentUser });
-  if (!user) return res.json({ success: false, message: 'Profile not found.' }).end();
+  if (!user) return res.send({ error: 'Profile not found.' });
 
   const toSkip = !start ? 0 : parseInt(start, 10);
   const numberPerRequest = 2;
@@ -36,12 +36,12 @@ const get = async (req, res) => {
   notificationsCollection.updateMany({ login: currentUser, read: false }, { $set: { read: true } });
 
   // send infos and end request
-  const resObj = { success: true, message: 'Notifications found.', notifications };
+  const resObj = { error: '', notifications };
   if (notifications.length) {
     const nextStart = toSkip + numberPerRequest;
     resObj.nextHref = `/notifications?start=${nextStart}`;
   }
-  return res.json(resObj).end();
+  return res.send(resObj);
 };
 
 const getUnreadNumber = async (req, res) => {
@@ -57,7 +57,7 @@ const getUnreadNumber = async (req, res) => {
   const count = !result ? 0 : result.count;
 
   // send infos and end request
-  return res.json({ error: '', count }).end();
+  return res.send({ error: '', count });
 };
 
 export { send, get, getUnreadNumber };

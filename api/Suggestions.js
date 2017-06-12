@@ -136,7 +136,7 @@ const get = async (req, res) => {
   const resObj = { error: '', users };
 
   // send response and end request
-  return res.json(resObj).end();
+  return res.send(resObj);
 };
 
 export { get };

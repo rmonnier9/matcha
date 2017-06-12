@@ -12,12 +12,12 @@ const signup = async (req, res) => {
 
   // parse the form fields
   const error = parser.signupForm(req.body);
-  if (error != null) return res.json({ success: false, error }).end();
+  if (error != null) return res.send({ error });
 
   // check if the login already exists
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login });
-  if (user) return res.json({ success: false, error: [{ field: 'login', message: 'That login is already taken.' }] }).end();
+  if (user) return res.send({ error: [{ field: 'login', message: 'That login is already taken.' }] });
 
   const { ip } = req;
   const location = await IPGeolocation(ip);
@@ -34,7 +34,7 @@ const signup = async (req, res) => {
   const subject = 'Matcha - Account created !';
   const content = `Welcome to Matcha. Your activation key is : ${activationString}`;
   mail(email, subject, content);
-  return res.json({ success: true, message: 'Account successfully created.' }).end();
+  return res.send({ error: 'Account successfully created.' });
 };
 
 const emailConfirm = async (req, res) => {
@@ -43,7 +43,7 @@ const emailConfirm = async (req, res) => {
   // find user in DB
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login });
-  if (!user) return res.json({ error: 'User not found.' }).end();
+  if (!user) return res.send({ error: 'User not found.' });
 
   const update = { $set: { active: true }, $unset: { activationString: '', newEmail: '' } };
 
@@ -51,20 +51,20 @@ const emailConfirm = async (req, res) => {
   if (user.newEmail) {
     update.$set = { email: user.newEmail };
   } else if (user.active === true) {
-    return res.json({ error: 'Account already activated.' }).end();
+    return res.send({ error: 'Account already activated.' });
   }
 
   // check if activation key is valid
   if (!activation) {
-    return res.json({ error: 'No activation key.' }).end();
+    return res.send({ error: 'No activation key.' });
   }
   if (user.activationString !== activation) {
-    return res.json({ error: 'Wrong activation key.' }).end();
+    return res.send({ error: 'Wrong activation key.' });
   }
 
   // update the user in DB and end the request
   usersCollection.updateOne({ login }, update);
-  return res.json({ error: '' }).end();
+  return res.send({ error: '' });
 };
 
 const signin = async (req, res) => {
@@ -73,23 +73,26 @@ const signin = async (req, res) => {
   // find user in DB
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login });
-  if (!user) return res.json({ success: false, message: 'Authentication failed : user not found.' }).end();
+  if (!user) return res.send({ error: 'Authentication failed : user not found.' });
 
   // check if password is valid
   if (!UsersTools.validPassword(password, user.password)) {
-    return res.json({ success: false, message: 'Authentication failed : wrong password.' }).end();
+    return res.send({ error: 'Authentication failed : wrong password.' });
   }
 
   if (!user.active) {
-    return res.json({ success: false, message: 'Please activate your account. Check your email' }).end();
+    return res.send({ error: 'Please activate your account. Check your email' });
   }
 
   // create a session token for 2 hours, send it then end the request
-  const token = jwt.sign({ currentUser: user.login },
-    config.secret, { expiresIn: 3600 * 24 * 300 });
+  const token = jwt.sign(
+    { currentUser: user.login },
+    config.secret,
+    { expiresIn: 3600 * 24 * 300 },
+  );
   // res.set('Access-Control-Expose-Headers', 'x-access-token');
   // res.set('x-access-token', token);
-  return res.json({ success: true, message: 'Token delivered.', token }).end();
+  return res.send({ success: true, message: 'Token delivered.', token });
 };
 
 const forgotPassword = async (req, res) => {
@@ -99,7 +102,7 @@ const forgotPassword = async (req, res) => {
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login });
   if (!user || user.email !== email) {
-    return res.json({ error: 'Wrong login/email association.' }).end();
+    return res.send({ error: 'Wrong login/email association.' });
   }
 
   // generate new random password
@@ -118,17 +121,17 @@ const forgotPassword = async (req, res) => {
   const subject = 'Forgot password - New password';
   const content = `Your new password is ${newPassword}`;
   mail(email, subject, content);
-  return res.json({ error: '' });
+  return res.send({ error: '' });
 };
 
 const isLogged = (req, res, next) => {
   // get the token from post, get or x-access-token http header field
   const token = req.body.token || req.query.token || req.headers['x-access-token'];
-  if (!token) return res.status(401).json({ success: false, message: 'No token provided.' });
+  if (!token) return res.send({ error: 'No token provided.' });
 
   // check if token is valid
   jwt.verify(token, config.secret, (err, decoded) => {
-    if (err) return res.json({ success: false, message: 'Failed to authenticate token.' });
+    if (err) return res.send({ error: 'Failed to authenticate token.' });
 
     // save token datas into req.decoded and then call next request
     req.decoded = decoded;
@@ -140,7 +143,7 @@ const whoami = (req, res) => {
   const { currentUser } = req.decoded;
 
   // send the login and end request
-  return res.json({ success: true, message: `Authenticated as ${currentUser}` }).end();
+  return res.send({ error: '', message: `Authenticated as ${currentUser}` });
 };
 
 const updatePassword = async (req, res) => {
@@ -150,15 +153,15 @@ const updatePassword = async (req, res) => {
   // find user in DB
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: currentUser });
-  if (!user) return res.json({ error: 'User not found.' }).end();
+  if (!user) return res.send({ error: 'User not found.' });
 
   if (!UsersTools.validPassword(oldPassword, user.password)) {
-    return res.json({ error: 'Wrong old password.' }).end();
+    return res.send({ error: 'Wrong old password.' });
   }
 
   // parse the form fields
   const error = parser.passwordField(newPassword, confirmNewPassword);
-  if (error != null) return res.json({ error });
+  if (error != null) return res.send({ error });
 
   // hash the password
   const hashedPassword = UsersTools.generateHash(newPassword);
@@ -166,7 +169,7 @@ const updatePassword = async (req, res) => {
   // save the new password in DB and then end the request
   const update = { password: hashedPassword };
   usersCollection.updateOne({ login: currentUser }, { $set: update });
-  return res.json({ error: '' });
+  return res.send({ error: '' });
 };
 
 export { signup, signin, isLogged, whoami, updatePassword, forgotPassword, emailConfirm };

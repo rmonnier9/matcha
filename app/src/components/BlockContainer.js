@@ -3,19 +3,15 @@ import React, { Component } from 'react';
 import callApi from '../callApi.js';
 
 class BlockContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      alreadyBlocked: false,
-      error: '',
-    };
-  }
+  state = {
+    alreadyBlocked: false,
+    error: '',
+  };
 
   componentDidMount() {
     const { login } = this.props;
     const url = `/blocks/${login}`;
-    callApi(url, 'GET').then((json) => {
-      const { error, alreadyBlocked } = json.data;
+    callApi(url, 'GET').then(({ data: { error, alreadyBlocked } }) => {
       if (error) {
         this.setState({ error });
       } else {
@@ -28,8 +24,7 @@ class BlockContainer extends Component {
     const { login } = this.props;
     const url = `/blocks/${login}`;
     callApi(url, 'POST', { blocks })
-    .then((json) => {
-      const { error } = json.data;
+    .then(({ data: { error } }) => {
       if (error) {
         this.setState({ error });
       } else {
@@ -42,8 +37,7 @@ class BlockContainer extends Component {
     const { login } = this.props;
     const url = `/reports/${login}`;
     callApi(url, 'POST')
-    .then((json) => {
-      const { error } = json.data;
+    .then(({ data: { error } }) => {
       if (error) {
         this.setState({ error });
       } else {

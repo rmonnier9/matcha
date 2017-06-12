@@ -3,19 +3,15 @@ import React, { Component } from 'react';
 import callApi from '../callApi.js';
 
 class LikeContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      alreadyLiked: false,
-      error: '',
-    };
-  }
+  state = {
+    alreadyLiked: false,
+    error: '',
+  };
 
   componentDidMount() {
     const { login } = this.props;
     const url = `/likes/${login}`;
-    callApi(url, 'GET').then((json) => {
-      const { error, alreadyLiked } = json.data;
+    callApi(url, 'GET').then(({ data: { error, alreadyLiked } }) => {
       if (error) {
         this.setState({ error });
       } else {
@@ -28,8 +24,7 @@ class LikeContainer extends Component {
     const { login } = this.props;
     const url = `/likes/${login}`;
     callApi(url, 'POST', { likes })
-    .then((json) => {
-      const { error } = json.data;
+    .then(({ data: { error } }) => {
       if (error) {
         this.setState({ error });
       } else {

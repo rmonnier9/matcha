@@ -1,7 +1,6 @@
 import React from 'react';
 
-const ProfilePicture = (props) => {
-  const { login, pictures, profilePicture } = props;
+const ProfilePicture = ({ login, pictures, profilePicture }) => {
   let img;
   if (pictures.length === 0 || profilePicture === -1) {
     img = 'default';

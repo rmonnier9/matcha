@@ -20,57 +20,57 @@ const routes = (app, users, upload) => {
   // console.log(Interactions);
 
   // User authentification  ==========
-  app.post('/api/signup', rejectedCatcher(Auth.signup));
-  app.post('/api/signin', Auth.signin);
-  app.post('/api/confirm', Auth.emailConfirm);
-  app.post('/api/forgot_password', Auth.forgotPassword);
+  app.post('/api/signup', rejectedCatcher(Auth.signup))
+  .post('/api/signin', Auth.signin)
+  .post('/api/confirm', Auth.emailConfirm)
+  .post('/api/forgot_password', Auth.forgotPassword)
 
   // Logged part  ====================
-  app.use('/api', Auth.isLogged);
-  app.get('/api/whoami', Auth.whoami);
+  .use('/api', Auth.isLogged)
+  .get('/api/whoami', Auth.whoami)
 
   // Password  ============
-  app.post('/api/update_password', Auth.updatePassword);
+  .post('/api/update_password', Auth.updatePassword)
 
   // User Datas  ==========
-  app.get('/api/profile/:login', User.getInfos(users)); // block report and like also
-  app.get('/api/myprofile', User.getMyInfos); // block report and like also
-  app.post('/api/myprofile', rejectedCatcher(User.updateInfo));
+  .get('/api/profile/:login', User.getInfos(users)) // block report and like also
+  .get('/api/myprofile', User.getMyInfos) // block report and like also
+  .post('/api/myprofile', rejectedCatcher(User.updateInfo))
   // app.delete('/api/profile/:login', User.deleteProfile)
   // app.get('/api/profile/:login/notifications', User.notifications)
 
   // Images  ==============
-  app.get('/api/pictures/:login/:id', Pictures.get);
-  app.post('/api/myprofile/pictures', Pictures.saveCheck, upload.single('imageUploaded'), Pictures.save);
-  app.delete('/api/myprofile/pictures/:id', Pictures.remove);
-  app.get('/api/myprofile/pictures/:id', Pictures.setAsProfile);
+  .get('/api/pictures/:login/:id', Pictures.get)
+  .post('/api/myprofile/pictures', Pictures.saveCheck, upload.single('imageUploaded'), Pictures.save)
+  .delete('/api/myprofile/pictures/:id', Pictures.remove)
+  .get('/api/myprofile/pictures/:id', Pictures.setAsProfile)
 
   // Likes  ===============
-  app.get('/api/likes/:target', Interactions.getInterest);
-  app.post('/api/likes/:target', Interactions.updateInterest(users));
+  .get('/api/likes/:target', Interactions.getInterest)
+  .post('/api/likes/:target', Interactions.updateInterest(users))
 
   // Report and block  ====
-  app.post('/api/reports/:target', Interactions.reportUser, Interactions.updateBlock);
-  app.get('/api/blocks/:target', Interactions.getBlockStatus);
-  app.post('/api/blocks/:target', Interactions.updateBlock);
+  .post('/api/reports/:target', Interactions.reportUser, Interactions.updateBlock)
+  .get('/api/blocks/:target', Interactions.getBlockStatus)
+  .post('/api/blocks/:target', Interactions.updateBlock)
 
   // chat  ===============
-  app.get('/api/chat/:target', rejectedCatcher(Chat.getMessages));
+  .get('/api/chat/:target', rejectedCatcher(Chat.getMessages))
 
   // Notifications  ===============
-  app.get('/api/notifications', rejectedCatcher(Notifications.get));
-  app.get('/api/unreadnotifications', rejectedCatcher(Notifications.getUnreadNumber));
+  .get('/api/notifications', rejectedCatcher(Notifications.get))
+  .get('/api/unreadnotifications', rejectedCatcher(Notifications.getUnreadNumber))
 
   // Matches  ===============
-  app.get('/api/myprofile/matches', rejectedCatcher(Matches.get));
-  app.get('/api/myprofile/visits', rejectedCatcher(Visits.get));
-  app.get('/api/myprofile/likes', rejectedCatcher(Likes.get));
+  .get('/api/myprofile/matches', rejectedCatcher(Matches.get))
+  .get('/api/myprofile/visits', rejectedCatcher(Visits.get))
+  .get('/api/myprofile/likes', rejectedCatcher(Likes.get))
 
   // Suggestions ===============
-  app.get('/api/suggestions', rejectedCatcher(Suggestions.get));
+  .get('/api/suggestions', rejectedCatcher(Suggestions.get))
 
   // Search  ===============
-  app.get('/api/search', rejectedCatcher(Search.advancedSearch));
+  .get('/api/search', rejectedCatcher(Search.advancedSearch))
 };
 
 export default routes;

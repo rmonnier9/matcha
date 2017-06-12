@@ -8,7 +8,7 @@ const getMessages = async (req, res) => {
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({
     login: target, blocked: { $ne: currentUser }, matches: currentUser });
-  if (!user) return res.status(404).json({ error: 'Profile not found or no match.' }).end();
+  if (!user) return res.send({ error: 'Profile not found or no match.' });
 
   const chatCollection = MongoConnection.db.collection('chat');
   const cursor = chatCollection.find(
@@ -19,7 +19,7 @@ const getMessages = async (req, res) => {
     });
   const messages = await cursor.toArray();
 
-  return res.json({ error: '', messages }).end();
+  return res.send({ error: '', messages });
 };
 
 export { getMessages };

@@ -57,8 +57,7 @@ class UpdateInfos extends Component {
     };
     const url = '/myprofile';
     callApi(url, 'POST', data)
-    .then((json) => {
-      const { error } = json.data;
+    .then(({ data: { error } }) => {
       if (error) {
         this.setState({ error });
       } else {

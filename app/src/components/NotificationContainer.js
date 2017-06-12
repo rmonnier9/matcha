@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import io from 'socket.io-client';
 import NotificationSystem from 'react-notification-system';
@@ -6,7 +6,7 @@ import { receiveNotification } from '../actions';
 
 const socket = io();
 
-class NotificationContainer extends React.Component {
+class NotificationContainer extends Component {
   componentDidMount = () => {
     const token = localStorage.getItem('x-access-token');
     socket.emit('auth', token);
@@ -27,8 +27,7 @@ class NotificationContainer extends React.Component {
     this.props.dispatch(receiveNotification(message, 'warning'));
   }
 
-  messageReceive = (message) => {
-    const { from } = message;
+  messageReceive = ({ from }) => {
     this.props.dispatch(receiveNotification(`New message from ${from}`, 'warning'));
   }
 

@@ -10,63 +10,51 @@ export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const INIT_NOTIFICATIONS_NUMBER = 'INIT_NOTIFICATIONS_NUMBER';
 
-function requestLogin(creds) {
-  return {
-    type: LOGIN_REQUEST,
-    isFetching: true,
-    isAuthenticated: false,
-    creds,
-  };
-}
+const requestLogin = (creds) => ({
+  type: LOGIN_REQUEST,
+  isFetching: true,
+  isAuthenticated: false,
+  creds,
+});
 
-function receiveLogin(id_token) {
-  return {
-    type: LOGIN_SUCCESS,
-    isFetching: false,
-    isAuthenticated: true,
-    id_token,
-  };
-}
+const receiveLogin = (id_token) => ({
+  type: LOGIN_SUCCESS,
+  isFetching: false,
+  isAuthenticated: true,
+  id_token,
+});
 
-const loginError = (message) =>  ({
+const loginError = (message) => ({
   type: LOGIN_FAILURE,
   isFetching: false,
   isAuthenticated: false,
   message,
 });
 
-function requestLogout() {
-  return {
-    type: LOGOUT_REQUEST,
-    isFetching: true,
-    isAuthenticated: true,
-  };
-}
+const requestLogout = () => ({
+  type: LOGOUT_REQUEST,
+  isFetching: true,
+  isAuthenticated: true,
+});
 
-function receiveLogout() {
-  return {
-    type: LOGOUT_SUCCESS,
-    isFetching: false,
-    isAuthenticated: false,
-  };
-}
+const receiveLogout = () => ({
+  type: LOGOUT_SUCCESS,
+  isFetching: false,
+  isAuthenticated: false,
+});
+;
+const receiveNotification = (message, level) => ({
+  type: ADD_NOTIFICATION,
+  message,
+  level,
+});
 
-export function receiveNotification(message, level) {
-  return {
-    type: ADD_NOTIFICATION,
-    message,
-    level,
-  };
-}
+const unreadNotificationsNumber = (number) => ({
+  type: INIT_NOTIFICATIONS_NUMBER,
+  number,
+});
 
-export function unreadNotificationsNumber(number) {
-  return {
-    type: INIT_NOTIFICATIONS_NUMBER,
-    number,
-  };
-}
-
-export function initNotificationsNumber() {
+const initNotificationsNumber = () => {
   return (dispatch) => {
     const url = '/unreadnotifications';
     callApi(url, 'GET')
@@ -90,7 +78,7 @@ export function initNotificationsNumber() {
 
 
 // login action function, calls the API to get a token
-export function loginUser(creds) {
+const loginUser = (creds) => {
   return (dispatch) => {
     dispatch(requestLogin(creds));
 
@@ -110,12 +98,20 @@ export function loginUser(creds) {
 }
 
 // logout action function, remove local storage
-export function logoutUser() {
+const logoutUser = () => {
   return (dispatch) => {
     dispatch(requestLogout());
     localStorage.removeItem('x-access-token');
     dispatch(receiveLogout());
   }
+}
+
+export {
+  logoutUser,
+  loginUser,
+  initNotificationsNumber,
+  unreadNotificationsNumber,
+  receiveNotification,
 }
 
 

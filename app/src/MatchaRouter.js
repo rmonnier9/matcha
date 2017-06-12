@@ -67,13 +67,8 @@ MatchaRouter.defaultProps = {
 //  CONNECT
 //-------------------------------------
 
-const mapStateToProps = (state) => {
-  const { auth } = state;
-  const { isAuthenticated } = auth;
-
-  return {
-    isAuthenticated,
-  };
-};
+const mapStateToProps = ({ auth: { isAuthenticated } }) => ({
+  isAuthenticated,
+});
 
 export default connect(mapStateToProps)(MatchaRouter);

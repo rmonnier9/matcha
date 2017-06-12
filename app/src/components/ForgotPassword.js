@@ -3,16 +3,13 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 class ForgotPassword extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: '',
-      message: '',
-      login: '',
-      email: '',
-      confirmed: false,
-    };
-  }
+  state = {
+    error: '',
+    message: '',
+    login: '',
+    email: '',
+    confirmed: false,
+  };
 
   handleClick = (event) => {
     event.preventDefault();
@@ -30,8 +27,7 @@ class ForgotPassword extends Component {
     });
   }
 
-  updateLogin = e => this.setState({ login: e.target.value })
-  updateEmail = e => this.setState({ email: e.target.value })
+  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value })
 
   render() {
     const { error, message, login, email } = this.state;
@@ -39,23 +35,21 @@ class ForgotPassword extends Component {
     return (
       <div className="myprofileform">
         <h1>Get a new password</h1>
-        <form onSubmit={this.handleClick}>
+        <form onSubmit={this.handleClick} onChange={this.handleChange}>
           <div>
             <input
               type="text"
-              placeholder="login"
+              name="login"
               className="login"
-              onChange={this.updateLogin}
-              value={login}
+              placeholder="login"
             />
           </div>
           <div>
             <input
               type="text"
-              placeholder="email"
+              name="email"
               className="email"
-              onChange={this.updateEmail}
-              value={email}
+              placeholder="email"
             />
             <input type="submit" value="Get a new password" />
           </div>

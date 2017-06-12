@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { unreadNotificationsNumber } from '../actions';
 import callApi from '../callApi.js';
 
-const NotificationsList = props => (
+const NotificationsList = ({ notifications }) => (
   <div className="notifications">
     <h2> Notifications: </h2>
     {
-      props.notifications.map(notification => (
+      notifications.map(notification => (
         <div key={notification.date}>
           <span>{notification.content}</span><br />
           on <span>{new Date(notification.date).toDateString()}</span>

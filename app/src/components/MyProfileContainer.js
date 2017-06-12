@@ -16,8 +16,7 @@ class MyProfileContainer extends Component {
   componentDidMount() {
     const url = '/myprofile';
     callApi(url, 'GET')
-    .then((json) => {
-      const { error, profile } = json.data;
+    .then(({ data: { error, profile } }) => {
       if (error) {
         this.setState({ error });
       } else {

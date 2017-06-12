@@ -5,13 +5,10 @@ import callApi from '../callApi.js';
 import UsersList from './UsersList.js';
 
 class Suggestions extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: '',
-      users: [],
-    };
-  }
+  state = {
+    error: '',
+    users: [],
+  };
 
   componentDidMount() {
     const { search } = this.props.location;
@@ -30,8 +27,7 @@ class Suggestions extends Component {
 
   loadItems = (url) => {
     callApi(url, 'GET')
-    .then((json) => {
-      const { users, error } = json.data;
+    .then(({ data: { users, error } }) => {
       if (error) {
         this.setState({
           error,

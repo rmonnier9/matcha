@@ -21,10 +21,10 @@ class Login extends Component {
 
   handleClick = (event) => {
     event.preventDefault();
-    const { login, password } = this;
+    const { login, password } = this.state;
     const creds = {
-      login: login.value.trim(),
-      password: password.value.trim(),
+      login: login.trim(),
+      password: password.trim(),
     };
     this.props.dispatch(loginUser(creds));
   }

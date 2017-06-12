@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Tags = props => (
+const Tags = ({ tags }) => (
   <div className="tags">
     {
-      props.tags.map(tag => (<span key={tag}>#{tag} </span>))
+      tags.map(tag => (<span key={tag}>#{tag} </span>))
     }
   </div>
 );

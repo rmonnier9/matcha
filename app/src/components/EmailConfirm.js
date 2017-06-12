@@ -4,14 +4,11 @@ import queryString from 'query-string';
 import axios from 'axios';
 
 class EmailConfirm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: '',
-      message: '',
-      confirmed: false,
-    };
-  }
+  state = {
+    error: '',
+    message: '',
+    confirmed: false,
+  };
 
   componentDidMount = () => {
     const url = '/api/confirm';
@@ -19,8 +16,7 @@ class EmailConfirm extends Component {
     const { activation, login } = query;
 
     axios({ url, method: 'POST', data: { activation, login } })
-    .then((json) => {
-      const { error } = json.data;
+    .then(({ data: { error } }) => {
       if (error) {
         this.setState({ error });
       } else {

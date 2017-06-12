@@ -31,7 +31,7 @@ const get = async (req, res) => {
   }
 
   // send response and end request
-  return res.json(resObj).end();
+  return res.send(resObj);
 };
 
 export { get };

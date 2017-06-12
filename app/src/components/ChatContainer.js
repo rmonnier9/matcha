@@ -4,26 +4,23 @@ import callApi from '../callApi.js';
 
 const socket = io();
 
-const Message = (props) => {
-  const { from, target, text } = props;
-  return (
-    <div className="message">
-      <strong>{from === target ? from : 'me'} : </strong>
-      <span>{text}</span>
-    </div>
-  );
-};
+const Message = ({ from, target, text }) => (
+  <div className="message">
+    <strong>{from === target ? from : 'me'} : </strong>
+    <span>{text}</span>
+  </div>
+);
 
-const MessageList = props => (
+const MessageList = ({ messages, target }) => (
   <div className="messages">
     <h2> Conversation: </h2>
     {
-      props.messages.map((message, index) => (
+      messages.map((message, index) => (
         <Message
           key={index}
           from={message.from}
           text={message.text}
-          target={props.target}
+          target={target}
         />
       ))
     }
@@ -31,7 +28,6 @@ const MessageList = props => (
 );
 
 class MessageForm extends Component {
-
   state = {
     text: '',
   }
@@ -83,8 +79,7 @@ class ChatContainer extends Component {
     const { login } = this.props.match.params;
     const url = `/chat/${login}`;
     callApi(url, 'GET')
-    .then((json) => {
-      const { error, messages } = json.data;
+    .then(({ data: { error, messages } }) => {
       if (error) {
         this.setState({ error });
       } else if (messages.length !== 0) {
