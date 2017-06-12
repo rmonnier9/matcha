@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import {
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
   LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE,
-  ADD_NOTIFICATION,
+  ADD_NOTIFICATION, INIT_NOTIFICATIONS_NUMBER,
 } from '../actions';
 
 function auth(state = {
@@ -47,16 +47,17 @@ function auth(state = {
   }
 }
 
-function notification(state = {}, action) {
+function notification(state = { notificationsNumber: 0 }, action) {
   switch (action.type) {
-    case ADD_NOTIFICATION: {
-      const { message, level } = action;
+    case INIT_NOTIFICATIONS_NUMBER:
       return Object.assign({}, state, {
-        message,
-        level,
+        notificationsNumber: action.number,
       });
-    }
-
+    case ADD_NOTIFICATION:
+      return Object.assign({}, state, {
+        last: { message: action.message, level: action.level },
+        notificationsNumber: state.notificationsNumber + 1,
+      });
     default:
       // console.debug('notification reducer :: hit default', action.type);
       return state;

@@ -8,7 +8,6 @@ const socket = io();
 
 class NotificationContainer extends React.Component {
   componentDidMount = () => {
-    console.log(this.props);
     const token = localStorage.getItem('x-access-token');
     socket.emit('auth', token);
     socket.on('notification', this.notificationReceive);
@@ -42,7 +41,7 @@ class NotificationContainer extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    notification: state.notification,
+    notification: state.notification.last,
   };
 }
 

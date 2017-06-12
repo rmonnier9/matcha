@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
+import { unreadNotificationsNumber } from '../actions';
 import callApi from '../callApi.js';
 
 const NotificationsList = props => (
@@ -7,7 +9,7 @@ const NotificationsList = props => (
     <h2> Notifications: </h2>
     {
       props.notifications.map(notification => (
-        <div key={notification.content}>
+        <div key={notification.date}>
           <span>{notification.content}</span><br />
           on <span>{new Date(notification.date).toDateString()}</span>
         </div>
@@ -26,6 +28,7 @@ class Notifications extends Component {
 
   componentDidMount() {
     this.loadItems();
+    this.props.dispatch(unreadNotificationsNumber(0));
   }
 
   loadItems = () => {
@@ -72,4 +75,4 @@ class Notifications extends Component {
   }
 }
 
-export default Notifications;
+export default connect()(Notifications);

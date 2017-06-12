@@ -24,14 +24,14 @@ const get = async (req, res) => {
   // get user from DB
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: currentUser });
-  if (!user) return res.status(404).json({ success: false, message: 'Profile not found.' }).end();
+  if (!user) return res.json({ success: false, message: 'Profile not found.' }).end();
 
   const toSkip = !start ? 0 : parseInt(start, 10);
   const numberPerRequest = 2;
 
   const notificationsCollection = MongoConnection.db.collection('notifications');
   const cursor = notificationsCollection.find({ login: currentUser })
-                                        .skip(toSkip).limit(numberPerRequest);
+                                        .sort({ date: -1 }).skip(toSkip).limit(numberPerRequest);
   const notifications = await cursor.toArray();
   notificationsCollection.updateMany({ login: currentUser, read: false }, { $set: { read: true } });
 
@@ -44,4 +44,20 @@ const get = async (req, res) => {
   return res.json(resObj).end();
 };
 
-export { send, get };
+const getUnreadNumber = async (req, res) => {
+  const { currentUser } = req.decoded;
+
+  const notificationsCollection = MongoConnection.db.collection('notifications');
+  const cursor = notificationsCollection.aggregate([
+        { $match: { login: currentUser, read: false } },
+        { $group: { _id: null, count: { $sum: 1 } } },
+  ]);
+
+  const result = await cursor.next();
+  const count = !result ? 0 : result.count;
+
+  // send infos and end request
+  return res.json({ error: '', count }).end();
+};
+
+export { send, get, getUnreadNumber };

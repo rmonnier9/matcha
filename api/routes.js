@@ -59,6 +59,7 @@ const routes = (app, users, upload) => {
 
   // Notifications  ===============
   app.get('/api/notifications', rejectedCatcher(Notifications.get));
+  app.get('/api/unreadnotifications', rejectedCatcher(Notifications.getUnreadNumber));
 
   // Matches  ===============
   app.get('/api/myprofile/matches', rejectedCatcher(Matches.get));

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import callApi from '../callApi.js';
 
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -7,6 +8,7 @@ export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const LOGOUT_FAILURE = 'LOGOUT_FAILURE';
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
+export const INIT_NOTIFICATIONS_NUMBER = 'INIT_NOTIFICATIONS_NUMBER';
 
 function requestLogin(creds) {
   return {
@@ -59,6 +61,26 @@ export function receiveNotification(message, level) {
   };
 }
 
+export function unreadNotificationsNumber(number) {
+  return {
+    type: INIT_NOTIFICATIONS_NUMBER,
+    number,
+  };
+}
+
+export function initNotificationsNumber() {
+  return (dispatch) => {
+    const url = '/unreadnotifications';
+    callApi(url, 'GET')
+    .then((json) => {
+      const { error, count } = json.data;
+      if (!error) {
+        dispatch(unreadNotificationsNumber(parseInt(count, 10)));
+      }
+    });
+  };
+}
+
 // function logoutError(message) {
 //   return {
 //     type: LOGOUT_FAILURE,
@@ -68,33 +90,34 @@ export function receiveNotification(message, level) {
 //   }
 // }
 
+
 // login action function, calls the API to get a token
 export function loginUser(creds) {
-  return dispatch => {
-    dispatch(requestLogin(creds))
+  return (dispatch) => {
+    dispatch(requestLogin(creds));
 
     return axios.post('/api/signin', creds)
-      .then(({data}) => {
-			if (data.success === false) {
-         	dispatch(loginError(data.message))
-			} else {
-				// if login successful, set token in local storage
-				localStorage.setItem('x-access-token', data.token)
-				localStorage.setItem('login', creds.login)
-				dispatch(receiveLogin(data.token))
-			}
-		})
-		.catch(err => console.log("Error: ", err))
-	}
+    .then(({data}) => {
+      if (data.success === false) {
+        dispatch(loginError(data.message));
+      } else {
+        // if login successful, set token in local storage
+        localStorage.setItem('x-access-token', data.token);
+        localStorage.setItem('login', creds.login);
+        dispatch(receiveLogin(data.token));
+      }
+    })
+    .catch(err => console.log("Error: ", err));
+  }
 }
 
 // logout action function, remove local storage
 export function logoutUser() {
-	return dispatch => {
-		dispatch(requestLogout())
-		localStorage.removeItem('x-access-token')
-		dispatch(receiveLogout())
-	}
+  return (dispatch) => {
+    dispatch(requestLogout());
+    localStorage.removeItem('x-access-token');
+    dispatch(receiveLogout());
+  }
 }
 
 
