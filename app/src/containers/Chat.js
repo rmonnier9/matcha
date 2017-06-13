@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import io from 'socket.io-client';
 import callApi from '../callApi';
-
-const socket = io();
 
 const Message = ({ from, target, text }) => (
   <div className="message">
@@ -72,9 +69,7 @@ class Chat extends Component {
   }
 
   componentDidMount = () => {
-    const token = localStorage.getItem('x-access-token');
-    socket.emit('auth', token);
-    socket.on('message', this.messageReceive);
+    global.socket.on('message', this.messageReceive);
 
     const { login } = this.props.match.params;
     const url = `/chat/${login}`;
@@ -88,6 +83,10 @@ class Chat extends Component {
     });
   }
 
+  componentWillUnmount = () => {
+    global.socket.removeListener('message', this.messageReceive);
+  }
+
   messageReceive = ({ text, from, target }) => {
     if (from !== this.target) { return; }
     const { messages } = this.state;
@@ -99,7 +98,7 @@ class Chat extends Component {
     const { messages } = this.state;
     messages.push(message);
     this.setState({ messages });
-    socket.emit('message', message);
+    global.socket.emit('message', message);
   }
 
 

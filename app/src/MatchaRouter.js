@@ -6,7 +6,6 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 
 // Components
-import Header from './components/Header';
 import Footer from './components/Footer';
 import MyProfileMatches from './components/MyProfileMatches';
 import MyProfileVisits from './components/MyProfileVisits';
@@ -14,6 +13,7 @@ import MyProfileLikes from './components/MyProfileLikes';
 import NotFound from './components/NotFound';
 
 // Containers
+import Header from './containers/Header';
 import Suggestions from './containers/Suggestions';
 import Notifications from './containers/Notifications';
 import Search from './containers/Search';

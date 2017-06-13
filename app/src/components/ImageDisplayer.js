@@ -32,16 +32,14 @@ const Image = ({ picture, login, deletePicture, setProfilePicture, editable }) =
   );
 };
 
-const ImageDisplayer = (props) => {
-  const {
-    pictures,
-    profilePicture,
-    login,
-    deletePicture,
-    setProfilePicture,
-    editable,
-  } = props;
-
+const ImageDisplayer = ({
+  pictures,
+  profilePicture,
+  login,
+  deletePicture,
+  setProfilePicture,
+  editable,
+}) => {
   const imgList = pictures.map(picture => (
     <div key={picture}>
       <Image

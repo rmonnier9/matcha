@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import callApi from '../callApi';
 import UpdateInfosForm from '../components/UpdateInfosForm';
+import ErrorDisplayer from '../components/ErrorDisplayer';
 
 class UpdateInfos extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class UpdateInfos extends Component {
       about,
       tags,
       email: '',
-      error: '',
+      error: [],
       message: '',
     };
     this.oldEmail = email;
@@ -59,10 +60,11 @@ class UpdateInfos extends Component {
     callApi(url, 'POST', data)
     .then(({ data: { error } }) => {
       if (error) {
-        this.setState({ error });
+        this.setState({ error, message: '' });
       } else {
         this.setState({
           message: 'Profile successfully updated !',
+          error: [],
           email: '',
         });
       }
@@ -120,7 +122,10 @@ class UpdateInfos extends Component {
           login={login}
           handleSubmit={this.handleSubmit}
         />
-        <p>{message || error || ''}</p>
+        <p>{message || ''}</p>
+        <ErrorDisplayer
+          error={error}
+        />
       </div>
     );
   }

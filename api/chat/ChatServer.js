@@ -71,6 +71,7 @@ class ChatServer {
     });
 
     user.socket.on('message', ({ text, target }) => {
+      console.log(text, target);
         // parse the message
       if (!parserMessage(text)) return;
 

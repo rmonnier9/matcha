@@ -1,7 +1,7 @@
 import {
   LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
   LOGOUT_REQUEST, LOGOUT_SUCCESS, LOGOUT_FAILURE,
-} from '../actions';
+} from '../actions/authAction';
 
 export default function auth(state = {
   isFetching: false,

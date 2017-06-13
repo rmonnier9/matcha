@@ -9,4 +9,4 @@ const parserMessage = (text) => {
   return (true);
 };
 
-export default { parserMessage };
+export default parserMessage;

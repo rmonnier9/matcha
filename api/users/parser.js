@@ -51,9 +51,12 @@ const nameField = (field, text) => {
   return (null);
 };
 
-const genderField = (gender) => {
+const genderField = (gender, required) => {
   const field = 'gender';
-  if (!gender) return (null);
+  if (!gender) {
+    if (required) return { field, message: 'Gender is required.' };
+    return (null);
+  }
 
   // check if the value is valid
   if (!gender.match(/^(male|female)$/)) return ({ field, message: 'Gender must be either male or female.' });
@@ -125,6 +128,8 @@ const message = (text) => {
 const signupForm = (data) => {
   const error = [];
   let testVal;
+  testVal = genderField(data.gender, true);
+  if (testVal != null) error.push(testVal);
   testVal = emailField(data.email, true);
   if (testVal != null) error.push(testVal);
   testVal = nameField('firstname', data.firstname);
@@ -147,7 +152,7 @@ const updateForm = (data) => {
   if (testVal != null) error.push(testVal);
   testVal = emailField(data.email, false);
   if (testVal != null) error.push(testVal);
-  testVal = genderField(data.gender);
+  testVal = genderField(data.gender, false);
   if (testVal != null) error.push(testVal);
   testVal = lookingForField(data.lookingFor);
   if (testVal != null) error.push(testVal);

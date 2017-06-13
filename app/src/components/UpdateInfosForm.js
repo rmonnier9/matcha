@@ -65,7 +65,7 @@ const UpdateInfosForm = (props) => {
             placeholder="birthDate"
             className="bday"
             onChange={updateBirthDate}
-            value={birthDate || new Date().toISOString().substr(0, 10)}
+            value={birthDate}
           />
         </div>
         <br />

@@ -36,16 +36,16 @@ class Profile extends Component {
     return (
       <div className="profile">
         <h1>{profile.login}</h1>
-        <ProfileComponent
-          profile={profile}
-          isMyProfile={isMyProfile}
-        />
         <LikeButton
           login={login}
           isMyProfile={isMyProfile}
         />
         <BlockButton
           login={login}
+          isMyProfile={isMyProfile}
+        />
+        <ProfileComponent
+          profile={profile}
           isMyProfile={isMyProfile}
         />
       </div>

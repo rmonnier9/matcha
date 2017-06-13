@@ -1,7 +1,14 @@
 import callApi from '../callApi.js';
 
+export const NEW_MESSAGE = 'NEW_MESSAGE';
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
 export const INIT_NOTIFICATIONS_NUMBER = 'INIT_NOTIFICATIONS_NUMBER';
+
+const receiveMessage = (message, level) => ({
+  type: NEW_MESSAGE,
+  message,
+  level,
+});
 
 const receiveNotification = (message, level) => ({
   type: ADD_NOTIFICATION,
@@ -28,4 +35,5 @@ export {
   initNotificationsNumber,
   unreadNotificationsNumber,
   receiveNotification,
+  receiveMessage,
 };

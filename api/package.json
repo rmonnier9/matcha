@@ -4,8 +4,7 @@
   "description": "matcha 42's project",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon --exec 'babel-node server.js'",
-    "build": "webpack --progress --watch"
+    "start": "nodemon --exec 'babel-node server.js'"
   },
   "dependencies": {
     "babel-cli": "^6.24.0",

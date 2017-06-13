@@ -10,9 +10,8 @@ const mail = (to, subject, text) => {
     subject,
     text,
   };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) { console.log(error); return; }
-    console.log('Message %s sent: %s', info.messageId, info.response);
+  transporter.sendMail(mailOptions, (error) => {
+    if (error) { console.log(error); }
   });
 };
 

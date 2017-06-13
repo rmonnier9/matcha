@@ -8,7 +8,6 @@ class ForgotPassword extends Component {
     message: '',
     login: '',
     email: '',
-    confirmed: false,
   };
 
   handleClick = (event) => {
@@ -22,24 +21,32 @@ class ForgotPassword extends Component {
       if (error) {
         this.setState({ error });
       } else {
-        this.setState({ error: '', message: 'New password sent, please check your email !' });
+        this.setState({
+          error: '',
+          message: 'New password sent, please check your email !',
+          login: '',
+          email: '',
+        });
       }
     });
   }
 
-  handleChange = ({ target: { name, value } }) => this.setState({ [name]: value })
+  updateLogin = e => this.setState({ login: e.target.value })
+  updateEmail = e => this.setState({ email: e.target.value })
 
   render() {
-    const { error, message } = this.state;
+    const { error, message, login, email } = this.state;
 
     return (
       <div className="myprofileform">
         <h1>Get a new password</h1>
-        <form onSubmit={this.handleClick} onChange={this.handleChange}>
+        <form onSubmit={this.handleClick}>
           <div>
             <input
               type="text"
               name="login"
+              value={login}
+              onChange={this.updateLogin}
               className="login"
               placeholder="login"
             />
@@ -48,6 +55,8 @@ class ForgotPassword extends Component {
             <input
               type="text"
               name="email"
+              value={email}
+              onChange={this.updateEmail}
               className="email"
               placeholder="email"
             />

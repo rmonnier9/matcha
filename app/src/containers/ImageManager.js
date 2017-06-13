@@ -50,8 +50,12 @@ class ImageManager extends Component {
       if (error) {
         this.setState({ error });
       } else {
+        let { profilePicture } = this.state;
         const pictures = this.state.pictures.filter(picture => picture !== id);
-        this.setState({ pictures });
+        if (this.state.pictures[profilePicture] === id) {
+          profilePicture = pictures.length === 0 ? -1 : 0;
+        }
+        this.setState({ pictures, profilePicture });
       }
     });
   }

@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import ErrorDisplayer from '../components/ErrorDisplayer';
 
-import { loginUser } from '../actions';
+import { loginUser } from '../actions/authAction';
 
 class Signup extends Component {
   state = {
     error: [],
+    gender: '',
     email: '',
     firstname: '',
     lastname: '',
@@ -21,6 +23,7 @@ class Signup extends Component {
   handleClick = (event) => {
     event.preventDefault();
     const {
+      gender,
       email,
       firstname,
       lastname,
@@ -29,6 +32,7 @@ class Signup extends Component {
       confirmpassword,
     } = this.state;
     const data = {
+      gender,
       email: email.trim(),
       firstname: firstname.trim(),
       lastname: lastname.trim(),
@@ -57,6 +61,19 @@ class Signup extends Component {
       <div className="signin">
         <h2 className="form-signin-heading">Sign up</h2>
         <form onSubmit={this.handleClick} onChange={this.handleChange}>
+          <label htmlFor="gender">{"I'm a..."}</label>
+          <input
+            type="radio"
+            name="gender"
+            value="male"
+            className="gender"
+          />Dude
+          <input
+            type="radio"
+            name="gender"
+            value="female"
+            className="gender"
+          />Girl
           <label htmlFor="inputEmail" className="sr-only">Email address</label>
           <input
             type="email"
@@ -107,9 +124,9 @@ class Signup extends Component {
           />
           <input type="submit" name="submit" value="Create my profile" />
         </form>
-        {error.length !== 0 &&
-          <p>{error[0].message}</p>
-        }
+        <ErrorDisplayer
+          error={error}
+        />
         <Link to="/login">Already member ?</Link>
       </div>
     );

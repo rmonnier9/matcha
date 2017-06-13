@@ -28,7 +28,7 @@ const setAsProfile = async (req, res) => {
   const user = await usersCollection.findOne({ login: currentUser });
 
   const pictureIndex = user.pictures.indexOf(id);
-  if (pictureIndex === -1) return res.json({ error: 'Picture not found in db.' });
+  if (pictureIndex === -1) return res.json({ error: 'Picture not found on your profile.' });
 
   const update = { profilePicture: pictureIndex };
   usersCollection.updateOne({ login: currentUser }, { $set: update });
@@ -43,9 +43,9 @@ const remove = async (req, res) => {
   const user = await usersCollection.findOne({ login: currentUser });
 
   const pictureExists = user.pictures.indexOf(id);
-  if (pictureExists === -1) return res.send({ error: 'Picture not found in db.' });
+  if (pictureExists === -1) return res.send({ error: 'Picture not found on your profile.' });
 
-  const imgPath = `../uploads/${id}`;
+  const imgPath = path.resolve(__dirname, `../uploads/${id}`);
   fs.unlink(imgPath, (err) => {
     if (err) return res.json({ error: 'Picture not found on server.' });
     const pictures = user.pictures.filter(picture => picture !== id);
@@ -65,7 +65,7 @@ const saveCheck = async (req, res, next) => {
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login: currentUser });
   if (user.pictures.length >= 5) {
-    return res.send({ error: 'Too many images.' });
+    return res.send({ error: 'You can\'t upload more than 5 images.' });
   }
   req.user = user;
   return next();

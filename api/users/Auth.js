@@ -8,7 +8,7 @@ import parser from './parser';
 import mail from './mail';
 
 const signup = async (req, res) => {
-  const { email, firstname, lastname, login, password } = req.body;
+  const { gender, email, firstname, lastname, login, password } = req.body;
 
   // parse the form fields
   const error = parser.signupForm(req.body);
@@ -24,7 +24,7 @@ const signup = async (req, res) => {
 
   // create user obj
   const activationString = UsersTools.randomString(16);
-  const newUser = UsersTools.create(email, firstname, lastname, login, password,
+  const newUser = UsersTools.create(gender, email, firstname, lastname, login, password,
     activationString, location);
 
   // add user to DB
@@ -34,7 +34,7 @@ const signup = async (req, res) => {
   const subject = 'Matcha - Account created !';
   const content = `Welcome to Matcha. Your activation key is : ${activationString}`;
   mail(email, subject, content);
-  return res.send({ error: 'Account successfully created.' });
+  return res.send({ error: '' });
 };
 
 const emailConfirm = async (req, res) => {
@@ -115,8 +115,6 @@ const forgotPassword = async (req, res) => {
   const update = { password: hashedPassword };
   usersCollection.updateOne({ login }, { $set: update });
 
-  // find the user in DB to get email
-
   // send mail with password and then end the request
   const subject = 'Forgot password - New password';
   const content = `Your new password is ${newPassword}`;
@@ -161,7 +159,7 @@ const updatePassword = async (req, res) => {
 
   // parse the form fields
   const error = parser.passwordField(newPassword, confirmNewPassword);
-  if (error != null) return res.send({ error });
+  if (error) return res.send({ error: error[0].message });
 
   // hash the password
   const hashedPassword = UsersTools.generateHash(newPassword);

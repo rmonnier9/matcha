@@ -103,7 +103,7 @@ const get = async (req, res) => {
     popularity: 1,
     tagsInCommon: 1,
     compatibility: { $add: [
-      { $divide: [1000, '$distance'] },
+      { $divide: ['$distance', 1000] },
       { $multiply: [0.5, '$popularity'] },
       { $multiply: [10, '$tagsInCommon'] },
     ] },

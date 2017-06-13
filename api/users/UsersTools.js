@@ -92,7 +92,7 @@ const addAge = users => (
 );
 
 // New profile -----------------------------------------------------------------
-const create = (email, firstname, lastname, login, password, activationString, location) => {
+const create = (gender, email, firstname, lastname, login, password, activationString, location) => {
   const emptyArray = [];
   const hashedPassword = generateHash(password);
   const lat = parseFloat(location.latitude);
@@ -119,11 +119,12 @@ const create = (email, firstname, lastname, login, password, activationString, l
     tags: emptyArray,
     notifications: emptyArray,
     matches: emptyArray,
+    gender,
     lookingFor: ['male', 'female'],
     active: false,
     activationString,
     lastConnection: new Date(),
-    birthDate: null,
+    birthDate: new Date(1990),
     loc,
   });
 };

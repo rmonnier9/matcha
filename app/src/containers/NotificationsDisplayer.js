@@ -1,19 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import io from 'socket.io-client';
 import NotificationSystem from 'react-notification-system';
-import { receiveNotification } from '../actions/notifAction';
-
-const socket = io();
+import { receiveNotification, receiveMessage } from '../actions/notifAction';
 
 class NotificationsDisplayer extends Component {
   componentDidMount = () => {
-    const token = localStorage.getItem('x-access-token');
-    socket.emit('auth', token);
-    socket.on('notification', this.notificationReceive);
-    socket.on('message', this.messageReceive);
+    global.socket.on('notification', this.notificationReceive);
+    global.socket.on('message', this.messageReceive);
   }
-
 
   componentWillReceiveProps(newProps) {
     const { message, level } = newProps.notification;
@@ -28,7 +22,7 @@ class NotificationsDisplayer extends Component {
   }
 
   messageReceive = ({ from }) => {
-    this.props.dispatch(receiveNotification(`New message from ${from}`, 'warning'));
+    this.props.dispatch(receiveMessage(`New message from ${from}`, 'warning'));
   }
 
   render() {
@@ -38,9 +32,9 @@ class NotificationsDisplayer extends Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ notifications: { last } }) {
   return {
-    notification: state.notification.last,
+    notification: last,
   };
 }
 
