@@ -1,10 +1,9 @@
 import React from 'react';
 
-import ProfilePicture from './ProfilePicture.js';
-import Tags from './Tags.js';
+import ProfilePicture from './ProfilePicture';
+import Tags from './Tags';
 
-const EncartLeft = (props) => {
-  const { profile } = props;
+const EncartLeft = ({ profile }) => {
   const {
     login,
     profilePicture,

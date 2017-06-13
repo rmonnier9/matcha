@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
-import Localisation from './Localisation.js';
-import LookingFor from './LookingFor.js';
+import LookingFor from './LookingFor';
 
 class EncartRight extends Component {
 
@@ -36,7 +35,9 @@ class EncartRight extends Component {
         <div className="about">
           <span>{about}</span>
         </div>
-        <Localisation distance={distance} />
+        <div className="localisation">
+          A <span>{distance}</span> kms.
+        </div>
       </div>
     );
   }

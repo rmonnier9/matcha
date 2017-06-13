@@ -4,8 +4,7 @@ import InputRange from 'react-input-range';
 
 import 'react-input-range/lib/css/index.css';
 
-const SearchParams = (props) => {
-  const {
+const SearchParams = ({
     message,
     name,
     updateName,
@@ -17,8 +16,7 @@ const SearchParams = (props) => {
     updateDist,
     popVal,
     updatePop,
-  } = props;
-  return (
+  }) => (
     <div className="search-params">
       <div className="errorMessageMain">{message}</div>
       <div className="leftSearch">
@@ -68,6 +66,5 @@ const SearchParams = (props) => {
       <input type="submit" value="Find my soulmate!" />
     </div>
   );
-};
 
 export default SearchParams;

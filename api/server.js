@@ -7,9 +7,9 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import multer from 'multer';
 
-import MongoConnection from './config/MongoConnection.js';
-import routes from './routes.js';
-import ChatServer from './ChatServer.js';
+import MongoConnection from './config/MongoConnection';
+import routes from './routes';
+import ChatServer from './chat/ChatServer';
 
 const app = express();
 const port = 8000;

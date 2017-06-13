@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { logoutUser, initNotificationsNumber } from '../actions';
+import { logoutUser } from '../actions/authAction';
+import { initNotificationsNumber } from '../actions/notifAction';
 
-import Nav from './Nav.js';
+import Nav from './Nav';
 
 class Header extends Component {
   componentDidMount() {
-    this.props.dispatch(initNotificationsNumber());
+    const { isAuthenticated } = this.props;
+    if (isAuthenticated) {
+      this.props.dispatch(initNotificationsNumber());
+    }
   }
 
   handleClick = () => {
@@ -34,16 +38,12 @@ class Header extends Component {
 //  CONNECT
 //-------------------------------------
 
-const mapStateToProps = (state) => {
-  const { auth, notification } = state;
-  const { isAuthenticated, errorMessage } = auth;
-  const { notificationsNumber } = notification;
-
-  return {
-    isAuthenticated,
-    errorMessage,
-    notificationsNumber,
-  };
-};
+const mapStateToProps = ({
+  auth: { isAuthenticated },
+  notifications: { notificationsNumber },
+}) => ({
+  isAuthenticated,
+  notificationsNumber,
+});
 
 export default connect(mapStateToProps)(Header);

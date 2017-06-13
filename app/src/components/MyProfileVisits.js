@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import InfiniteUsersScroll from './InfiniteUsersScroll.js';
+import InfiniteUsersScroll from '../containers/InfiniteUsersScroll';
 
 const MyProfileVisits = () => (
   <div className="myvisits">

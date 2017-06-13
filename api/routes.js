@@ -1,14 +1,14 @@
-import * as Auth from './Auth.js';
-import * as User from './User.js';
-import * as Pictures from './Pictures.js';
-import * as Interactions from './Interactions.js';
-import * as Search from './Search.js';
-import * as Chat from './Chat.js';
-import * as Suggestions from './Suggestions.js';
-import * as Notifications from './Notifications.js';
-import * as Matches from './Matches.js';
-import * as Likes from './Likes.js';
-import * as Visits from './Visits.js';
+import * as Auth from './users/Auth';
+import * as User from './users/User';
+import * as Pictures from './users/Pictures';
+import * as Interactions from './users/Interactions';
+import * as Search from './users/Search';
+import * as Suggestions from './users/Suggestions';
+import * as Matches from './users/Matches';
+import * as Likes from './users/Likes';
+import * as Visits from './users/Visits';
+import * as Chat from './chat/Chat';
+import * as Notifications from './notifications/Notifications';
 
 const rejectedCatcher = handler => (req, res, next) => {
   handler(req, res, next).catch((error) => { next(error); });
@@ -70,7 +70,7 @@ const routes = (app, users, upload) => {
   .get('/api/suggestions', rejectedCatcher(Suggestions.get))
 
   // Search  ===============
-  .get('/api/search', rejectedCatcher(Search.advancedSearch))
+  .get('/api/search', rejectedCatcher(Search.advancedSearch));
 };
 
 export default routes;

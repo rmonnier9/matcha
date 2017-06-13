@@ -1,6 +1,6 @@
 import React from 'react';
 
-import InfiniteUsersScroll from './InfiniteUsersScroll.js';
+import InfiniteUsersScroll from '../containers/InfiniteUsersScroll';
 
 const MyProfileMatches = () => (
   <div className="mymatches">

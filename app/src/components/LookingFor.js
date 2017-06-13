@@ -1,8 +1,6 @@
 import React from 'react';
 
-const LookingFor = (props) => {
-  const { lookingFor } = props;
-
+const LookingFor = ({ lookingFor }) => {
   let message;
   if (lookingFor === 'both') {
     message = 'girls and dudes';

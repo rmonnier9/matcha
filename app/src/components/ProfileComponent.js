@@ -1,8 +1,8 @@
 import React from 'react';
 
-import EncartLeft from './EncartLeft.js';
-import EncartRight from './EncartRight.js';
-import ImageDisplayer from './ImageDisplayer.js';
+import EncartLeft from './EncartLeft';
+import EncartRight from './EncartRight';
+import ImageDisplayer from './ImageDisplayer';
 
 const ProfileComponent = ({ profile, isMyProfile }) => (
   <div className="profilecomponent">

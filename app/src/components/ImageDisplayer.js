@@ -1,8 +1,7 @@
 import React from 'react';
-import ProfilePicture from './ProfilePicture.js';
+import ProfilePicture from './ProfilePicture';
 
-const Image = (props) => {
-  const { picture, login, deletePicture, setProfilePicture, editable } = props;
+const Image = ({ picture, login, deletePicture, setProfilePicture, editable }) => {
   const token = localStorage.getItem('x-access-token');
   const url = `/api/pictures/${login}/${picture}?token=${token}`;
   return (
