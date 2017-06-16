@@ -17,15 +17,15 @@ Learn javascript eco-system, websockets, No-SQL
 * Logged part
   * Profile
     * Pictures
-    * Geolocation
     * Interests tags
+    * Geolocation
     * Popularity score
 
-  * Users suggestions
-  * Users research based on
-    * age range
-    * distance range
-    * name
+  * Users research
+  * Users suggestions based on
+    * age
+    * distance
+    * interests tags in common
     * popularity score
   * Likes, Blocks and Reports
-  * Chat when mutual likes
+  * Chat when match (mutual likes)
