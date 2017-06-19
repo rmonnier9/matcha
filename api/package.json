@@ -22,11 +22,11 @@
     "nodemailer": "^4.0.1",
     "nodemon": "^1.11.0",
     "query-string": "^4.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.5.1",
     "socket.io": "^1.7.3"
   },
   "devDependencies": {
-    "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-preset-env": "^1.5.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.3.0"

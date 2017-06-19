@@ -29,8 +29,14 @@ const IPGeolocation = ip => new Promise((resolve, reject) => {
     res.on('end', () => {
       try {
         const parsedData = JSON.parse(rawData);
-        const location = parsedData.loc.split(',');
-        resolve({ latitude: location[0], longitude: location[1] });
+        let latitude;
+        let longitude;
+        if (parsedData && parsedData.loc) {
+          [latitude, longitude] = parsedData.loc.split(',');
+        } else {
+          [latitude, longitude] = [49.038691, 2.385393];
+        }
+        resolve({ latitude, longitude });
       } catch (e) {
         reject(e.message);
       }

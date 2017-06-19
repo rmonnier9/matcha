@@ -5,6 +5,7 @@
   "proxy": "http://localhost:8000",
   "dependencies": {
     "axios": "^0.16.1",
+    "material-ui": "^0.18.3",
     "prop-types": "^15.5.9",
     "query-string": "^4.3.4",
     "react": "^15.5.4",
@@ -18,6 +19,7 @@
     "react-redux": "^5.0.4",
     "react-router-dom": "^4.1.1",
     "react-tagsinput": "^3.16.1",
+    "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0",

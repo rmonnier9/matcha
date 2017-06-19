@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import ErrorDisplayer from '../components/ErrorDisplayer';
+import SignupComponent from '../components/SignupComponent';
 
 import { loginUser } from '../actions/authAction';
 
@@ -19,8 +18,8 @@ class Signup extends Component {
   }
 
   handleChange = ({ target: { name, value } }) => this.setState({ [name]: value })
-
-  handleClick = (event) => {
+  updateGender = (event, index, value) => this.setState({ gender: value })
+  handleSubmit = (event) => {
     event.preventDefault();
     const {
       gender,
@@ -56,79 +55,15 @@ class Signup extends Component {
   }
 
   render() {
-    const { error } = this.state;
+    const { gender, error } = this.state;
     return (
-      <div className="signin">
-        <h2 className="form-signin-heading">Sign up</h2>
-        <form onSubmit={this.handleClick} onChange={this.handleChange}>
-          <label htmlFor="gender">{"I'm a..."}</label>
-          <input
-            type="radio"
-            name="gender"
-            value="male"
-            className="gender"
-          />Dude
-          <input
-            type="radio"
-            name="gender"
-            value="female"
-            className="gender"
-          />Girl
-          <label htmlFor="inputEmail" className="sr-only">Email address</label>
-          <input
-            type="email"
-            name="email"
-            className="form-control"
-            placeholder="Email address"
-            required
-          />
-          <label htmlFor="inputFirstname" className="sr-only">Firstname</label>
-          <input
-            type="login"
-            name="firstname"
-            className="form-control"
-            placeholder="Firstname"
-            required
-          />
-          <label htmlFor="inputLastname" className="sr-only">Lastname</label>
-          <input
-            type="login"
-            name="lastname"
-            className="form-control"
-            placeholder="Lastname"
-            required
-          />
-          <label htmlFor="inputLogin" className="sr-only">Login</label>
-          <input
-            type="login"
-            name="login"
-            className="form-control"
-            placeholder="Login"
-            required
-          />
-          <label htmlFor="inputPassword" className="sr-only">Password</label>
-          <input
-            type="password"
-            name="password"
-            className="form-control"
-            placeholder="Password"
-            required
-          />
-          <label htmlFor="inputPassword" className="sr-only">Confirm password</label>
-          <input
-            type="password"
-            name="confirmpassword"
-            className="form-control"
-            placeholder="Confirm password"
-            required
-          />
-          <input type="submit" name="submit" value="Create my profile" />
-        </form>
-        <ErrorDisplayer
-          error={error}
-        />
-        <Link to="/login">Already member ?</Link>
-      </div>
+      <SignupComponent
+        gender={gender}
+        updateGender={this.updateGender}
+        handleSubmit={this.handleSubmit}
+        handleChange={this.handleChange}
+        error={error}
+      />
     );
   }
 }
