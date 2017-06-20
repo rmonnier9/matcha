@@ -2,7 +2,7 @@
 
 ## Synopsis
 
-A Mongo DB, Express, React, Node dating website. Project part of the web branch at 42 school.
+A dating website with Mongo DB, Express JS, React JS, Node JS. Project part of the web branch at 42 school.
 
 ## Motivation
 
