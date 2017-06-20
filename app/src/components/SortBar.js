@@ -1,19 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+
+const styles = {
+  block: {
+    maxWidth: 250,
+  },
+  radioButton: {
+    marginBottom: 16,
+  },
+};
 
 const SortBar = ({ defaultSort }) => (
-  <div className="sortBar">
-    <div className="label">Sort by</div>
-    <div className="sortButtons">
-      <input type="radio" value="popularity" id="popularity" name="sort" defaultChecked={defaultSort === 'popularity'} />
-      <label htmlFor="popularity">Popularity</label>
-      <input type="radio" value="commonTags" id="commonTags" name="sort" defaultChecked={defaultSort === 'commonTags'} />
-      <label htmlFor="commonTags">Common tags</label>
-      <input type="radio" value="age" id="age" name="sort" defaultChecked={defaultSort === 'age'} />
-      <label htmlFor="age">Age</label>
-      <input type="radio" value="distance" id="distance" name="sort" defaultChecked={defaultSort === 'sort'} />
-      <label htmlFor="distance">Distance</label>
-    </div>
+  <div>
+    <RadioButtonGroup name="sort" defaultSelected={defaultSort}>
+      <RadioButton
+        value="popularity"
+        label="Popularity"
+        style={styles.radioButton}
+      />
+      <RadioButton
+        value="commonTags"
+        label="Common tags"
+        style={styles.radioButton}
+      />
+      <RadioButton
+        value="distance"
+        label="Age"
+        style={styles.radioButton}
+      />
+      <RadioButton
+        value="age"
+        label="Distance"
+        style={styles.radioButton}
+      />
+    </RadioButtonGroup>
   </div>
 );
 
@@ -25,6 +46,5 @@ SortBar.propTypes = {
 SortBar.defaultProps = {
   defaultSort: 'popularity',
 };
-
 
 export default SortBar;

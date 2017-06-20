@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import { connect } from 'react-redux';
 import { logoutUser } from '../actions/authAction';
 import { initNotificationsNumber } from '../actions/notifAction';
-import Nav from '../components/Nav';
+import NavBar from '../components/NavBar';
 
 class Header extends Component {
   componentDidMount() {
@@ -21,7 +21,7 @@ class Header extends Component {
     this.socket.disconnect();
   }
 
-  handleClick = () => {
+  handleSignOut = () => {
     this.props.dispatch(logoutUser());
   }
 
@@ -30,9 +30,9 @@ class Header extends Component {
     return (
       <header className="header">
         {isAuthenticated &&
-          <Nav
+          <NavBar
             notificationsNumber={notificationsNumber}
-            handleClick={this.handleClick}
+            handleSignOut={this.handleSignOut}
           />
         }
       </header>
