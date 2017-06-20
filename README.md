@@ -1,6 +1,8 @@
+# Matcha
+
 ## Synopsis
 
-A basic Mongo DB, Express, React, Node dating website. Project part of the web branch at 42 school.
+A Mongo DB, Express, React, Node dating website. Project part of the web branch at 42 school.
 
 ## Motivation
 
