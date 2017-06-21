@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import queryString from 'query-string';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import SortBar from '../components/SortBar';
 import SearchParams from '../components/SearchParams';
 import callApi from '../callApi';
 import UsersList from '../components/UsersList';
@@ -87,8 +86,8 @@ class Search extends Component {
   }
 
   updateName = e => this.setState({ name: e.target.value })
-  updateAge = e => this.setState({ ageVal: e.target.value })
-  updateDist = e => this.setState({ distVal: e.target.value })
+  updateAge = (event, index, value) => this.setState({ ageVal: value })
+  updateDist = (event, index, value) => this.setState({ distVal: value })
   updatePop = value => this.setState({ popVal: value })
   updateTags = tags => this.setState({ tags })
 
@@ -126,7 +125,6 @@ class Search extends Component {
             updatePop={this.updatePop}
             onSubmit={this.onSubmit}
           />
-          <SortBar defaultSort={'popularity'} />
         </form>
         {loadStarted &&
           <InfiniteScroll

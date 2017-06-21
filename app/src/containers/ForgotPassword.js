@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import ForgotPasswordComponent from '../components/ForgotPasswordComponent';
 import axios from 'axios';
 
 class ForgotPassword extends Component {
@@ -10,7 +11,7 @@ class ForgotPassword extends Component {
     email: '',
   };
 
-  handleClick = (event) => {
+  handleSubmit = (event) => {
     event.preventDefault();
     const url = '/api/forgot_password';
     const { login, email } = this.state;
@@ -39,32 +40,15 @@ class ForgotPassword extends Component {
 
     return (
       <div className="myprofileform">
-        <h1>Get a new password</h1>
-        <form onSubmit={this.handleClick}>
-          <div>
-            <input
-              type="text"
-              name="login"
-              value={login}
-              onChange={this.updateLogin}
-              className="login"
-              placeholder="login"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              name="email"
-              value={email}
-              onChange={this.updateEmail}
-              className="email"
-              placeholder="email"
-            />
-            <input type="submit" value="Get a new password" />
-          </div>
-        </form>
-        <div>{error || message}</div>
-        <Link to="/login">Login</Link>
+        <ForgotPasswordComponent
+          handleSubmit={this.handleSubmit}
+          updateLogin={this.updateLogin}
+          updateEmail={this.updateEmail}
+          email={email}
+          login={login}
+          error={error}
+          message={message}
+        />
       </div>
     );
   }

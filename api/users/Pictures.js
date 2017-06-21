@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import sharp from 'sharp';
 import MongoConnection from '../config/MongoConnection';
 
 // browser expect a content type img, res.json is then useless
@@ -13,7 +14,7 @@ const get = async (req, res, next) => {
   if (!user || id === 'default') return res.sendFile(defaultPath, (err) => { if (err) next(err); });
 
   const pictureExists = user.pictures.indexOf(id);
-  const imgPath = path.resolve(__dirname, `../uploads/${id}`);
+  const imgPath = path.resolve(__dirname, `../uploads/resized/${id}`);
   fs.access(imgPath, fs.F_OK, (err) => {
     if (err || pictureExists === -1) res.sendFile(defaultPath, (err) => { if (err) next(err); });
     else res.sendFile(imgPath, (error) => { if (error) next(error); });
@@ -45,9 +46,12 @@ const remove = async (req, res) => {
   const pictureExists = user.pictures.indexOf(id);
   if (pictureExists === -1) return res.send({ error: 'Picture not found on your profile.' });
 
-  const imgPath = path.resolve(__dirname, `../uploads/${id}`);
+  const imgPath = path.resolve(__dirname, `../uploads/resized/${id}`);
   fs.unlink(imgPath, (err) => {
-    if (err) return res.json({ error: 'Picture not found on server.' });
+    if (err) {
+      console.log(err);
+      // return res.json({ error: 'Picture not found on server.' });
+    }
     const pictures = user.pictures.filter(picture => picture !== id);
 
     let profilePicture = pictures.indexOf(id);
@@ -80,6 +84,17 @@ const save = async (req, res) => {
   if (!req.file) {
     return res.send({ error: 'No images were uploaded.' });
   }
+
+  const oldPath = path.resolve(__dirname, `../uploads/${filename}`);
+  const newPath = path.resolve(__dirname, `../uploads/resized/${filename}`);
+
+  // async but we don't need to wait
+  await sharp(oldPath)
+          .resize(240, 240, {
+            kernel: sharp.kernel.lanczos2,
+            interpolator: sharp.interpolator.nohalo,
+          })
+          .toFile(newPath);
 
  // save filename in db
   const pictures = [...user.pictures, filename];

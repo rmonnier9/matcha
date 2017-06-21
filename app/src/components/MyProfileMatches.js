@@ -7,7 +7,7 @@ const MyProfileMatches = () => (
     <h2>My matches</h2>
     <InfiniteUsersScroll
       baseUrl={'/myprofile/matches'}
-      showChat
+      chat
     />
   </div>
 );

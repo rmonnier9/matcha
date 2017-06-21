@@ -1,8 +1,17 @@
 import React from 'react';
 import TagsInput from 'react-tagsinput';
 import InputRange from 'react-input-range';
-
+import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 import 'react-input-range/lib/css/index.css';
+
+import SortBar from '../components/SortBar';
+
+const style = {
+  margin: 12,
+};
 
 const SearchParams = ({
     message,
@@ -19,51 +28,46 @@ const SearchParams = ({
   }) => (
     <div className="search-params">
       <div className="errorMessageMain">{message}</div>
-      <div className="leftSearch">
-        <input type="text" value={name} onChange={updateName} />
-        <TagsInput value={tags} onChange={updateTags} />
-        <br />
-      </div>
       <div className="rightSearch">
-        <div>
-          <input
-            className="distance" type="radio" name="distance" value="0to15"
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <TextField
+            floatingLabelText="Name or username"
+            value={name}
+            onChange={updateName}
+          />
+          <SelectField
+            floatingLabelText="Distance :"
+            value={distVal}
             onChange={updateDist}
-            checked={distVal === '0to15'}
-          />From 0 to 15km
-          <input
-            className="distance" type="radio" name="distance" value="to50"
-            onChange={updateDist}
-            checked={distVal === 'to50'}
-          />Until 50km
-          <input
-            className="distance" type="radio" name="distance" value="to150"
-            onChange={updateDist}
-            checked={distVal === 'to150'}
-          />Until 150km
+          >
+            <MenuItem value={'0to15'} primaryText="From 0 to 15km" />
+            <MenuItem value={'to50'} primaryText="Until 50km" />
+            <MenuItem value={'to150'} primaryText="Until 150km" />
+          </SelectField><br />
+          <SelectField
+            floatingLabelText="Age :"
+            value={ageVal}
+            onChange={updateAge}
+          >
+            <MenuItem value={'18to30'} primaryText="18 to 30 years old" />
+            <MenuItem value={'30to50'} primaryText="30 to 45 years old" />
+            <MenuItem value={'from50'} primaryText="45 and beyond" />
+          </SelectField><br />
         </div>
-        <div>
-          <input
-            className="age" type="radio" name="age" value="18to30"
-            onChange={updateAge}
-            checked={ageVal === '18to30'}
-          />18 to 30 years old
-          <input
-            className="age" type="radio" name="age" value="30to50"
-            onChange={updateAge}
-            checked={ageVal === '30to50'}
-          />30 to 45 years old
-          <input
-            className="age" type="radio" name="age" value="from50"
-            onChange={updateAge}
-            checked={ageVal === 'from50'}
-          />45 and beyond
+        <div className="leftSearch">
+          <TagsInput value={tags} onChange={updateTags} />
         </div>
         <label htmlFor="inputPopularity" className="sr-only">Popularity</label>
         <InputRange maxValue={100} minValue={0} value={popVal} onChange={updatePop} />
         <br />
       </div>
-      <input type="submit" value="Find my soulmate!" />
+      <SortBar defaultSort={'popularity'} />
+      <RaisedButton
+        style={style}
+        type="submit"
+        label="SEARCH"
+        primary
+      />
     </div>
   );
 

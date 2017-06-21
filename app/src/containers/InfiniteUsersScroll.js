@@ -5,16 +5,12 @@ import callApi from '../callApi';
 import UsersList from '../components/UsersList';
 
 class InfiniteUsersScroll extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      users: [],
-      baseUrl: props.baseUrl,
-      hasMoreItems: true,
-      nextHref: null,
-    };
-    this.showChat = props.showChat;
-  }
+  state = {
+    users: [],
+    baseUrl: this.props.baseUrl,
+    hasMoreItems: true,
+    nextHref: null,
+  };
 
   loadItems = () => {
     const { nextHref, hasMoreItems, baseUrl } = this.state;
@@ -57,7 +53,7 @@ class InfiniteUsersScroll extends Component {
       >
         <UsersList
           users={users}
-          showChat={this.showChat}
+          chat={this.props.chat}
         />
       </InfiniteScroll>
     );
