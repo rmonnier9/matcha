@@ -15,9 +15,11 @@ const get = async (req, res, next) => {
 
   const pictureExists = user.pictures.indexOf(id);
   const imgPath = path.resolve(__dirname, `../uploads/resized/${id}`);
-  fs.access(imgPath, fs.F_OK, (err) => {
-    if (err || pictureExists === -1) res.sendFile(defaultPath, (err) => { if (err) next(err); });
-    else res.sendFile(imgPath, (error) => { if (error) next(error); });
+  return fs.access(imgPath, fs.F_OK, (error) => {
+    if (error || pictureExists === -1) {
+      return res.sendFile(defaultPath, (err) => { if (err) next(err); });
+    }
+    return res.sendFile(imgPath, (err) => { if (err) next(err); });
   });
 };
 

@@ -34,21 +34,10 @@ class Profile extends Component {
       return (<div><h1>{error || 'Loading...'}</h1></div>);
     }
     return (
-      <div className="profile">
-        <h1>{profile.login}</h1>
-        <LikeButton
-          login={login}
-          isMyProfile={isMyProfile}
-        />
-        <BlockButton
-          login={login}
-          isMyProfile={isMyProfile}
-        />
-        <ProfileComponent
-          profile={profile}
-          isMyProfile={isMyProfile}
-        />
-      </div>
+      <ProfileComponent
+        profile={profile}
+        isMyProfile={isMyProfile}
+      />
     );
   }
 }

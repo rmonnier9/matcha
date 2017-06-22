@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import IconButton from 'material-ui/IconButton';
+import ActionUnblock from 'material-ui/svg-icons/action/visibility';
+import ActionBlock from 'material-ui/svg-icons/action/visibility-off';
 
 import callApi from '../callApi';
 
@@ -21,7 +24,7 @@ class BlockButton extends Component {
     });
   }
 
-  onBlockClick = (e, blocks) => {
+  onBlockClick = blocks => () => {
     const { login } = this.props;
     const url = `/blocks/${login}`;
     callApi(url, 'POST', { blocks })
@@ -49,23 +52,20 @@ class BlockButton extends Component {
 
   render() {
     // console.log('RENDER', this.state);
-    const { alreadyBlocked, error } = this.state;
+    const { alreadyBlocked } = this.state;
     const { isMyProfile } = this.props;
 
     return (
-      <div className="block">
-        {!isMyProfile &&
-          <div className="blockreport">
-            {!alreadyBlocked &&
-              <span role="button" tabIndex={0} className="block" onClick={e => this.onBlockClick(e, true)}>Block this.</span>
-            }
-            {alreadyBlocked &&
-              <span role="button" tabIndex={0} className="block" onClick={e => this.onBlockClick(e, false)}>Unblock this.</span>
-            }
-            <span role="button" tabIndex={0} className="fake" onClick={e => this.onReportClick(e)}>Fake account ?</span>
-          </div>
-        }
-        <div>{error}</div>
+      isMyProfile ?
+      null :
+      <div>
+        <IconButton tooltip="SVG Icon">
+          {alreadyBlocked ?
+            <ActionUnblock onTouchTap={this.onBlockClick(false)} /> :
+            <ActionBlock onTouchTap={this.onBlockClick(true)} />
+          }
+        </IconButton>
+        <span role="button" tabIndex={0} className="fake" onClick={e => this.onReportClick(e)}>Fake account ?</span>
       </div>
     );
   }

@@ -45,7 +45,7 @@ const UserListItem = ({ profile, chat }) => {
             at <span>{roundTwo(distance / 1000)}</span> km
           </span><br />
           <span className="tagsInCommon">
-            <span>{tagsInCommon.length}</span> tags in common
+            <span>{tagsInCommon}</span> tags in common
           </span><br />
           <span className="popularity">
             <span>{roundTwo(popularity)}</span>pts.

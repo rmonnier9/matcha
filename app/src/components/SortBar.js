@@ -26,12 +26,12 @@ const SortBar = ({ defaultSort }) => (
       />
       <RadioButton
         value="distance"
-        label="Age"
+        label="Distance"
         style={styles.radioButton}
       />
       <RadioButton
         value="age"
-        label="Distance"
+        label="Age"
         style={styles.radioButton}
       />
     </RadioButtonGroup>

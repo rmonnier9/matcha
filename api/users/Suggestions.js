@@ -53,13 +53,13 @@ const getSortObj = (sort) => {
   let sortObj;
   switch (sort) {
     case 'commonTags':
-      sortObj = { tagsInCommon: -1 }; break;
+      sortObj = { tagsInCommon: -1, login: 1 }; break;
     case 'age':
-      sortObj = { birthDate: -1 }; break;
+      sortObj = { birthDate: -1, login: 1 }; break;
     case 'popularity':
-      sortObj = { popularity: -1 }; break;
+      sortObj = { popularity: -1, login: 1 }; break;
     default:
-      sortObj = { distance: 1 };
+      sortObj = { distance: 1, login: 1 };
   }
   return sortObj;
 };
@@ -124,7 +124,7 @@ const get = async (req, res) => {
     { $skip: toSkip },
     { $limit: numberPerRequest },
     { $sort: sortObj },
-  ], { cursor: { batchSize: numberPerRequest } });
+  ]);
 
   let users = await cursor.toArray();
 

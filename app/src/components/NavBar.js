@@ -7,6 +7,8 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import Badge from 'material-ui/Badge';
+
 
 const style = {
   title: {
@@ -15,22 +17,34 @@ const style = {
 };
 
 const SignOutMenu = props => (
-  <IconMenu
-    iconButtonElement={
-      <IconButton><MoreVertIcon /></IconButton>
-    }
-    targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-    anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+  <Badge
+    badgeContent={props.notificationsNumber}
+    secondary
+    badgeStyle={{ top: 20, right: 20 }}
   >
-    <MenuItem
-      containerElement={<Link to="/notifications" />}
-      primaryText="Notifications"
-    />
-    <MenuItem
-      primaryText="Sign out"
-      onTouchTap={props.handleSignOut}
-    />
-  </IconMenu>
+    <IconMenu
+      iconButtonElement={
+        <IconButton><MoreVertIcon /></IconButton>
+      }
+      targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+    >
+      <Badge
+        badgeContent={props.notificationsNumber}
+        secondary
+        badgeStyle={{ top: 10, right: 10 }}
+      >
+        <MenuItem
+          containerElement={<Link to="/notifications" />}
+          primaryText="Notifications"
+        />
+      </Badge>
+      <MenuItem
+        primaryText="Sign out"
+        onTouchTap={props.handleSignOut}
+      />
+    </IconMenu>
+  </Badge>
 );
 
 export default class NavBar extends React.Component {
@@ -53,7 +67,12 @@ export default class NavBar extends React.Component {
           onLeftIconButtonTouchTap={this.handleToggle}
           title={<span style={style.title}>Matcha</span>}
           onTitleTouchTap={this.handleTitleTouchTap}
-          iconElementRight={<SignOutMenu handleSignOut={this.props.handleSignOut} />}
+          iconElementRight={
+            <SignOutMenu
+              handleSignOut={this.props.handleSignOut}
+              notificationsNumber={this.props.notificationsNumber}
+            />
+          }
         />
         <Drawer
           docked={false}

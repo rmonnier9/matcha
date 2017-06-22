@@ -2,7 +2,7 @@ import React from 'react';
 
 import UserListItem from './UserListItem';
 
-const UsersList = ({ users, chat }) => (
+const UserList = ({ users, chat }) => (
   users.length === 0 ?
     <div className="users-list" /> :
     <div className="users-list">
@@ -19,4 +19,4 @@ const UsersList = ({ users, chat }) => (
     </div>
 );
 
-export default UsersList;
+export default UserList;

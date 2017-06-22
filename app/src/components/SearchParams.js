@@ -25,6 +25,7 @@ const SearchParams = ({
     updateDist,
     popVal,
     updatePop,
+    sort,
   }) => (
     <div className="search-params">
       <div className="errorMessageMain">{message}</div>
@@ -61,7 +62,7 @@ const SearchParams = ({
         <InputRange maxValue={100} minValue={0} value={popVal} onChange={updatePop} />
         <br />
       </div>
-      <SortBar defaultSort={'popularity'} />
+      <SortBar defaultSort={sort || 'popularity'} />
       <RaisedButton
         style={style}
         type="submit"

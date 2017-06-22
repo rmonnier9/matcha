@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import SortBar from '../components/SortBar';
 import callApi from '../callApi';
-import UsersList from '../components/UsersList';
+import UserList from '../components/UserList';
+
+const style = {
+  margin: 12,
+};
 
 class Suggestions extends Component {
   state = {
@@ -11,17 +16,14 @@ class Suggestions extends Component {
   };
 
   componentDidMount() {
-    const { search } = this.props.location;
-    const url = `/suggestions${search}`;
+    const url = '/suggestions';
     this.loadItems(url);
   }
 
   onSubmit = (event) => {
     event.preventDefault();
     const sort = event.target.sort.value;
-    const search = `?sort=${sort}`;
-    this.props.history.push(search);
-    const url = `/suggestions${search}`;
+    const url = `/suggestions?sort=${sort}`;
     this.loadItems(url);
   }
 
@@ -55,9 +57,14 @@ class Suggestions extends Component {
             <div className="errorMessageMain">{message}</div>
             <SortBar defaultSort={'popularity'} />
           </div>
-          <input type="submit" value="Filter!" />
+          <RaisedButton
+            style={style}
+            type="submit"
+            label="FILTER"
+            primary
+          />
         </form>
-        <UsersList
+        <UserList
           users={users}
         />
       </div>

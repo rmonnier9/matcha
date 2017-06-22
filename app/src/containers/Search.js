@@ -4,7 +4,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 import SearchParams from '../components/SearchParams';
 import callApi from '../callApi';
-import UsersList from '../components/UsersList';
+import UserList from '../components/UserList';
 
 class Search extends Component {
   constructor(props) {
@@ -20,6 +20,7 @@ class Search extends Component {
         min: parseInt(query.popmin, 10) || 0,
         max: parseInt(query.popmax, 10) || 100,
       },
+      sort: query.sort || '',
       message: '',
       users: [],
       loadStarted: !!search,
@@ -37,6 +38,7 @@ class Search extends Component {
       popVal,
       tags,
     } = this.state;
+    const sort = event.target.sort.value;
     const query = {
       name,
       ageVal,
@@ -44,13 +46,14 @@ class Search extends Component {
       popmin: popVal.min,
       popmax: popVal.max,
       tags,
-      sort: event.target.sort.value,
+      sort,
     };
     const { pathname } = this.props.location;
     const search = queryString.stringify(query);
     const newUrl = `${pathname}?${search}`;
     this.props.history.push(newUrl);
-    this.setState({ users: [],
+    this.setState({ sort,
+      users: [],
       hasMoreItems: true,
       nextHref: null,
       loadStarted: true,
@@ -100,6 +103,7 @@ class Search extends Component {
       ageVal,
       distVal,
       popVal,
+      sort,
       loadStarted,
       hasMoreItems,
       message,
@@ -123,6 +127,7 @@ class Search extends Component {
             updateDist={this.updateDist}
             popVal={popVal}
             updatePop={this.updatePop}
+            sort={sort}
             onSubmit={this.onSubmit}
           />
         </form>
@@ -133,7 +138,7 @@ class Search extends Component {
             hasMore={hasMoreItems}
             loader={loader}
           >
-            <UsersList
+            <UserList
               users={users}
             />
           </InfiniteScroll>

@@ -18,7 +18,7 @@ import Suggestions from './containers/Suggestions';
 import Notifications from './containers/Notifications';
 import Search from './containers/Search';
 import Profile from './containers/Profile';
-import MyProfileContainer from './containers/MyProfile';
+import MyProfile from './containers/MyProfile';
 import Chat from './containers/Chat';
 import EmailConfirm from './containers/EmailConfirm';
 import Login from './containers/Login';
@@ -43,7 +43,7 @@ const MatchaRouter = ({ isAuthenticated }) => (
         <PrivateRoute exact path="/myprofile/matches" isAuthenticated={isAuthenticated} component={MyProfileMatches} />
         <PrivateRoute exact path="/myprofile/visits" isAuthenticated={isAuthenticated} component={MyProfileVisits} />
         <PrivateRoute exact path="/myprofile/likes" isAuthenticated={isAuthenticated} component={MyProfileLikes} />
-        <PrivateRoute path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfileContainer} />
+        <PrivateRoute path="/myprofile" isAuthenticated={isAuthenticated} component={MyProfile} />
         <PrivateRoute path="/chat/:login" isAuthenticated={isAuthenticated} component={Chat} />
         <Route path="/confirm" component={EmailConfirm} />
         <Route path="/login" component={Login} />

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import IconButton from 'material-ui/IconButton';
+import ActionUnlike from 'material-ui/svg-icons/action/favorite-border';
+import ActionLike from 'material-ui/svg-icons/av/not-interested';
 import callApi from '../callApi';
 
 class LikeButton extends Component {
@@ -21,7 +23,7 @@ class LikeButton extends Component {
     });
   }
 
-  onLikeClick = (e, likes) => {
+  onLikeClick = likes => () => {
     const { login } = this.props;
     const url = `/likes/${login}`;
     callApi(url, 'POST', { likes })
@@ -36,23 +38,19 @@ class LikeButton extends Component {
 
   render() {
     // console.log('RENDER', this.state);
-    const { alreadyLiked, error } = this.state;
+    // if (this.state.error) { console.log(this.state.error); }
+    const { alreadyLiked } = this.state;
     const { isMyProfile } = this.props;
 
     return (
-      <div className="like">
-        {!isMyProfile &&
-          <div className="likeAction">
-            {!alreadyLiked &&
-              <span role="button" tabIndex={0} className="like" onClick={e => this.onLikeClick(e, true)}>Like this.</span>
-            }
-            {alreadyLiked &&
-              <span role="button" tabIndex={0} className="like" onClick={e => this.onLikeClick(e, false)}>Unlike this.</span>
-            }
-          </div>
-        }
-        <div>{error}</div>
-      </div>
+        isMyProfile ?
+        null :
+        <IconButton tooltip="SVG Icon">
+          {alreadyLiked ?
+            <ActionUnlike onTouchTap={this.onLikeClick(false)} /> :
+            <ActionLike onTouchTap={this.onLikeClick(true)} />
+          }
+        </IconButton>
     );
   }
 }

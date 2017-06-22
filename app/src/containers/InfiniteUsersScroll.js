@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import callApi from '../callApi';
-import UsersList from '../components/UsersList';
+import UserList from '../components/UserList';
 
 class InfiniteUsersScroll extends Component {
   state = {
@@ -51,7 +51,7 @@ class InfiniteUsersScroll extends Component {
         hasMore={this.state.hasMoreItems}
         loader={loader}
       >
-        <UsersList
+        <UserList
           users={users}
           chat={this.props.chat}
         />

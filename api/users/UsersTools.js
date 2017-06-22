@@ -20,13 +20,7 @@ const randomString = (length) => {
 };
 
 // compute data to send to users
-const roundTwo = (nb) => {
-  const nbM = nb * 100;
-  const nbR = Math.floor(nbM);
-  return (nbR / 100);
-};
-
-const getPopularity = (visits, likes) => roundTwo((likes * 50) / (visits + 1));
+const getPopularity = (visits, likes) => ((likes * 50) / (visits + 1));
 
 const getDistance = (userA, userB) => {
   if (!userA.location || !userB.location ||
@@ -81,7 +75,7 @@ const addUsefullData = (users, currentUser) => (
   users.map((user) => {
     user.age = getAge(user.birthDate);
     user.popularity = getPopularity(user.visits, user.interestCounter);
-    user.tagsInCommon = getTagsInCommon(user, currentUser);
+    user.tagsInCommon = getTagsInCommon(user, currentUser).length;
     user.distance = getDistance(user, currentUser);
     return (user)
   })

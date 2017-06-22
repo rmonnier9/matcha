@@ -71,33 +71,32 @@ const getGeoNearObj = (loc, dist) => {
     distMax = 150 * 1000;
   }
 
-  const geoNearObj = {
+  return {
     near: { type: 'Point', coordinates: [lng, lat] },
     distanceField: 'distance',
     maxDistance: distMax,
     spherical: true,
   };
-  return geoNearObj;
 };
 
 const getSortObj = (sort) => {
   let sortObj;
   switch (sort) {
     case 'commonTags':
-      sortObj = { tagsInCommon: -1 }; break;
+      sortObj = { tagsInCommon: -1, login: 1 }; break;
     case 'age':
-      sortObj = { birthDate: -1 }; break;
+      sortObj = { birthDate: -1, login: 1 }; break;
     case 'popularity':
-      sortObj = { popularity: -1 }; break;
+      sortObj = { popularity: -1, login: 1 }; break;
     default:
-      sortObj = { distance: 1 };
+      sortObj = { distance: 1, login: 1 };
   }
   return sortObj;
 };
 
-const getFilterPopObj = (popmin, popmax) => {
-  popmin = parseInt(popmin, 10);
-  popmax = parseInt(popmax, 10);
+const getFilterPopObj = (popminParam, popmaxParam) => {
+  const popmin = parseInt(popminParam, 10);
+  const popmax = parseInt(popmaxParam, 10);
 
   return ({ $and: [{ popularity: { $gt: popmin } }, { popularity: { $lt: popmax } }] });
 };
@@ -159,7 +158,7 @@ const advancedSearch = async (req, res) => {
 
   // define number of results per requests
   const toSkip = !query.start ? 0 : parseInt(query.start, 10);
-  const numberPerRequest = 2;
+  const numberPerRequest = 1;
 
   // get users from db
   const cursor = usersCollection.aggregate([
@@ -170,9 +169,10 @@ const advancedSearch = async (req, res) => {
     { $sort: sortObj },
     { $skip: toSkip },
     { $limit: numberPerRequest },
-  ], { cursor: { batchSize: numberPerRequest } });
+  ]);
 
   let users = await cursor.toArray();
+  cursor.close();
 
   // format users' data
   users = UsersTools.addAge(users);
