@@ -11,14 +11,13 @@ class Header extends Component {
     if (isAuthenticated) {
       this.props.dispatch(initNotificationsNumber());
     }
-    this.socket = io();
-    global.socket = this.socket;
+    global.socket = io();
     const token = localStorage.getItem('x-access-token');
-    this.socket.emit('auth', token);
+    global.socket.emit('auth', token);
   }
 
   componentWillUnmount() {
-    this.socket.disconnect();
+    global.socket.disconnect();
   }
 
   handleSignOut = () => {
