@@ -96,11 +96,11 @@ const create = (gender, email, firstname, lastname, login, password, activationS
     coordinates: [lng, lat],
   };
   return ({
-    login,
+    login: login.toLowerCase(),
     password: hashedPassword,
     email,
-    firstname,
-    lastname,
+    firstname: firstname.toLowerCase(),
+    lastname: lastname.toLowerCase(),
     pictures: emptyArray,
     profilePicture: -1,
     interestedIn: emptyArray,

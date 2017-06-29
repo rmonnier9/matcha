@@ -32,7 +32,7 @@ const signup = async (req, res) => {
 
   // send mail to the user and end the request
   const subject = 'Matcha - Account created !';
-  const content = `Welcome to Matcha. Your activation key is : ${activationString}`;
+  const content = `Welcome to Matcha. Please visit /confirm?login=${login}&activation=${activationString}`;
   mail(email, subject, content);
   return res.send({ error: '' });
 };

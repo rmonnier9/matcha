@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import IconButton from 'material-ui/IconButton';
-import ActionUnblock from 'material-ui/svg-icons/action/visibility';
 import ActionBlock from 'material-ui/svg-icons/action/visibility-off';
+import ActionUnblock from 'material-ui/svg-icons/action/visibility';
 
 import callApi from '../callApi';
+
+const style = {
+  active: {
+    color: 'rgba(0, 0, 0, 0.90)',
+  },
+  inactive: {
+    color: 'rgba(0, 0, 50, 0.26)',
+  },
+};
 
 class BlockButton extends Component {
   state = {
@@ -61,8 +70,8 @@ class BlockButton extends Component {
       <div>
         <IconButton tooltip="SVG Icon">
           {alreadyBlocked ?
-            <ActionUnblock onTouchTap={this.onBlockClick(false)} /> :
-            <ActionBlock onTouchTap={this.onBlockClick(true)} />
+            <ActionBlock color={style.active.color} onTouchTap={this.onBlockClick(false)} /> :
+            <ActionUnblock color={style.inactive.color} onTouchTap={this.onBlockClick(true)} />
           }
         </IconButton>
         <span role="button" tabIndex={0} className="fake" onClick={e => this.onReportClick(e)}>Fake account ?</span>

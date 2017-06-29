@@ -15,6 +15,11 @@ const SortBar = ({ defaultSort }) => (
   <div>
     <RadioButtonGroup name="sort" defaultSelected={defaultSort}>
       <RadioButton
+        value="distance"
+        label="Distance"
+        style={styles.radioButton}
+      />
+      <RadioButton
         value="popularity"
         label="Popularity"
         style={styles.radioButton}
@@ -22,11 +27,6 @@ const SortBar = ({ defaultSort }) => (
       <RadioButton
         value="commonTags"
         label="Common tags"
-        style={styles.radioButton}
-      />
-      <RadioButton
-        value="distance"
-        label="Distance"
         style={styles.radioButton}
       />
       <RadioButton

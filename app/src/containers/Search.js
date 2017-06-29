@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import queryString from 'query-string';
 import InfiniteScroll from 'react-infinite-scroller';
+import axios from 'axios';
 
 import SearchParams from '../components/SearchParams';
 import callApi from '../callApi';
 import UserList from '../components/UserList';
+
+const CancelToken = axios.CancelToken;
 
 class Search extends Component {
   constructor(props) {
@@ -26,6 +29,7 @@ class Search extends Component {
       loadStarted: !!search,
       hasMoreItems: true,
       nextHref: null,
+      source: CancelToken.source(),
     };
   }
 
@@ -37,7 +41,9 @@ class Search extends Component {
       distVal,
       popVal,
       tags,
+      source,
     } = this.state;
+    source.cancel('Request canceled by reloading.');
     const sort = event.target.sort.value;
     const query = {
       name,
@@ -54,9 +60,10 @@ class Search extends Component {
     this.props.history.push(newUrl);
     this.setState({ sort,
       users: [],
+      loadStarted: true,
       hasMoreItems: true,
       nextHref: null,
-      loadStarted: true,
+      source: CancelToken.source(),
     });
   }
 
@@ -67,9 +74,9 @@ class Search extends Component {
   }
 
   loadItems = () => {
-    const { nextHref } = this.state;
+    const { nextHref, source } = this.state;
     const url = nextHref || this.getSearchURL();
-    callApi(url, 'GET')
+    callApi(url, 'GET', {}, {}, source.token)
     .then(({ data }) => {
       const users = [...this.state.users, ...data.users];
 
@@ -84,6 +91,13 @@ class Search extends Component {
           hasMoreItems: false,
           nextHref: null,
         });
+      }
+    })
+    .catch((error) => {
+      if (axios.isCancel(error)) {
+        console.log('Request canceled', error.message);
+      } else {
+        console.log(error);
       }
     });
   }
@@ -109,7 +123,7 @@ class Search extends Component {
       message,
     } = this.state;
     const { users } = this.state;
-    const loader = <div className="loader">Loading ...</div>;
+    const loader = <div className="loader"></div>;
 
     return (
       <div className="search">

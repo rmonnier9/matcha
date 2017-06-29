@@ -22,7 +22,7 @@ const get = async (req, res) => {
   const { start } = req.query;
 
   const toSkip = !start ? 0 : parseInt(start, 10);
-  const numberPerRequest = 2;
+  const numberPerRequest = 12;
 
   const notificationsCollection = MongoConnection.db.collection('notifications');
   const cursor = notificationsCollection.find({ login: currentUser })

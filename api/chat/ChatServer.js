@@ -100,11 +100,10 @@ class ChatServer {
           socketTargets.forEach((current) => {
             current.socket.emit('message', message);
           });
-        } else {
-          // send and update user notifications
-          const newNotification = `${user.login} has sent you a message.`;
-          Notifications.send(this.users, newNotification, targetUser);
         }
+        // send and update user notifications
+        const newNotification = `${user.login} has sent you a message.`;
+        Notifications.send(this.users, newNotification, targetUser);
       });
     });
   }

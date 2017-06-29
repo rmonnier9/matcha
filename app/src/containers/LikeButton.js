@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import IconButton from 'material-ui/IconButton';
-import ActionUnlike from 'material-ui/svg-icons/action/favorite-border';
-import ActionLike from 'material-ui/svg-icons/av/not-interested';
+// import ActionUnlike from 'material-ui/svg-icons/action/favorite-border';
+import ActionLike from 'material-ui/svg-icons/action/favorite-border';
 import callApi from '../callApi';
+
+const style = {
+  active: {
+    color: 'rgba(200, 0, 0, 0.80)',
+  },
+  inactive: {
+    color: 'rgba(0, 0, 50, 0.26)',
+  },
+};
 
 class LikeButton extends Component {
   state = {
@@ -47,8 +56,8 @@ class LikeButton extends Component {
         null :
         <IconButton tooltip="SVG Icon">
           {alreadyLiked ?
-            <ActionUnlike onTouchTap={this.onLikeClick(false)} /> :
-            <ActionLike onTouchTap={this.onLikeClick(true)} />
+            <ActionLike color={style.active.color} onTouchTap={this.onLikeClick(false)} /> :
+            <ActionLike color={style.inactive.color} onTouchTap={this.onLikeClick(true)} />
           }
         </IconButton>
     );

@@ -1,5 +1,5 @@
 import {
-  ADD_NOTIFICATION, INIT_NOTIFICATIONS_NUMBER, NEW_MESSAGE,
+  ADD_NOTIFICATION, INIT_NOTIFICATIONS_NUMBER,
 } from '../actions/notifAction';
 
 export default function notifications(state = { notificationsNumber: 0 }, action) {
@@ -13,12 +13,6 @@ export default function notifications(state = { notificationsNumber: 0 }, action
       return Object.assign({}, state, {
         last: { message: action.message, level: action.level },
         notificationsNumber: state.notificationsNumber + 1,
-      });
-    }
-    case NEW_MESSAGE: {
-    console.log(action);
-      return Object.assign({}, state, {
-        last: { message: action.message, level: action.level },
       });
     }
     default:

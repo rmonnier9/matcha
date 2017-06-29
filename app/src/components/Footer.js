@@ -30,7 +30,7 @@ const Footer = () => (
       <p>&copy; 2017 <a style={style.anchorColor} href="http://github.com/rmonnier">Robin Monnier</a></p>
     </div>
     <div style={style.panel}>
-      <a href="https://github.com/rmonnier/matcha-dating-app"><img src="/df" alt="Github" style={style.icon} /></a>
+      <a href="https://github.com/rmonnier/matcha-dating-app">Matcha</a>
     </div>
     <div style={style.panel}>
       <Link to="/"><p style={style.anchorColor}>Matcha</p></Link>

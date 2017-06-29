@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import callApi from '../callApi';
+
+const style = {
+  margin: 12,
+};
 
 class Geolocation extends Component {
   constructor(props) {
@@ -62,9 +67,13 @@ class Geolocation extends Component {
     return (
       <div>
         <div id="map" style={{ height: '500px', width: '500px' }} />
-        <button onClick={event => this.handleClick(event)} className="btn btn-primary">
-          Geolocate me !
-        </button>
+        <RaisedButton
+          style={style}
+          onClick={this.handleClick}
+          type="submit"
+          label="GEOLOCATE ME"
+          primary
+        />
         <p>{error}</p>
       </div>
     );

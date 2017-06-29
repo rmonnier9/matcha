@@ -1,7 +1,15 @@
 import React from 'react';
 import TagsInput from 'react-tagsinput';
+import TextField from 'material-ui/TextField';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import 'react-tagsinput/react-tagsinput.css';
+
+const style = {
+  margin: 12,
+};
 
 const UpdateInfosForm = (props) => {
   const {
@@ -30,32 +38,37 @@ const UpdateInfosForm = (props) => {
       <br />
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="name">My name is </label>
-          <input
-            type="text"
-            placeholder="firstname"
-            className="name"
+          <TextField
+            style={style}
+            name="firstname"
+            hintText="firstname"
+            floatingLabelText="firstname"
             onChange={updateFirstname}
             value={firstname}
+            required
           />
-          <input
-            type="text"
-            placeholder="lastname"
-            className="name"
+          <TextField
+            style={style}
+            name="lastname"
+            hintText="lastname"
+            floatingLabelText="lastname"
             onChange={updateLastname}
             value={lastname}
-          />
+            required
+          /><br />
         </div>
         <br />
         <div>
           <label htmlFor="email">Email : {oldEmail}</label>
-          <input
+          <TextField
+            style={style}
             type="email"
-            placeholder="new email"
-            className="email"
+            name="email"
+            hintText="email"
+            floatingLabelText="email"
             onChange={updateEmail}
             value={email}
-          />
+          /><br />
         </div>
         <br />
         <div>
@@ -70,46 +83,26 @@ const UpdateInfosForm = (props) => {
         </div>
         <br />
         <div>
-          <label htmlFor="gender">{"I'm a..."}</label>
-          <input
-            type="radio"
-            value="male"
-            className="gender"
+          <SelectField
+            floatingLabelText="I'm a"
+            value={gender}
             onChange={updateGender}
-            checked={gender === 'male'}
-          />Dude
-          <input
-            type="radio"
-            value="female"
-            className="gender"
-            onChange={updateGender}
-            checked={gender === 'female'}
-          />Girl
+          >
+            <MenuItem value={'male'} primaryText="dude" />
+            <MenuItem value={'female'} primaryText="girl" />
+          </SelectField><br />
         </div>
         <br />
         <div>
-          <label htmlFor="lookingFor">I want to have fun with a...</label>
-          <input
-            type="radio"
-            value="male"
-            className="lookingFor"
+          <SelectField
+            floatingLabelText="I'm looking for"
+            value={lookingFor}
             onChange={updateLookingFor}
-            checked={lookingFor === 'male'}
-          />Dude
-          <input
-            type="radio"
-            value="female"
-            className="lookingFor"
-            onChange={updateLookingFor}
-            checked={lookingFor === 'female'}
-          />Girl
-          <input
-            type="radio"
-            value="both"
-            className="lookingFor"
-            onChange={updateLookingFor}
-            checked={lookingFor === 'both'}
-          />Whatever
+          >
+            <MenuItem value={'male'} primaryText="dudes" />
+            <MenuItem value={'female'} primaryText="girls" />
+            <MenuItem value={'both'} primaryText="both" />
+          </SelectField><br />
         </div>
         <br />
         <div>
@@ -124,7 +117,12 @@ const UpdateInfosForm = (props) => {
           />
         </div>
         <TagsInput value={tags} onChange={updateTags} />
-        <input type="submit" value="Save my changes" />
+        <RaisedButton
+          style={style}
+          type="submit"
+          label="SAVE MY CHANGES"
+          primary
+        />
       </form>
     </div>
   );

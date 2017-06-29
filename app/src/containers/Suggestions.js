@@ -55,7 +55,7 @@ class Suggestions extends Component {
         <form onSubmit={event => this.onSubmit(event)}>
           <div className="suggestions-params">
             <div className="errorMessageMain">{message}</div>
-            <SortBar defaultSort={'popularity'} />
+            <SortBar defaultSort={'distance'} />
           </div>
           <RaisedButton
             style={style}

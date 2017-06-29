@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import ErrorDisplayer from '../components/ErrorDisplayer';
 
@@ -15,7 +15,10 @@ const style = {
 const SignupComponent = props => (
   <div className="signin">
     <h2 className="form-signin-heading">Sign up</h2>
-    <form onSubmit={props.handleClick} onChange={props.handleChange}>
+    <form
+      onSubmit={props.handleSubmit}
+      onChange={props.handleChange}
+    >
       <SelectField
         floatingLabelText="I'm a"
         value={props.gender}

@@ -62,7 +62,7 @@ const SearchParams = ({
         <InputRange maxValue={100} minValue={0} value={popVal} onChange={updatePop} />
         <br />
       </div>
-      <SortBar defaultSort={sort || 'popularity'} />
+      <SortBar defaultSort={sort || 'distance'} />
       <RaisedButton
         style={style}
         type="submit"

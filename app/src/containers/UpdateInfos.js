@@ -75,8 +75,8 @@ class UpdateInfos extends Component {
   updateLastname = e => this.setState({ lastname: e.target.value })
   updateEmail = e => this.setState({ email: e.target.value })
   updateBirthDate = e => this.setState({ birthDate: e.target.value })
-  updateGender = e => this.setState({ gender: e.target.value })
-  updateLookingFor = e => this.setState({ lookingFor: e.target.value })
+  updateGender = (event, index, value) => this.setState({ gender: value })
+  updateLookingFor = (event, index, value) => this.setState({ lookingFor: value })
   updateAbout = e => this.setState({ about: e.target.value })
   updateTags = tags => this.setState({ tags })
 

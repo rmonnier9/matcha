@@ -58,7 +58,7 @@ const changeEmail = (update, email, login) => {
 
   // send mail to the user and end the request
   const subject = 'Matcha - Email update';
-  const content = `To confirm your email update, please check : <a>localhost:3000/confirm?login=${login}&activation=${activationString}</a>`;
+  const content = `To confirm your email update, please check : /confirm?login=${login}&activation=${activationString}`;
   mail(email, subject, content);
   return (update);
 };

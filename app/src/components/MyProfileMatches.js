@@ -4,7 +4,7 @@ import InfiniteUsersScroll from '../containers/InfiniteUsersScroll';
 
 const MyProfileMatches = () => (
   <div className="mymatches">
-    <h2>My matches</h2>
+    <h2>Chat</h2>
     <InfiniteUsersScroll
       baseUrl={'/myprofile/matches'}
       chat

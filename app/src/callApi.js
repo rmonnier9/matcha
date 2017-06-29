@@ -10,10 +10,11 @@ import axios from 'axios';
 //   }
 // })
 
-const callApi = (endpoint, method, data = {}, headers = {}) => {
+const callApi = (endpoint, method, data = {}, headers = {}, cancelToken = '') => {
   const token = localStorage.getItem('x-access-token') || null;
   const fullUrl = `/api${endpoint}`;
-  const config = Object.assign({}, { url: fullUrl }, { method }, { data, headers });
+  const config = Object.assign({}, { url: fullUrl }, { method },
+                                { data, headers }, { cancelToken });
 
   if (!token) { return Promise.reject(new Error('No token saved!')); }
 

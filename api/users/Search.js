@@ -19,9 +19,9 @@ const addNameQuery = (matchObj, name) => {
 
     matchObj.$and.push({
       $or: [
-        { login: regex },
+        // { login: regex },
         { firstname: regex },
-        { lastname: regex },
+        // { lastname: regex },
       ],
     });
   }
@@ -45,12 +45,12 @@ const addAgeQuery = (matchObj, age) => {
 
     matchObj.$and.push({
       birthDate: {
-        $lt: dateMax,
+        $lte: dateMax,
       },
     });
     matchObj.$and.push({
       birthDate: {
-        $gt: dateMin,
+        $gte: dateMin,
       },
     });
   }
@@ -94,11 +94,11 @@ const getSortObj = (sort) => {
   return sortObj;
 };
 
-const getFilterPopObj = (popminParam, popmaxParam) => {
+const getFilterPopObj = (popminParam = 0, popmaxParam = 100) => {
   const popmin = parseInt(popminParam, 10);
   const popmax = parseInt(popmaxParam, 10);
 
-  return ({ $and: [{ popularity: { $gt: popmin } }, { popularity: { $lt: popmax } }] });
+  return ({ $and: [{ popularity: { $gte: popmin } }, { popularity: { $lte: popmax } }] });
 };
 
 const getProjObj = tags => (

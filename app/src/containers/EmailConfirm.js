@@ -21,7 +21,7 @@ class EmailConfirm extends Component {
         this.setState({ error });
       } else {
         this.setState({ message: 'email successfully confirmed !' });
-        setInterval(() => this.setState({ confirmed: true }), 3000);
+        setTimeout(() => this.setState({ confirmed: true }), 3000);
       }
     });
   }
@@ -31,9 +31,11 @@ class EmailConfirm extends Component {
     const { from } = this.props.location.state || { from: { pathname: '/' } };
     const { error, message, confirmed } = this.state;
 
-    if (confirmed) { return (<Redirect to={from} />); }
-
-    return (<div><h1>{error || message || 'Loading...'}</h1></div>);
+    return (
+      confirmed ?
+        <Redirect to={from} /> :
+        <div><h1>{error || message || 'Loading...'}</h1></div>
+    );
   }
 }
 

@@ -13,8 +13,8 @@ const getMatchObj = (currentUser, gender, lookingFor, birthDate) => {
       { blocked: { $ne: currentUser } },
       { gender: { $in: lookingFor } },
       { lookingFor: gender },
-      { birthDate: { $gt: dateMin } },
-      { birthDate: { $lt: dateMax } },
+      { birthDate: { $gte: dateMin } },
+      { birthDate: { $lte: dateMax } },
     ],
   };
   return (matchObj);
