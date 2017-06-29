@@ -114,17 +114,6 @@ const aboutField = (about) => {
   return (null);
 };
 
-const message = (text) => {
-  if (!text) return (false);
-
-  // check message size
-  if (!(text.length >= 1 && text.length <= 160)) return (false);
-
-  // check content
-  if (!text.match(/^[a-zA-Z0-9 .,:;?!'-\s]+$/)) return (false);
-  return (true);
-};
-
 const signupForm = (data) => {
   const error = [];
   let testVal;
@@ -165,4 +154,4 @@ const updateForm = (data) => {
   return error.length === 0 ? null : error;
 };
 
-export default { signupForm, passwordField, loginField, updateForm, message };
+export default { signupForm, passwordField, loginField, updateForm };
