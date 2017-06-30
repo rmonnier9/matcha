@@ -6,6 +6,7 @@ import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import io from 'socket.io-client';
 
 import rootReducer from './reducers';
 import MatchaRouter from './MatchaRouter.js';
@@ -23,6 +24,8 @@ const store = createStore(
     loggerMiddleware, // neat middleware that logs actions
   ),
 );
+
+global.socket = io();
 
 render(
   <MuiThemeProvider>

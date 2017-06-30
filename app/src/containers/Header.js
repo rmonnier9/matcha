@@ -1,27 +1,39 @@
 import React, { Component } from 'react';
-import io from 'socket.io-client';
 import { connect } from 'react-redux';
 import { logoutUser } from '../actions/authAction';
-import { initNotificationsNumber } from '../actions/notifAction';
+import { initNotificationsNumber, receiveNotification } from '../actions/notifAction';
 import NavBar from '../components/NavBar';
 
 class Header extends Component {
-  componentDidMount() {
+  componentDidMount = () => {
     const { isAuthenticated } = this.props;
     if (isAuthenticated) {
-      this.props.dispatch(initNotificationsNumber());
+      this.initSocket();
     }
-    global.socket = io();
-    const token = localStorage.getItem('x-access-token');
-    global.socket.emit('auth', token);
   }
 
-  componentWillUnmount() {
-    global.socket.disconnect();
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.isAuthenticated !== this.props.isAuthenticated && nextProps.isAuthenticated) {
+      this.initSocket();
+    }
+  }
+
+  initSocket = () => {
+    this.props.dispatch(initNotificationsNumber());
+    const token = localStorage.getItem('x-access-token');
+    global.socket.open();
+    global.socket.emit('auth', token);
+    global.socket.on('notification', this.notificationReceive);
+  }
+
+  notificationReceive = (message) => {
+    this.props.dispatch(receiveNotification(message, 'warning'));
   }
 
   handleSignOut = () => {
     this.props.dispatch(logoutUser());
+    global.socket.removeListener('notification', this.notificationReceive);
+    global.socket.disconnect();
   }
 
   render() {
