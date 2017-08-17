@@ -1,5 +1,5 @@
-import MongoConnection from '../config/MongoConnection.js';
-import * as UsersTools from './UsersTools.js';
+import MongoConnection from '../MongoConnection';
+import * as UsersTools from './UsersTools';
 
 const get = async (req, res) => {
   const { currentUser } = req.decoded;

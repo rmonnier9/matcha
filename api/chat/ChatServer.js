@@ -2,8 +2,7 @@ import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import moment from 'moment';
 
-import config from '../config/config';
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 import parserMessage from './parserMessage';
 import * as Notifications from '../notifications/Notifications';
 
@@ -24,7 +23,7 @@ class ChatServer {
 
   auth(socket) {
     return ((token) => {
-      jwt.verify(token, config.secret, (err, decoded) => {
+      jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
         if (err) { socket.emit('auth', 'Auth error : Invalid token.'); return; }
         const { currentUser } = decoded;
 

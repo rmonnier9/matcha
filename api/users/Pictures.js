@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 
 // browser expect a content type img, res.json is then useless
 const get = async (req, res, next) => {

@@ -1,4 +1,4 @@
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 
 const send = (userSocketList, newNotification, currentUser) => {
   const askedUser = userSocketList.filter(userSocket => userSocket.login === currentUser.login);

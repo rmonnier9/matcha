@@ -1,11 +1,9 @@
 import { MongoClient } from 'mongodb';
-import config from './config';
-
 
 const MongoConnection = {
   connect() {
     return new Promise((resolve, reject) => {
-      MongoClient.connect(config.database, (err, db) => {
+      MongoClient.connect(process.env.MONGODB_URI, (err, db) => {
         if (err) {
           reject(err);
         }

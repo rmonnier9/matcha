@@ -1,4 +1,4 @@
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 import * as UsersTools from './UsersTools';
 
 const getMatchObj = (currentUser, gender, lookingFor, birthDate) => {

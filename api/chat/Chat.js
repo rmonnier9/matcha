@@ -1,4 +1,4 @@
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 
 const getMessages = async (req, res) => {
   const { currentUser } = req.decoded;

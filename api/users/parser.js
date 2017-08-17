@@ -1,4 +1,4 @@
-import * as UsersTools from './UsersTools.js';
+import * as UsersTools from './UsersTools';
 
 const loginField = (login) => {
   const field = 'login';

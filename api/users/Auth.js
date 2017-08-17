@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import IPGeolocation from './IPGeolocation';
-import config from '../config/config';
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 import * as UsersTools from './UsersTools';
 import parser from './parser';
 import mail from './mail';
@@ -87,7 +86,7 @@ const signin = async (req, res) => {
   // create a session token for 2 hours, send it then end the request
   const token = jwt.sign(
     { currentUser: user.login },
-    config.secret,
+    process.env.SESSION_SECRET,
     { expiresIn: 3600 * 24 * 300 },
   );
   // res.set('Access-Control-Expose-Headers', 'x-access-token');
@@ -128,7 +127,7 @@ const isLogged = (req, res, next) => {
   if (!token) return res.send({ error: 'No token provided.' });
 
   // check if token is valid
-  jwt.verify(token, config.secret, (err, decoded) => {
+  jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
     if (err) return res.send({ error: 'Failed to authenticate token.' });
 
     // save token datas into req.decoded and then call next request

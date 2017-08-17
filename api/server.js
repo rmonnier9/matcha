@@ -1,19 +1,26 @@
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
 import express from 'express';
 import http from 'http';
 import socketIo from 'socket.io';
-import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 import path from 'path';
 import multer from 'multer';
 
-import MongoConnection from './config/MongoConnection';
+import MongoConnection from './MongoConnection';
 import routes from './routes';
 import ChatServer from './chat/ChatServer';
 
-// connect app to the database
+dotenv.config({ path: '.env' });
+
+/**
+ * Connect to MongoDB.
+ * Wrap everyting in order to wait for succesfull connection
+ */
 MongoConnection.connect().then(() => {
   console.log('Connected to Mongo database.');
+
   const app = express();
   const port = 8000;
   const server = http.createServer(app);

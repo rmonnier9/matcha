@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 import * as UsersTools from './UsersTools';
 
 const initMatchObj = currentUser => (

@@ -1,4 +1,4 @@
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 import mail from './mail';
 import * as Notifications from '../notifications/Notifications';
 

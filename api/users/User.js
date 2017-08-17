@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import MongoConnection from '../config/MongoConnection';
+import MongoConnection from '../MongoConnection';
 import parser from './parser';
 import * as UsersTools from './UsersTools';
-import * as Notification from '../notifications/Notifications.js';
-import mail from './mail.js';
+import * as Notification from '../notifications/Notifications';
+import mail from './mail';
 
 const getInfos = users => async (req, res) => {
   const { currentUser } = req.decoded;
