@@ -1,6 +1,6 @@
-import MongoConnection from '../MongoConnection';
-import mail from './mail';
-import * as Notifications from '../notifications/Notifications';
+const MongoConnection = require('../MongoConnection');
+const mail = require('./mail');
+const Notifications = require('../notifications/Notifications');
 
 const getInterest = async (req, res) => {
   const { target } = req.params;
@@ -208,4 +208,4 @@ const reportUser = async (req, res, next) => {
   return next();
 };
 
-export { getInterest, updateInterest, updateBlock, reportUser, getBlockStatus };
+module.exports = { getInterest, updateInterest, updateBlock, reportUser, getBlockStatus };

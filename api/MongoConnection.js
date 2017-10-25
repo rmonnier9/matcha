@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+const { MongoClient } = require('mongodb');
 
 const MongoConnection = {
   connect() {
@@ -14,4 +14,4 @@ const MongoConnection = {
   },
 };
 
-export default MongoConnection;
+module.exports = MongoConnection;

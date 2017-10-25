@@ -1,5 +1,5 @@
-import MongoConnection from '../MongoConnection';
-import * as UsersTools from './UsersTools';
+const MongoConnection = require('../MongoConnection');
+const UsersTools = require('./UsersTools');
 
 const getGeoNearObj = (loc) => {
   const { coordinates } = loc;
@@ -79,4 +79,4 @@ const get = async (req, res) => {
   return res.send(resObj);
 };
 
-export { get };
+module.exports = { get };

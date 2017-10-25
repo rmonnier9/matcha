@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer');
 
 const stmp = 'smtps://api.matcha@laposte.net:Apimatcha75@smtp.laposte.net';
 const transporter = nodemailer.createTransport(stmp);
@@ -15,4 +15,4 @@ const mail = (to, subject, text) => {
   });
 };
 
-export default mail;
+module.exports = mail;

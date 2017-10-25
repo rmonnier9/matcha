@@ -1,4 +1,4 @@
-import * as UsersTools from './UsersTools';
+const UsersTools = require('./UsersTools');
 
 const loginField = (login) => {
   const field = 'login';
@@ -154,4 +154,4 @@ const updateForm = (data) => {
   return error.length === 0 ? null : error;
 };
 
-export default { signupForm, passwordField, loginField, updateForm };
+module.exports = { signupForm, passwordField, loginField, updateForm };

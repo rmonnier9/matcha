@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt-nodejs';
-import geolib from 'geolib';
+const bcrypt = require('bcrypt-nodejs');
+const geolib = require('geolib');
 
 // Authentication and activation tools -----------------------------------------
 const generateHash = password => (
@@ -234,7 +234,7 @@ const filterPrivateInfos = (user) => {
   };
 };
 
-export { getInfos,
+module.exports = { getInfos,
   getPrivateInfos,
   create,
   randomString,

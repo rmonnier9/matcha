@@ -1,7 +1,7 @@
-import queryString from 'query-string';
+const queryString = require('query-string');
 
-import MongoConnection from '../MongoConnection';
-import * as UsersTools from './UsersTools';
+const MongoConnection = require('../MongoConnection');
+const UsersTools = require('./UsersTools');
 
 const initMatchObj = currentUser => (
   {
@@ -189,4 +189,4 @@ const advancedSearch = async (req, res) => {
   return res.send(resObj);
 };
 
-export { advancedSearch };
+module.exports = { advancedSearch };

@@ -1,10 +1,10 @@
-import jwt from 'jsonwebtoken';
-import _ from 'lodash';
-import moment from 'moment';
+const jwt = require('jsonwebtoken');
+const _ = require('lodash');
+const moment = require('moment');
 
-import MongoConnection from '../MongoConnection';
-import parserMessage from './parserMessage';
-import * as Notifications from '../notifications/Notifications';
+const MongoConnection = require('../MongoConnection');
+const parserMessage = require('./parserMessage');
+const Notifications = require('../notifications/Notifications');
 
 // reddis
 
@@ -109,4 +109,4 @@ class ChatServer {
 }
 
 
-export default ChatServer;
+module.exports = ChatServer;

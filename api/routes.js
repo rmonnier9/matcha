@@ -1,14 +1,14 @@
-import * as Auth from './users/Auth';
-import * as User from './users/User';
-import * as Pictures from './users/Pictures';
-import * as Interactions from './users/Interactions';
-import * as Search from './users/Search';
-import * as Suggestions from './users/Suggestions';
-import * as Matches from './users/Matches';
-import * as Likes from './users/Likes';
-import * as Visits from './users/Visits';
-import * as Chat from './chat/Chat';
-import * as Notifications from './notifications/Notifications';
+const Auth = require('./users/Auth');
+const User = require('./users/User');
+const Pictures = require('./users/Pictures');
+const Interactions = require('./users/Interactions');
+const Search = require('./users/Search');
+const Suggestions = require('./users/Suggestions');
+const Matches = require('./users/Matches');
+const Likes = require('./users/Likes');
+const Visits = require('./users/Visits');
+const Chat = require('./chat/Chat');
+const Notifications = require('./notifications/Notifications');
 
 const rejectedCatcher = handler => (req, res, next) => {
   handler(req, res, next).catch((error) => { next(error); });
@@ -73,4 +73,4 @@ const routes = (app, users, upload) => {
   .get('/api/search', rejectedCatcher(Search.advancedSearch));
 };
 
-export default routes;
+module.exports = routes;

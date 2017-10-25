@@ -1,7 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-import sharp from 'sharp';
-import MongoConnection from '../MongoConnection';
+const fs = require('fs');
+const path = require('path');
+const sharp = require('sharp');
+const MongoConnection = require('../MongoConnection');
 
 // browser expect a content type img, res.json is then useless
 const get = async (req, res, next) => {
@@ -107,4 +107,4 @@ const save = async (req, res) => {
 };
 
 
-export { save, saveCheck, get, remove, setAsProfile };
+module.exports = { save, saveCheck, get, remove, setAsProfile };

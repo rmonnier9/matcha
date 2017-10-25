@@ -1,4 +1,4 @@
-import MongoConnection from '../MongoConnection';
+const MongoConnection = require('../MongoConnection');
 
 const send = (userSocketList, newNotification, currentUser) => {
   const askedUser = userSocketList.filter(userSocket => userSocket.login === currentUser.login);
@@ -55,4 +55,4 @@ const getUnreadNumber = async (req, res) => {
   return res.send({ error: '', count });
 };
 
-export { send, get, getUnreadNumber };
+module.exports = { send, get, getUnreadNumber };

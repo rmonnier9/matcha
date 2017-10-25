@@ -1,4 +1,4 @@
-import MongoConnection from '../MongoConnection';
+const MongoConnection = require('../MongoConnection');
 
 const getMessages = async (req, res) => {
   const { currentUser } = req.decoded;
@@ -22,4 +22,4 @@ const getMessages = async (req, res) => {
   return res.json({ error: '', messages }).end();
 };
 
-export { getMessages };
+module.exports = { getMessages };

@@ -1,9 +1,9 @@
-import _ from 'lodash';
-import MongoConnection from '../MongoConnection';
-import parser from './parser';
-import * as UsersTools from './UsersTools';
-import * as Notification from '../notifications/Notifications';
-import mail from './mail';
+const _ = require('lodash');
+const MongoConnection = require('../MongoConnection');
+const parser = require('./parser');
+const UsersTools = require('./UsersTools');
+const Notification = require('../notifications/Notifications');
+const mail = require('./mail');
 
 const getInfos = users => async (req, res) => {
   const { currentUser } = req.decoded;
@@ -111,4 +111,4 @@ const updateInfo = async (req, res) => {
   return res.json({ error: '' }).end();
 };
 
-export { getInfos, getMyInfos, updateInfo };
+module.exports = { getInfos, getMyInfos, updateInfo };

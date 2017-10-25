@@ -1,5 +1,5 @@
-import MongoConnection from '../MongoConnection';
-import * as UsersTools from './UsersTools';
+const MongoConnection = require('../MongoConnection');
+const UsersTools = require('./UsersTools');
 
 const getMatchObj = (currentUser, gender, lookingFor, birthDate) => {
   const secondsInTenYears = 10 * 365 * 24 * 3600 * 1000;
@@ -139,4 +139,4 @@ const get = async (req, res) => {
   return res.send(resObj);
 };
 
-export { get };
+module.exports = { get };

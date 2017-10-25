@@ -7,4 +7,4 @@ const parserMessage = (text) => {
   return (true);
 };
 
-export default parserMessage;
+module.exports = parserMessage;

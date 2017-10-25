@@ -1,4 +1,4 @@
-import http from 'http';
+const http = require('http');
 
 const IPGeolocation = ip => new Promise((resolve, reject) => {
   let url = 'http://ipinfo.io/';
@@ -45,4 +45,4 @@ const IPGeolocation = ip => new Promise((resolve, reject) => {
   .on('error', (e) => { reject(e.message); });
 });
 
-export default IPGeolocation;
+module.exports = IPGeolocation;

@@ -1,16 +1,16 @@
-import bodyParser from 'body-parser';
-import morgan from 'morgan';
-import dotenv from 'dotenv';
-import express from 'express';
-import http from 'http';
-import socketIo from 'socket.io';
-import cookieParser from 'cookie-parser';
-import path from 'path';
-import multer from 'multer';
+const bodyParser = require('body-parser');
+const morgan = require('morgan');
+const dotenv = require('dotenv');
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const cookieParser = require('cookie-parser');
+const path = require('path');
+const multer = require('multer');
 
-import MongoConnection from './MongoConnection';
-import routes from './routes';
-import ChatServer from './chat/ChatServer';
+const MongoConnection = require('./MongoConnection');
+const routes = require('./routes');
+const ChatServer = require('./chat/ChatServer');
 
 dotenv.config({ path: '.env' });
 

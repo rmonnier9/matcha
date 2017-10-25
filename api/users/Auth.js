@@ -1,10 +1,9 @@
-import jwt from 'jsonwebtoken';
-
-import IPGeolocation from './IPGeolocation';
-import MongoConnection from '../MongoConnection';
-import * as UsersTools from './UsersTools';
-import parser from './parser';
-import mail from './mail';
+const jwt = require('jsonwebtoken');
+const IPGeolocation = require('./IPGeolocation');
+const MongoConnection = require('../MongoConnection');
+const UsersTools = require('./UsersTools');
+const parser = require('./parser');
+const mail = require('./mail');
 
 const signup = async (req, res) => {
   const { gender, email, firstname, lastname, login, password } = req.body;
@@ -72,6 +71,7 @@ const signin = async (req, res) => {
   // find user in DB
   const usersCollection = MongoConnection.db.collection('users');
   const user = await usersCollection.findOne({ login });
+  console.log(login);
   if (!user) return res.send({ error: 'Authentication failed : user not found.' });
 
   // check if password is valid
@@ -169,4 +169,4 @@ const updatePassword = async (req, res) => {
   return res.send({ error: '' });
 };
 
-export { signup, signin, isLogged, whoami, updatePassword, forgotPassword, emailConfirm };
+module.exports = { signup, signin, isLogged, whoami, updatePassword, forgotPassword, emailConfirm };
