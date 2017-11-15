@@ -6,7 +6,7 @@ A dating website with Mongo DB, Express JS, React JS, Node JS. Project part of t
 
 ## Motivation
 
-Learn javascript eco-system, websockets, No-SQL
+Learn javascript eco-system, websockets, No-SQL.
 
 ## Which features are done
 
