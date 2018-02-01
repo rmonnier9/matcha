@@ -4,7 +4,9 @@ module.exports = {
       name      : 'matcha',
       script    : './api/server.js',
 	cwd : './api',
-	'env_production': {}
+	'env_production': {
+	'PORT': '8005'
+	}
     },
   ],
   deploy : {
