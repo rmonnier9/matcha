@@ -13,7 +13,7 @@ module.exports = {
       ref  : 'origin/master',
       repo : 'https://github.com/rmonnier/matcha.git',
       path : '/home/robin/matcha',
-      'post-deploy' : 'source /home/robin/.bashrc && npm install && pm2 restart ecosystem.config.js --env production'
+      'post-deploy' : 'PATH=$PATH:/home/robin/.nvm/versions/node/v9.4.0/bin/ npm install && pm2 restart ecosystem.config.js --env production'
     }
   }
 };
