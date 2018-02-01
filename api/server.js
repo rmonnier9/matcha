@@ -1,6 +1,8 @@
+const dotenv = require('dotenv');
+dotenv.config({ path: '.env' });
+
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
@@ -11,9 +13,6 @@ const multer = require('multer');
 const MongoConnection = require('./MongoConnection');
 const routes = require('./routes');
 const ChatServer = require('./chat/ChatServer');
-
-dotenv.config({ path: '.env' });
-
 /**
  * Connect to MongoDB.
  * Wrap everyting in order to wait for succesfull connection
