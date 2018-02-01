@@ -3,7 +3,8 @@ module.exports = {
     {
       name      : 'matcha',
       script    : './api/server.js',
-	cwd : './api'
+	cwd : './api',
+	'env_production': {}
     },
   ],
   deploy : {
